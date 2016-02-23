@@ -11,7 +11,8 @@
 
 </head>
 
-<body>
+<?php //Use the filename e.g. index/profile/dashboard as a css class to target css at that page only ?>
+<body class="<?php echo basename($_SERVER['PHP_SELF'], ".php"); ?>">
 <div id="page" class="site">
 
     <header id="main-header" class="site-header" role="banner">
