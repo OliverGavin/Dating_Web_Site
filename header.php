@@ -16,15 +16,17 @@
 <div id="page" class="site">
 
     <header id="main-header" class="site-header" role="banner">
-        <nav id="main-navigation" class="site-navigation" role="navigation">
+        <div class="site-wrapper">
+            <nav id="main-navigation" class="site-navigation" role="navigation">
 
-        </nav>
+            </nav>
 
-        <div class="site-branding">
-            <h1 class="site-title">
+            <div class="site-branding">
+                <h1 class="site-title">
 
-            </h1>
+                </h1>
+            </div>
         </div>
     </header>
 
-    <div id="content" class="site-content">
+    <div id="content" class="site-content site-wrapper">
