@@ -12,7 +12,9 @@
 # Widgets
 # Content
     ## Login
+    ## Search
     ## Profile
+    ## Edit Profile
     ## Dashboard
 	## Settings
 	## ...
@@ -26,17 +28,37 @@
     padding: 0;
 }
 
+ul {
+    padding-left: 20px;
+}
+
 /*--------------------------------------------------------------
 # Typography
 --------------------------------------------------------------*/
+* {
+    font-family: sans-serif;
+}
 
 /*--------------------------------------------------------------
 # Elements
 --------------------------------------------------------------*/
+
+.site-content {
+    padding-top: 60px;
+}
+
 .site-wrapper {
     max-width: 900px;
     margin: auto;
     min-height: 50px;
+}
+
+.profile-pic {
+    border-radius: 50%;
+    border: solid white;
+    box-shadow: rgba(97, 97, 97, 0.4) 0 0 10px 0;
+    height: 100%;
+    width: 100%;
 }
 
 /*--------------------------------------------------------------
@@ -55,7 +77,149 @@
 	## Menus    i.e. navbar
 --------------------------------------------------------------*/
 .site-header {
-    background-color: lightblue;
+    background-color: rgba(68, 68, 68, 0.94);
+    position: fixed;
+    width: 100%;
+    height: 60px;
+    z-index: 5;
+    border-bottom: 2px solid #E91E63;
+}
+
+#main-navigation {
+    float: right;
+}
+
+#main-navigation .navmenu-container {
+    width: 300px;
+    /*background-color: #666666;*/
+}
+
+.nav-menu {
+    position: absolute;
+    width: inherit;
+    /*padding: 10px 20px 0 0;*/
+    padding: 0;
+    z-index: 5;
+}
+
+.nav-menu li {
+    position: relative;
+    display: block;
+    /*padding: 8px 8px 8px 16px;*/
+    border-radius: 10px;
+}
+
+.nav-menu > li {
+    margin: 10px 20px 0 0;
+    background-color: #222222;
+}
+
+.nav-menu li ul.sub-menu li {
+    margin: 3px 4px;
+}
+
+.nav-menu li ul.sub-menu li:hover {
+    background-color: #222222;
+}
+
+.nav-menu li a {
+    /*display: block;*/
+    display: inline-block;
+    text-decoration: none;
+    font-family: sans-serif;
+    padding: 8px 10px;
+    width: calc(100% - 60px);
+}
+
+/*.nav-menu ul.sub-menu li.menu-item-has-children:after {*/
+    /*content: 'v';*/
+    /*display: inline-block;*/
+/*}*/
+
+/*.nav-menu ul.sub-menu li.menu-item-has-children:hover:after {*/
+    /*content: none;*/
+/*}*/
+
+.nav-menu > li > a {
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+
+.nav-menu li a,
+.nav-menu li a:visited {
+    color: white;
+}
+
+.nav-menu li a:focus,
+.nav-menu li:hover > a {
+    color: #E91E63;
+}
+
+.nav-menu li.menu-item-has-children ul.sub-menu {
+    overflow-y: hidden;
+    transition: all .5s ease-in-out;
+    -moz-transition: all .5s ease-in-out;
+    -webkit-transition: all .5s ease-in-out;
+    max-height: 0;
+    visibility: hidden;
+    opacity: 0;
+    /*display: none;*/
+    /*position: absolute;*/
+    position: relative;
+    background-color: #333333;
+    width: inherit;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    border-radius: 0 0 10px 10px;
+    z-index: 1;
+}
+
+.nav-menu > li.menu-item-has-children:hover > ul.sub-menu {
+    transition: all .5s ease-in-out;
+    -moz-transition: all .5s ease-in-out;
+    -webkit-transition: all .5s ease-in-out;
+    max-height: 400px;
+    visibility: visible;
+    opacity: 1;
+    padding: 2px 0;
+    /*display: block;*/
+}
+
+.nav-menu li.menu-item-has-children:hover > ul.sub-menu.expanded {
+    max-height: 400px;
+    visibility: visible;
+    /*display: block;*/
+}
+
+
+
+.nav-menu .profile-image {
+    display: inline-block;
+    width: 50px;
+    float: right;
+    right: 0;
+    top: -8px;
+    position: absolute;
+    z-index: 5;
+}
+
+.nav-menu .profile-image .profile-pic {
+    border-width: 0;
+}
+
+.nav-menu .profile-image .profile-notification-counter {
+    float: right;
+    position: relative;
+    bottom: 28px;
+    right: -2px;
+    padding: 2px 5px 1px 5px;
+    border-radius: 6px;
+    background-color: #E91E63;
+    font-size: 12px;
+}
+
+.nav-menu .profile-image .profile-notification-counter p {
+    color: white;
+    font-weight: bold;
 }
 
 /*--------------------------------------------------------------
@@ -74,8 +238,12 @@
 --------------------------------------------------------------*/
 
 .site-main {
-    background-color: greenyellow;
-    height: 100px;
+            min-height: 100px;
+}
+
+.content-area {
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 /*--------------------------------------------------------------
@@ -83,7 +251,261 @@
 --------------------------------------------------------------*/
 
 /*--------------------------------------------------------------
+    ## Search
+--------------------------------------------------------------*/
+
+.search .search-form-container {
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+.search .search-form-container .search-form {
+
+}
+
+.search .search-form-container .search-form fieldset {
+    padding: 0;
+    margin: 0;
+    border: none;
+    background-color: #666666;
+    border-radius: 10px 0 0 10px;
+    overflow: hidden;
+    display: inline;
+}
+
+.search .search-form-container .search-form .search-field-label,
+.search .search-form-container .search-form .search-field,
+.search .search-form-container .search-form .select-field,
+.search .search-form-container .search-form .numeric-field,
+.search .search-form-container .search-form input[type='submit'] {
+    border: none;
+    /*border: solid #aeaeae;*/
+    /*border-top-width: 1px;*/
+    /*border-right-style: none;*/
+    /*border-bottom-width: 1px;*/
+    /*border-left-style: none;*/
+    padding: 10px 4px;
+    margin: 0 -2px;
+    background-color: #666666;
+    color: white;
+    font-size: 16px;
+    user-focus: none;
+}
+
+.search .search-form-container .search-form .search-field:focus,
+.search .search-form-container .search-form .select-field:focus,
+.search .search-form-container .search-form .numeric-field:focus,
+.search .search-form-container .search-form input[type='submit']:focus {
+    outline:0;
+}
+
+.search .search-form-container .search-form .search-field {
+    /*border-left: 1px solid;*/
+    width: 300px;
+    padding-left: 10px;
+}
+
+.search .search-form-container .search-form .select-field {
+    padding-top: 9px;
+    width: 52px;
+}
+
+.search .search-form-container .search-form .male {
+    color: deepskyblue;
+}
+
+.search .search-form-container .search-form .female {
+    color: #E91E63;
+}
+
+.search .search-form-container .search-form .numeric-field {
+    width: 34px;
+}
+
+.search .search-form-container .search-form .search-field-label {
+    padding: 10px 12px 11px 0;
+    margin-left: -6px;
+}
+
+.search .search-form-container .search-form input[name='likes'],
+.search .search-form-container .search-form select[name='sex'],
+.search .search-form-container .search-form input[name='max-age'] {
+    border-right: 1px solid #777;
+}
+.search .search-form-container .search-form input[type='submit'] {
+    background-color: #E91E63;
+    padding-left: 5px;
+    padding-right: 10px;
+    border-radius: 0 10px 10px 0;
+    vertical-align: top;
+}
+
+.search .search-form-container .search-form .search-more-options {
+    padding: 11px 12px 11px 12px;
+    color: #E91E63;
+    position: absolute;
+}
+
+.fontAwesome,
+.fontAwesome * {
+    font-family: FontAwesome, sans-serif;
+    /*font-style: normal;*/
+}
+
+
+
+
+
+
+.search article {
+    text-align: center;
+}
+
+.search .search-result-profile {
+    display: inline-block;
+    width: 24%;
+    text-align: center;
+    color: #666;
+    font-family: sans-serif;
+    /*font-weight: bold;*/
+}
+
+.search .search-result-profile .profile-image {
+    display: inline-block;
+    width: 60%;
+    margin-top: 20px;
+}
+
+.search .search-result-profile .profile-image .profile-pic {
+    border-width: 3px;
+}
+
+.search .search-result-profile:hover .profile-image .profile-pic {
+    box-shadow: rgba(233, 30, 99, 0.6) 0 0 10px 0;
+    transition: ease-in;
+}
+
+.search .search-result-profile .profile-info .profile-age {
+    float: right;
+    position: relative;
+    bottom: 45px;
+    margin-bottom: -20px;
+    right: 20%;
+    padding: 5px 6px;
+    border-radius: 50%;
+    background-color: #E91E63;
+}
+
+.search .search-result-profile .profile-info .profile-age p {
+    color: white;
+    font-weight: bold;
+}
+
+.search .search-result-profile .profile-name {
+    overflow: hidden;
+    width: 100%;
+    font-size: 1.2em;
+}
+
+.search .search-result-profile .profile-name .profile-first-name {
+    font-weight: bold;
+}
+
+.search .search-result-profile .profile-name .profile-last-name {
+
+}
+
+.search .search-result-profile .profile-location {
+    font-size: 0.8em;
+}
+
+/*--------------------------------------------------------------
     ## Profile
+--------------------------------------------------------------*/
+.profile .profile-actions {
+
+}
+
+.profile .profile-actions-good {
+    position: relative;
+    top: -70px;
+    left: 10px;
+}
+
+.profile .profile-actions-bad {
+    text-align: right;
+    height: 0;
+    padding-right: 50px;
+}
+
+.profile .profile-actions .action {
+    width: 60px;
+    height: 60px;
+    /*line-height: 100px;*/
+    background-color: #777;
+    border-radius: 50%;
+    display: inline-block;
+    text-align: center;
+    box-shadow: rgba(97, 97, 97, 0.4) 0 0 10px 0;
+}
+
+.profile .profile-actions .action:hover {
+    background-color: #333;
+}
+
+.profile .profile-actions .action p {
+    font-size: 10px;
+    color: white;
+}
+
+.profile .profile-actions .action p .fa {
+    margin-top: 10px;
+    font-size: 26px;
+}
+
+.profile .profile-actions .action:hover p {
+    color: #E91E63;
+}
+
+.profile .profile-actions .action-like {
+
+}
+
+.profile .profile-actions .action-block {
+
+}
+
+.profile .profile-actions .action-report {
+
+}
+
+.profile article .profile-image {
+    float: left;
+    height: 200px;
+    width: 200px;
+    margin: 20px;
+}
+
+.profile article .profile-image .profile-pic {
+    border-width: 5px;
+}
+
+.profile article .site-main {
+    background-color: mintcream;
+}
+
+.profile article .profile-info .profile-field {
+    padding: 10px 20px 5px 20px;
+}
+
+.profile article .profile-info .profile-likes,
+.profile article .profile-info .profile-dislikes {
+    display: inline-block;
+    vertical-align: top;
+}
+
+/*--------------------------------------------------------------
+    ## Edit Profile
 --------------------------------------------------------------*/
 
 /*--------------------------------------------------------------
