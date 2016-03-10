@@ -35,7 +35,8 @@ ul {
 /*--------------------------------------------------------------
 # Typography
 --------------------------------------------------------------*/
-* {
+body {
+    color: #666;
     font-family: sans-serif;
 }
 
@@ -64,6 +65,38 @@ ul {
 /*--------------------------------------------------------------
 # Forms
 --------------------------------------------------------------*/
+
+select,
+input[type="text"] {
+border: none;
+/* border-bottom: 2px solid #E91E63; */
+padding: 2px 3px 2px 3px;
+background: linear-gradient(#777, #777), linear-gradient(#777, #777), linear-gradient(#777, #777);
+background-size: 1px 20%, 100% 1px, 1px 20%;
+background-position: bottom left, bottom center, bottom right;
+background-repeat: no-repeat;
+outline: 0;
+}
+
+select:focus,
+input[type="text"]:focus {
+    background: linear-gradient(#E91E63, #E91E63), linear-gradient(#E91E63, #E91E63), linear-gradient(#E91E63, #E91E63);
+    background-size: 2px 20%, 100% 2px, 2px 20%;
+    background-position: bottom left, bottom center, bottom right;
+    background-repeat: no-repeat;
+}
+
+textarea {
+    padding: 5px 10px;
+    border: 1px solid #777;
+    border-radius: 8px 8px 2px 8px;
+}
+
+textarea:focus {
+    border-width: 2px;
+    border-color: #E91E63;
+    outline: 0;
+}
 
 /*--------------------------------------------------------------
 # Navigation
@@ -195,6 +228,7 @@ ul {
 .nav-menu .profile-image {
     display: inline-block;
     width: 50px;
+    height: 50px;
     float: right;
     right: 0;
     top: -8px;
@@ -365,8 +399,6 @@ ul {
     display: inline-block;
     width: 24%;
     text-align: center;
-    color: #666;
-    font-family: sans-serif;
     /*font-weight: bold;*/
 }
 
@@ -435,7 +467,11 @@ ul {
 .profile .profile-actions-bad {
     text-align: right;
     height: 0;
-    padding-right: 50px;
+    margin-right: 110px;
+}
+
+.profile .profile-actions-bad .action {
+    margin-top: 50px;
 }
 
 .profile .profile-actions .action {
@@ -490,8 +526,14 @@ ul {
     border-width: 5px;
 }
 
-.profile article .site-main {
-    background-color: mintcream;
+.profile article .profile-info {
+    width: 700px;
+    max-width: 100%;
+    margin: 40px auto;
+    border-radius: 30px;
+    box-shadow: rgba(97, 97, 97, 0.4) 0 0 10px 0;
+    padding-top: 20px;
+    padding-bottom: 30px;
 }
 
 .profile article .profile-info .profile-field {
@@ -503,6 +545,23 @@ ul {
     display: inline-block;
     vertical-align: top;
 }
+
+/*fix*/
+.profile-name input{
+    font-size: 24px;
+}
+
+.profile-likes input,
+.profile-dislikes input{
+    margin-top: 10px;
+}
+
+/*.profile-location,*/
+/*.profile-looking-for,*/
+/*.profile-age-range {*/
+    /*display: inline-block;*/
+    /*width: 180px;*/
+/*}*/
 
 /*--------------------------------------------------------------
     ## Edit Profile
@@ -520,11 +579,12 @@ ul {
     ## Login
 --------------------------------------------------------------*/
 
-.loginOrRegister form{
+.index .loginOrRegister form {
 	text-align: center;
 	margin: 0 auto;
-	}
-.textbox {
+}
+
+.index .textbox {
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
@@ -537,21 +597,25 @@ ul {
     margin: 3px;
 	font-size: 17px;
 }
-.hideRegister{
+
+.index .hideRegister{
 	display: none;
-	}
-.radioGender label{
+}
+
+.index .radioGender label {
 	display: inline-block;
 	cursor: pointer;
 	position: relative;
 	padding-left: 25px;
 	margin-right: 15px;
 	font-size: 13px;
-	}
-.radioGender input[type=radio]{
+}
+
+.index .radioGender input[type=radio] {
 	display: none;
-	}
-.radioGender label:before {
+}
+
+.index .radioGender label:before {
 	content: "";
 	display: inline-block;
 	
@@ -565,15 +629,17 @@ ul {
 	background-color: #aaa;
 	box-shadow: inset 0px 2px 3px 0px rgba(0, 0, 0, .3), 0px 1px 0px 0px rgba(255, 255, 255, .8);
 	border-radius: 8px;
-	}
-.radioGender input[type=radio]:checked + label:before{
+}
+
+.index .radioGender input[type=radio]:checked + label:before{
 	content: "\2022";
 	color: #F3F3F3;
 	font-size: 30px;
 	text-align: center;
 	line-height: 18px;
-	}
-.selectLogin select{
+}
+
+.index .selectLogin select {
 	-webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
@@ -583,19 +649,22 @@ ul {
     background: #1B1B1B;
     padding: 5px;
 	margin-bottom: 5px;
-	}
-.checkboxR label{
+}
+
+.index .checkboxR label {
 	display: inline-block;
     cursor: pointer;
     position: relative;
     padding-left: 25px;
     margin-right: 15px;
     font-size: 15px;
-	}
-.checkboxR input[type=checkbox]{
+}
+
+.index .checkboxR input[type=checkbox] {
 	display: none;
-	}
-.checkboxR label:before{
+}
+
+.index .checkboxR label:before {
 	content: "";
     display: inline-block;
  
@@ -609,8 +678,9 @@ ul {
     background-color: #aaa;
     box-shadow: inset 0px 2px 3px 0px rgba(0, 0, 0, .3), 0px 1px 0px 0px rgba(255, 255, 255, .8);
 	border-radius: 3px;
-	}
-.checkboxR input[type=checkbox]:checked + label:before {
+}
+
+.index .checkboxR input[type=checkbox]:checked + label:before {
     content: "\2713";
     text-shadow: 1px 1px 1px rgba(0, 0, 0, .2);
     font-size: 15px;
