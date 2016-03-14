@@ -101,7 +101,13 @@ function register() {
 
         $prepared->bind_param('ss', $email, $password); //s - string
 
-        $prepared->execute();
+        if ($prepared->execute()) {
+//            echo 'Success';
+        } else {
+            if($prepared->errno === 1062) {
+                array_push($_SESSION['error'], "Sorry, this email already exists");
+            }
+        }
 
         $prepared->free_result();
     }
