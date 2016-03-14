@@ -572,8 +572,36 @@ textarea:focus {
 --------------------------------------------------------------*/
 
 /*--------------------------------------------------------------
-	## Settings
+    ## Settings
 --------------------------------------------------------------*/
+
+.generalSettings h2{
+	text-align: center;
+	margin: 10px;
+	}
+.generalSettings form {
+	width: 500px;
+	text-align: center;
+	margin: 0 auto;
+	}
+.generalSettings label {
+	display: inline-block;
+	width: 80px;
+	text-align: left;
+	}
+.generalSettings .clear {
+	clear: both;
+	height: 0;
+	line-height: 0;
+	}
+.button{
+	-moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+	font-size: 17px;
+	margin: 0 0 15px -80px;
+	background-color: #e1d9ec;
+	}
 
 /*--------------------------------------------------------------
     ## Login
