@@ -2,10 +2,24 @@
 session_start();
 
 // reset errors
-//unset($_SESSION['error']);
 $_SESSION['error'] = array();
 
 if (isset($_GET['logout'])) {
+    logout();
+
+}
+
+else if (isset($_GET['login']) && isset($_POST['action'])) {
+    if ($_POST['action'] == 'Login') {
+        login();
+
+    } else if ($_POST['action'] == 'Register') {
+        register();
+
+    }
+}
+
+function logout() {
 
     unset($_SESSION);
 
@@ -18,9 +32,12 @@ if (isset($_GET['logout'])) {
 
     // redirect to the main page
     header('Location: index.php');
+
 }
 
-if (isset($_GET['login'])) {
+function login() {
+    global $db;
+
     if (isset($_POST['email'], $_POST['password']) &&
         !empty($_POST['email']) &&
         !empty($_POST['password'])  ) {
@@ -30,8 +47,8 @@ if (isset($_GET['login'])) {
         $ip = $_SERVER['REMOTE_ADDR'];
 
         $users = $db->prepare("
-          SELECT user_id FROM users WHERE email = ? AND password = ?
-        ");
+              SELECT user_id FROM users WHERE email = ? AND password = ?
+            ");
 
         $users->bind_param('ss', $email, $password);
 
@@ -41,20 +58,20 @@ if (isset($_GET['login'])) {
 
         $users->fetch();
 
-        if ($users->num_rows !== 1) {
-            $_SESSION['user_id'] = $user_id;
-            $_SESSION['user_ip'] = $ip;
+        if (!$user_id) {
+            array_push($_SESSION['error'], "Login failed");
+            return;
+        }
 
-            // redirect to their Dashboard
-            if (isset($_GET['redirect'])) {
-                header("Location: " . $_GET['redirect']);
+        $_SESSION['user_id'] = $user_id;
+        $_SESSION['user_ip'] = $ip;
 
-            } else {
-                header("Location: profile.php");
-            }
+        // redirect to their Dashboard
+        if (isset($_GET['redirect'])) {
+            header("Location: " . $_GET['redirect']);
 
         } else {
-            array_push($_SESSION['error'], "Login failed");
+            header("Location: profile.php");
         }
 
         //Free query result
@@ -63,18 +80,23 @@ if (isset($_GET['login'])) {
     }
 }
 
-if (isset($_GET['register'])) {
+function register() {
+    global $db;
 
-    if (isset($_POST['email'], $_POST['password'])) {
+    if (isset($_POST['email'], $_POST['password'], $_POST['password2'])) {
+
+        if ($_POST['password'] !== $_POST['password2']) {
+            array_push($_SESSION['error'], "Passwords don't match");
+            return;
+        }
+
         $email = $_POST['email'];
         $password = hash("sha256", $_POST['password'], false);
 
-        //validate
-
         $prepared = $db->prepare("
-            INSERT INTO users (email, password)
-            VALUES (?, ?)
-        ");
+                INSERT INTO users (email, password)
+                VALUES (?, ?)
+            ");
 
         $prepared->bind_param('ss', $email, $password); //s - string
 
@@ -82,6 +104,7 @@ if (isset($_GET['register'])) {
 
         $prepared->free_result();
     }
+
 }
 
 
@@ -94,11 +117,13 @@ function verify_login() {
     //if wrong ip...
     //if not logged in redirect
 
-    if ($_SERVER['REMOTE_ADDR'] != $_SESSION['user_ip']) {
-
-    }
-
     if ( is_user_logged_in() ) {
+
+        if ($_SERVER['REMOTE_ADDR'] != $_SESSION['user_ip']) {
+            logout();
+        }
+
+    } else {
         // remember where the user was going
         if (!isset($_GET['logout']) && isset($_SERVER[REQUEST_URI])) {
             $current_page = $_SERVER[REQUEST_URI];
@@ -114,6 +139,5 @@ function verify_login() {
  * @return bool
  */
 function is_user_logged_in() {
-//    return isset($_SESSION['user_id']);
     return (isset($_SESSION['user_id']) && !empty($_SESSION['user_id']));
 }
