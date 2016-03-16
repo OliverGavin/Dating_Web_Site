@@ -2,9 +2,6 @@
 
 session_start();
 
-// reset errors
-$_SESSION['error'] = array();
-
 if (isset($_GET['logout'])) {
     logout();
 
@@ -37,7 +34,7 @@ function logout() {
 }
 
 function login() {
-    global $db;
+    global $db, $message;
 
     if (isset($_POST['email'], $_POST['password']) &&
         !empty($_POST['email']) &&
@@ -60,7 +57,7 @@ function login() {
         $users->fetch();
 
         if (!$user_id) {
-            array_push($_SESSION['error'], "Login failed");
+            array_push($message['error'], "Login failed");
             return;
         }
 
@@ -82,12 +79,12 @@ function login() {
 }
 
 function register() {
-    global $db;
+    global $db, $message;
 
     if (isset($_POST['email'], $_POST['password'], $_POST['password2'])) {
 
         if ($_POST['password'] !== $_POST['password2']) {
-            array_push($_SESSION['error'], "Passwords don't match");
+            array_push($message['error'], "Passwords don't match");
             return;
         }
 
@@ -105,7 +102,7 @@ function register() {
 //            echo 'Success';
         } else {
             if($prepared->errno === 1062) {
-                array_push($_SESSION['error'], "Sorry, this email already exists");
+                array_push($message['error'], "Sorry, this email already exists");
             }
         }
 

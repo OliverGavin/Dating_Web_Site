@@ -12,11 +12,8 @@ require_once 'core/init.php';
 		<div class="loginOrRegister">
 
 			<?php
-			if (isset($_SESSION['user_id'])) {
-				echo 'You are logged in: ' . $_SESSION['user_id'];
-			}
-			if (isset($_SESSION['error'])) {
-				foreach ($_SESSION['error'] as $error) {
+			if (isset($message['error'])) {
+				foreach ($message['error'] as $error) {
 					echo 'Error: ' . $error;
 				}
 			}
