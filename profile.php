@@ -22,14 +22,22 @@ if (!$can_view) {
 $blocked = false;
 
 $prepared = $db->prepare("
-              SELECT * FROM profiles WHERE user_id = ?
+              SELECT    first_name, last_name,
+                        DOB, sex, description, country,
+                        county, looking_for, min_age,
+                        max_age, date_time_updated
+              FROM users NATURAL JOIN profiles
+              WHERE user_id = ?
             ");
 
 $prepared->bind_param('s', $user_id);
 
 $prepared->execute();
 // TODO error detection
-$prepared->bind_result($user_id, $first_name, $last_name, $DOB, $sex, $description, $country, $county, $looking_for, $min_age, $max_age, $date_time_updated); //i.e. binding to SELECTed attributes
+$prepared->bind_result( $first_name, $last_name,
+                        $DOB, $sex, $description, $country,
+                        $county, $looking_for, $min_age,
+                        $max_age, $date_time_updated); //i.e. binding to SELECTed attributes
 
 $profile_exists = $prepared->fetch();
 if (!$profile_exists || $blocked) {

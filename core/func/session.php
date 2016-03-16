@@ -30,6 +30,7 @@ function logout() {
 
     // redirect to the main page
     header('Location: index.php');
+    exit();
 
 }
 
@@ -56,6 +57,9 @@ function login() {
 
         $users->fetch();
 
+        //Free query result
+        $users->free_result();
+
         if (!$user_id) {
             array_push($message['error'], "Login failed");
             return;
@@ -72,9 +76,6 @@ function login() {
             header("Location: profile.php");
         }
 
-        //Free query result
-        $users->free_result();
-
     }
 }
 
@@ -90,20 +91,26 @@ function register() {
 
         $email = $_POST['email'];
         $password = hash("sha256", $_POST['password'], false);
+        $first_name     =   $_POST['first_name'];
+        $last_name      =   $_POST['last_name'];
 
         $prepared = $db->prepare("
-                INSERT INTO users (email, password)
-                VALUES (?, ?)
+                INSERT INTO users (email, password, first_name, last_name)
+                VALUES (?, ?, ?, ?)
             ");
 
-        $prepared->bind_param('ss', $email, $password); //s - string
+        $prepared->bind_param('ssss', $email, $password, $first_name, $last_name); //s - string
 
         if ($prepared->execute()) {
-//            echo 'Success';
+            array_push($message['success'], "Your account has been created, please log in");
+            // Create a profile for the user using their assigned user_id
             create_profile($prepared->insert_id);
         } else {
+            // Error code 1062 - duplicate
             if($prepared->errno === 1062) {
                 array_push($message['error'], "Sorry, this email already exists");
+            } else if ($prepared->errno) {
+                array_push($message['error'], "Sorry, an error occurred");
             }
         }
 
@@ -117,8 +124,6 @@ function register() {
 function create_profile($user_id) {
     global $db;
 
-    $first_name     =   $_POST['first_name'];
-    $last_name      =   $_POST['last_name'];
     $DOB_day        =   $_POST['DOB_day'];
     $DOB_month      =   $_POST['DOB_month'];
     $DOB_year       =   $_POST['DOB_year'];
@@ -126,13 +131,11 @@ function create_profile($user_id) {
     $sex            =   $_POST['sex'];
 
     $prepared = $db->prepare("
-                INSERT INTO profiles (user_id, first_name, last_name,
-                                      DOB, sex)
-                VALUES (?, ?, ?, ?, ?)
+                INSERT INTO profiles (user_id, DOB, sex)
+                VALUES (?, ?, ?)
             ");
 
-    $prepared->bind_param('isssi', $user_id, $first_name, $last_name,
-                                    $DOB, $sex); //s - string
+    $prepared->bind_param('isi', $user_id, $DOB, $sex); //s - string
 
     $prepared->execute();
 
@@ -159,6 +162,7 @@ function verify_login() {
         if (!isset($_GET['logout']) && isset($_SERVER[REQUEST_URI])) {
             $current_page = $_SERVER[REQUEST_URI];
             header("Location: index.php?redirect=$current_page");
+            exit();
         }
 
     }

@@ -50,31 +50,47 @@ if (isset($_POST['action']) && $_POST['action']==='Save') {
 
     // TODO validation
     $prepared = $db->prepare("
+              UPDATE users
+              SET first_name = ?, last_name = ?
+              WHERE user_id = ?
+            ");
+
+    $prepared->bind_param('ssi', $first_name, $last_name, $user_id);
+    $prepared->execute();
+
+    $prepared = $db->prepare("
               UPDATE profiles
-              SET first_name = ?, last_name = ?, DOB = ?, sex = ?, description = ?,
+              SET DOB = ?, sex = ?, description = ?,
                   country = ?, county = ?, looking_for = ?, min_age = ?, max_age = ?,
                   date_time_updated = ?
               WHERE user_id = ?
             ");
 
-    $prepared->bind_param('sssisssiiiss', $first_name, $last_name, $DOB, $sex, $description,
-                                            $country, $county, $looking_for, $min_age, $max_age,
-                                            $date_time_updated, $user_id);
-
+    $prepared->bind_param('sisssiiisi', $DOB, $sex, $description,
+                                        $country, $county, $looking_for, $min_age, $max_age,
+                                        $date_time_updated, $user_id);
     $prepared->execute();
 
 } else {
-
+    // TODO move to include/function? same code as profile.php
     // Load data from DB
     $prepared = $db->prepare("
-              SELECT * FROM profiles WHERE user_id = ?
+              SELECT    first_name, last_name,
+                        DOB, sex, description, country,
+                        county, looking_for, min_age,
+                        max_age, date_time_updated
+              FROM users NATURAL JOIN profiles
+              WHERE user_id = ?
             ");
 
     $prepared->bind_param('s', $user_id);
 
     $prepared->execute();
     // TODO error detection
-    $prepared->bind_result($user_id, $first_name, $last_name, $DOB, $sex, $description, $country, $county, $looking_for, $min_age, $max_age, $date_time_updated); //i.e. binding to SELECTed attributes
+    $prepared->bind_result( $first_name, $last_name,
+                            $DOB, $sex, $description, $country,
+                            $county, $looking_for, $min_age,
+                            $max_age, $date_time_updated); //i.e. binding to SELECTed attributes
 
     $profile_exists = $prepared->fetch();
     if (!$profile_exists) {
