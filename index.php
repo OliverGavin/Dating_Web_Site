@@ -13,8 +13,13 @@ require_once 'core/init.php';
 
 			<?php
 			if (isset($message['error'])) {
-				foreach ($message['error'] as $error) {
-					echo 'Error: ' . $error;
+				foreach ($message['error'] as $msg) {
+					echo 'Error: ' . $msg;
+				}
+			}
+			if (isset($message['success'])) {
+				foreach ($message['success'] as $msg) {
+					echo $msg;
 				}
 			}
 
