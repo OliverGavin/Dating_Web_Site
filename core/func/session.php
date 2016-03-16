@@ -100,6 +100,7 @@ function register() {
 
         if ($prepared->execute()) {
 //            echo 'Success';
+            create_profile($prepared->insert_id);
         } else {
             if($prepared->errno === 1062) {
                 array_push($message['error'], "Sorry, this email already exists");
@@ -107,7 +108,33 @@ function register() {
         }
 
         $prepared->free_result();
+    } else {
+        array_push($message['error'], "Sorry, please fill all the fields");
     }
+
+}
+
+function create_profile($user_id) {
+    global $db;
+
+    $first_name     =   $_POST['first_name'];
+    $last_name      =   $_POST['last_name'];
+    $DOB_day        =   $_POST['DOB_day'];
+    $DOB_month      =   $_POST['DOB_month'];
+    $DOB_year       =   $_POST['DOB_year'];
+    $DOB            =   "$DOB_year-$DOB_month-$DOB_day";
+    $sex            =   $_POST['sex'];
+
+    $prepared = $db->prepare("
+                INSERT INTO profiles (user_id, first_name, last_name,
+                                      DOB, sex)
+                VALUES (?, ?, ?, ?, ?)
+            ");
+
+    $prepared->bind_param('isssi', $user_id, $first_name, $last_name,
+                                    $DOB, $sex); //s - string
+
+    $prepared->execute();
 
 }
 

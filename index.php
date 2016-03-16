@@ -32,18 +32,18 @@ require_once 'core/init.php';
 
 				<div class="hideRegister">
 					<input class="textbox" type="password" size="30" placeholder="Confirm password" name="password2"><br>
-					<input class="textbox" type="text" size="12" placeholder="First Name" name="fname">
-					<input class="textbox" type="text" size="12" placeholder="Last Name" name="lName">
+					<input class="textbox" type="text" size="12" placeholder="First Name" name="first_name">
+					<input class="textbox" type="text" size="12" placeholder="Last Name" name="last_name">
 					<br>
 					<div class="radioGender">
-						<input id="male" type="radio" name="gender" value="male">
+						<input id="male" type="radio" name="sex" value="1">
 						<label for="male">Male</label>
-						<input id="female" type="radio" name="gender" value="female">
+						<input id="female" type="radio" name="sex" value="0">
 						<label for="female">Female</label>
 					</div>
 					<br>
 					<div class="selectLogin">
-						<select id="day" name="day">
+						<select id="DOB_day" name="DOB_day">
 							<option value="-">Day</option>
 							<?php
 							for($i = 1; $i <= 31; $i++) {
@@ -51,7 +51,7 @@ require_once 'core/init.php';
 							}
 							?>
 						</select>
-						<select id="month" name="month">
+						<select id="DOB_month" name="DOB_month">
 							<option value="-">Month</option>
 							<?php
 							$months = array("January", "February", "March", "April", "May", "June", "July",
@@ -61,7 +61,7 @@ require_once 'core/init.php';
 							}
 							?>
 						</select>
-						<select id="year" name="year">
+						<select id="DOB_year" name="DOB_year">
 							<option value="-">Year</option>
 							<?php
 							$current_year = date("Y");
