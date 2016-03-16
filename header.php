@@ -33,10 +33,13 @@
 <!--                        current-menu-item-->
 <!--                        menu-item-->
 
+<!--                        <li id="" class="menu-item">-->
+<!--                            <a>M</a>-->
+<!--                        </li>-->
                         <li id="" class="menu-item menu-item-has-children current-menu-parent">
                             <a>Hello, Joe</a>
                             <div class="profile-image">
-                                <img class="profile-pic" src="http://offline.fcwinti.com/wp-content/uploads/default-avatar-500x550.jpg">
+                                <img class="profile-pic" src="<?php echo get_profile_image(45) ?>">
                                 <div class="profile-notification-counter">
                                     <p>2</p>
                                 </div>
@@ -69,7 +72,7 @@
                                     <a href="http://127.0.0.1:8080/CS4014-Project/suggestions.php">Suggestions</a>
                                 </li>
                                 <li id="" class="menu-item">
-                                    <a href="http://127.0.0.1:8080/CS4014-Project/logout.php">Log out</a>
+                                    <a href="<?php echo $_SERVER['PHP_SELF'] ?>?logout">Log out</a>
                                 </li>
                             </ul>
                         </li>
