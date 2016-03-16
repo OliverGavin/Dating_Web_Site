@@ -8,7 +8,7 @@ function get_footer() {
 }
 
 function get_profile_image($size, $user_id = null) {
-    if ($user_id == null) $user_id = $_SESSION['user_id'];
+    if ($user_id == null && is_user_logged_in()) $user_id = $_SESSION['user_id'];
 
     if (false) {
 
