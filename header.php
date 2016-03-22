@@ -56,7 +56,7 @@
                         )
                     ),
                     array(
-                        'parent'    => new MenuItem("Hello, Joe", null, "menu-default", null, $profile_thumb_extra),
+                        'parent'    => new MenuItem("Hello, ".$_SESSION['first_name'], null, "menu-default", null, $profile_thumb_extra),
                         'child'     => array(
                                             array(
                                                 'parent'    => new MenuItem("Dashboard", null, null, null, null)
