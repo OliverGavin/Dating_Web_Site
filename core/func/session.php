@@ -46,14 +46,14 @@ function login() {
         $ip = $_SERVER['REMOTE_ADDR'];
 
         $users = $db->prepare("
-              SELECT user_id FROM users WHERE email = ? AND password = ?
+              SELECT user_id, first_name, last_name FROM users WHERE email = ? AND password = ?
             ");
 
         $users->bind_param('ss', $email, $password);
 
         $users->execute();
 
-        $users->bind_result($user_id); //i.e. binding to SELECTed attributes
+        $users->bind_result($user_id, $first_name, $last_name); //i.e. binding to SELECTed attributes
 
         $users->fetch();
 
@@ -67,6 +67,8 @@ function login() {
 
         $_SESSION['user_id'] = $user_id;
         $_SESSION['user_ip'] = $ip;
+        $_SESSION['first_name'] = $first_name;
+        $_SESSION['last_name'] = $last_name;
 
         // redirect to their Dashboard
         if (isset($_GET['redirect'])) {
@@ -88,6 +90,8 @@ function register() {
             array_push($message['error'], "Passwords don't match");
             return;
         }
+
+        // TODO validation
 
         $email = $_POST['email'];
         $password = hash("sha256", $_POST['password'], false);
