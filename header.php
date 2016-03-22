@@ -90,7 +90,7 @@
             <nav id="main-navigation" class="site-navigation" role="navigation">
                 <div class="navmenu-container">
                     <ul id="primary-menu" class="nav-menu">
-                        <?php if (isset($menu_items)) echo create_navigation_menu_items($menu_items); ?>
+                        <?php if (isset($menu_items)) create_navigation_menu_items($menu_items); ?>
 <!--                        <li id="" class="menu-item menu-item-has-children current-menu-parent">-->
 <!--                            <a>Hello, Joe</a>-->
 <!--                            <div class="profile-image">-->
