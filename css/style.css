@@ -123,28 +123,56 @@ textarea:focus {
 }
 
 #main-navigation .navmenu-container {
-    width: 300px;
+    width: 500px;
     /*background-color: #666666;*/
 }
 
 .nav-menu {
     position: absolute;
     width: inherit;
-    /*padding: 10px 20px 0 0;*/
+    text-align: right;
     padding: 0;
     z-index: 5;
 }
 
 .nav-menu li {
     position: relative;
+    text-align: left;
     display: block;
-    /*padding: 8px 8px 8px 16px;*/
+    /* padding: 8px 8px 8px 16px; */
     border-radius: 10px;
 }
 
 .nav-menu > li {
     margin: 10px 20px 0 0;
     background-color: #222222;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.nav-menu > li.menu-default {
+    width: 210px;
+}
+
+.nav-menu > li.menu-messages,
+.nav-menu > li.menu-notifications {
+    width: 42px;
+    margin-right: 10px;
+}
+
+.nav-menu > li.menu-messages:hover > a,
+.nav-menu > li.menu-notifications:hover > a {
+    padding-bottom: 16px;
+}
+
+.nav-menu > li.menu-messages .fa-comments {
+    font-size: 22px;
+    line-height: 0;
+}
+
+.nav-menu > li.menu-notifications .fa-bell {
+    font-size: 18px;
+    line-height: 0;
 }
 
 .nav-menu li ul.sub-menu li {
@@ -215,6 +243,36 @@ textarea:focus {
     opacity: 1;
     padding: 2px 0;
     /*display: block;*/
+}
+
+.nav-menu > li.menu-messages.menu-item-has-children:hover > ul.sub-menu,
+.nav-menu > li.menu-notifications.menu-item-has-children:hover > ul.sub-menu {
+    border-top-right-radius: 10px;
+    width: 250px;
+}
+
+.nav-menu > li.menu-messages.menu-item-has-children:hover > ul.sub-menu .scroll,
+.nav-menu > li.menu-notifications.menu-item-has-children:hover > ul.sub-menu .scroll {
+    max-height: 300px;
+    overflow-y: scroll;
+}
+
+.nav-menu > li.menu-messages.menu-item-has-children:hover > ul.sub-menu .scroll::-webkit-scrollbar,
+.nav-menu > li.menu-notifications.menu-item-has-children:hover > ul.sub-menu .scroll::-webkit-scrollbar {
+    width: 4px;
+}
+
+.nav-menu > li.menu-messages.menu-item-has-children:hover > ul.sub-menu .scroll::-webkit-scrollbar-track,
+.nav-menu > li.menu-notifications.menu-item-has-children:hover > ul.sub-menu .scroll::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    border-radius: 4px;
+}
+
+.nav-menu > li.menu-messages.menu-item-has-children:hover > ul.sub-menu .scroll::-webkit-scrollbar-thumb,
+.nav-menu > li.menu-notifications.menu-item-has-children:hover > ul.sub-menu .scroll::-webkit-scrollbar-thumb {
+    border-radius: 2px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+    background-color: #E91E63;
 }
 
 .nav-menu li.menu-item-has-children:hover > ul.sub-menu.expanded {
