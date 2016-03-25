@@ -23,7 +23,7 @@ function logout() {
 
     // set the session cookie to a time in the past so that it is deleted
     if (isset($_COOKIE[session_name()])) {
-        setcookie(session_name(), '', time()-5000 , "/");
+        setcookie(session_name(), '', time()-60*60 , "/");
     }
 
     session_destroy();
@@ -73,9 +73,10 @@ function login() {
         // redirect to their Dashboard
         if (isset($_GET['redirect'])) {
             header("Location: " . $_GET['redirect']);
-
+            exit();
         } else {
             header("Location: profile.php");
+            exit();
         }
 
     }
@@ -108,7 +109,13 @@ function register() {
         if ($prepared->execute()) {
             array_push($message['success'], "Your account has been created, please log in");
             // Create a profile for the user using their assigned user_id
-            create_profile($prepared->insert_id);
+            $profile = new Profile($prepared->insert_id);
+            $profile->create_profile();
+            if ($profile->error) {
+
+            }
+//            create_profile($prepared->insert_id);
+
         } else {
             // Error code 1062 - duplicate
             if($prepared->errno === 1062) {
@@ -122,26 +129,6 @@ function register() {
     } else {
         array_push($message['error'], "Sorry, please fill all the fields");
     }
-
-}
-
-function create_profile($user_id) {
-    global $db;
-
-    $DOB_day        =   $_POST['DOB_day'];
-    $DOB_month      =   $_POST['DOB_month'];
-    $DOB_year       =   $_POST['DOB_year'];
-    $DOB            =   "$DOB_year-$DOB_month-$DOB_day";
-    $sex            =   $_POST['sex'];
-
-    $prepared = $db->prepare("
-                INSERT INTO profiles (user_id, DOB, sex)
-                VALUES (?, ?, ?)
-            ");
-
-    $prepared->bind_param('isi', $user_id, $DOB, $sex); //s - string
-
-    $prepared->execute();
 
 }
 
@@ -160,6 +147,13 @@ function verify_login() {
         if ($_SERVER['REMOTE_ADDR'] != $_SESSION['user_ip']) {
             logout();
         }
+
+        $timeout = 60*60*0.5;   // 30 minutes
+        if (isset($_SESSION['LAST_REQUEST']) && (time() - $_SESSION['LAST_REQUEST'] > $timeout)) {
+            // last request was more than 30 minutes ago
+            logout();
+        }
+        $_SESSION['LAST_REQUEST'] = time();
 
     } else {
         // remember where the user was going
