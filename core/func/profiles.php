@@ -262,3 +262,60 @@ function delete_profile($user_id) {
     return false;
 
 }
+
+function get_profiles() {
+    global $db;
+    // TODO check permissions and if blocked
+    $profiles = array();
+
+    // TODO add limit and ignore list??
+    $prepared = $db->prepare("
+              SELECT    user_id, first_name, last_name,
+                        DOB, country, county
+              FROM users NATURAL JOIN profiles
+              WHERE user_id != ?
+            ");
+
+    $prepared->bind_param('s', $_SESSION['user_id']);
+
+    $prepared->execute();
+
+    $prepared->store_result();
+
+    if ($prepared->num_rows == 0){
+        $this->error_push('Not found???');
+        return false;
+    }
+
+    // TODO error detection
+    $prepared->bind_result(
+        $user_id,
+        $first_name,
+        $last_name,
+        $DOB,
+        $country,
+        $county
+    );
+
+    while ($prepared->fetch()) {
+        $profile = new Profile($user_id);
+        $profile->first_name = $first_name;
+        $profile->last_name = $last_name;
+        $profile->DOB = date_create($DOB);
+
+        $profile->age = date_diff($profile->DOB, date_create('now'))->y;
+
+        $profile->country = $country;
+        $profile->county = $county;
+
+        array_push($profiles, $profile);
+    }
+
+    return $profiles;
+
+}
+
+
+
+
+

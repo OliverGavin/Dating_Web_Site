@@ -12,6 +12,7 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <script type="text/javascript" src="js/scroll-lock.js"></script>
+    <script type="text/javascript" src="js/modal.js"></script>
 
 </head>
 
@@ -63,19 +64,19 @@
                                                 'parent'    => new MenuItem("Dashboard", null, null, null, null)
                                             ),
                                             array(
-                                                'parent'    => new MenuItem("Notifications", null, null, null, null)
-                                            ),
-                                            array(
                                                 'parent'    => new MenuItem("My Profile", "profile.php", null, null, null)
                                             ),
                                             array(
                                                 'parent'    => new MenuItem("Search", "search.php", null, null, null)
                                             ),
                                             array(
-                                                'parent'    => new MenuItem("Browse", "browse.php", null, null, null)
+                                                'parent'    => new MenuItem("Browse", "search.php?action=browse", null, null, null)
                                             ),
                                             array(
-                                                'parent'    => new MenuItem("Suggestions", "suggestions.php", null, null, null)
+                                                'parent'    => new MenuItem("Suggestions", "search.php?action=suggestions", null, null, null)
+                                            ),
+                                            array(
+                                                'parent'    => new MenuItem("Settings", "settings.php", null, null, null)
                                             ),
                                             array(
                                                 'parent'    => new MenuItem("Log out", basename($_SERVER["SCRIPT_FILENAME"])."?logout", null, null, null)

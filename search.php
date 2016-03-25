@@ -1,32 +1,45 @@
 <?php
 require_once 'core/init.php';
+require_once 'core/func/profiles.php';
 
 verify_login();
+// TODO permissions
+
+$current_user_id = $_SESSION['user_id'];
+// Load users preferences as the default search values
+$current_user_profile = new Profile($current_user_id);
+$current_user_profile->fetch();
+
+$search_text = "";
+$search_sex = (isset($current_user_profile->looking_for) ? $current_user_profile->looking_for : !$current_user_profile->sex);
+$search_min_age = (isset($current_user_profile->min_age) ? $current_user_profile->min_age : $current_user_profile->age-5);
+$search_max_age = (isset($current_user_profile->max_age) ? $current_user_profile->max_age : $current_user_profile->age+5);
+
 ?>
 
 <?php get_header(); ?>
 
 <div id="primary" class="content-area">
     <main id="main" class="site-main" role="main">
-        <article>
+        <article class="entry">
 
             <div class="search-form-container">
                 <h3>I'm looking for somebody who is</h3>
                 <form role="search" method="get" class="search-form" action="">
                     <fieldset>
                         <label>
-                            <input type="search" name="likes" class="search-field" placeholder="funny, movies, sport" value="" title="Search for somebody like you!">
+                            <input type="search" id="text" name="text" class="search-field" placeholder="funny, movies, sport" value="<?=$search_text?>" title="Search for somebody like you!">
                         </label>
                         <label>
-                            <select name="sex" class="select-field fontAwesome male" onchange="$(this).toggleClass('female', 'male')">
-                                <option class="female" value="0">&#xf221;</option>
-                                <option class="male" value="1" selected>&#xf222;</option>
+                            <select id="sex" name="sex" class="select-field fontAwesome <?php echo ($search_sex == 1) ? 'male':'female'?>" onchange="$(this).toggleClass('female').toggleClass('male')">
+                                <option class="male" <?php echo (($search_sex == 1) ? "selected=\"selected\"" : ""); ?> value="1" selected>&#xf222;</option>
+                                <option class="female" <?php echo (($search_sex == 0) ? "selected=\"selected\"" : ""); ?> value="0">&#xf221;</option>
                             </select>
                         </label>
                         <label>
-                            <input type="number" name="min-age" class="numeric-field" min="18" max="100" step="1" value="20">
+                            <input type="number" id="min_age" name="min_age" class="numeric-field" min="18" max="100" step="1" value="<?=$search_min_age?>">
                             <span class="search-field-label">-</span>
-                            <input type="number" name="max-age" class="numeric-field" min="18" max="100" step="1" value="26">
+                            <input type="number" id="max_age" name="max_age" class="numeric-field" min="18" max="100" step="1" value="<?=$search_max_age?>">
                         </label>
                     </fieldset>
 
@@ -38,246 +51,75 @@ verify_login();
                 </form>
             </div>
 
+            <div class="search-results-container">
+                <?php
+                $profiles = get_profiles();
 
+                $n = 1;
+                $lastBrAt = 0;
+                for ($i = 1; $i <= count($profiles); $i++) {
+                    if ($n % 5 === 0 && $lastBrAt !== 5) {
+                        echo '<br />';
+                        $lastBrAt = 5;
+                        $n = 1;
+                    } else if ($n % 4 === 0 && $lastBrAt !== 4 && $i !== 4) {
+                        echo '<br />';
+                        $lastBrAt = 4;
+                        $n = 1;
+                    }
+                    $n++;
 
-            <div class="search-result-profile">
-                <div class="profile-image">
-                    <img class="profile-pic" src="http://orig06.deviantart.net/b682/f/2013/135/4/3/profile_picture_by_mellodydoll_stock-d65fbf8.jpg">
-                </div>
+                    $profile = $profiles[$i-1];
+                ?>
+                    <div id="profile_<?=$profile->user_id?>" class="search-result-profile">
+                        <a href="" onclick="get_profile(<?=$profile->user_id?>)">
+                            <div class="profile-image">
+                                <img class="profile-pic" src=<?php echo get_profile_image(300, $profile->user_id); ?>>
+                            </div>
 
-                <div class="profile-info">
-                    <div class="profile-age">
-                        <p>22</p>
+                            <div class="profile-info">
+                                <div class="profile-age">
+                                    <p><?=$profile->age?></p>
+                                </div>
+                                <!--                user_id-->
+                                <!--                first_name-->
+                                <!--                last_name-->
+                                <div class="profile-name">
+                                    <p>
+                                        <span class="profile-first-name"><?=$profile->first_name?></span>
+                                        <span class="profile-last-name"><?=$profile->last_name?></span>
+                                    </p>
+                                </div>
+
+                                <!--                country-->
+                                <!--                county-->
+                                <div class="profile-location">
+                                    <p>
+                                        <?php
+                                        echo $profile->county;
+                                        if (!empty($profile->county) && !empty($profile->country)) echo ', ';
+                                        echo $profile->country;
+                                        ?>
+                                    </p>
+                                </div>
+
+                            </div>
+                        </a>
                     </div>
-                    <!--                user_id-->
-                    <!--                first_name-->
-                    <!--                last_name-->
-                    <div class="profile-name">
-                        <p>
-                            <span class="profile-first-name">Jane</span>
-                            <span class="profile-last-name">Doe</span>
-                        </p>
-                    </div>
-
-                    <!--                country-->
-                    <!--                county-->
-                    <div class="profile-location">
-                        <p>Limerick, Ireland</p>
-                    </div>
-
-                </div>
-            </div>
-            <div class="search-result-profile">
-                <div class="profile-image">
-                    <img class="profile-pic" src="http://img05.deviantart.net/038e/i/2010/150/b/0/me_2010_by_axy_stock.jpg">
-                </div>
-
-                <div class="profile-info">
-                    <div class="profile-age">
-                        <p>20</p>
-                    </div>
-                    <!--                user_id-->
-                    <!--                first_name-->
-                    <!--                last_name-->
-                    <div class="profile-name">
-                        <p>
-                            <span class="profile-first-name">Emily</span>
-                            <span class="profile-last-name">O'Brien</span>
-                        </p>
-                    </div>
-
-                    <!--                country-->
-                    <!--                county-->
-                    <div class="profile-location">
-                        <p>Dublin, Ireland</p>
-                    </div>
-
-                </div>
-            </div>
-            <div class="search-result-profile">
-                <div class="profile-image">
-                    <img class="profile-pic" src="http://previews.123rf.com/images/gabivali/gabivali1002/gabivali100200010/6353499-Profile-of-pretty-face-model-as-Prom-Queen-at-party-Stock-Photo.jpg">
-                </div>
-
-                <div class="profile-info">
-                    <div class="profile-age">
-                        <p>25</p>
-                    </div>
-                    <!--                user_id-->
-                    <!--                first_name-->
-                    <!--                last_name-->
-                    <div class="profile-name">
-                        <p>
-                            <span class="profile-first-name">Sarah</span>
-                            <span class="profile-last-name">Kelly</span>
-                        </p>
-                    </div>
-
-                    <!--                country-->
-                    <!--                county-->
-                    <div class="profile-location">
-                        <p>Dublin, Ireland</p>
-                    </div>
-
-                </div>
-            </div>
-            <div class="search-result-profile">
-                <div class="profile-image">
-                    <img class="profile-pic" src="https://pbs.twimg.com/profile_images/598496020880871424/UdTNk_Ko_400x400.jpg">
-                </div>
-
-                <div class="profile-info">
-                    <div class="profile-age">
-                        <p>25</p>
-                    </div>
-                    <!--                user_id-->
-                    <!--                first_name-->
-                    <!--                last_name-->
-                    <div class="profile-name">
-                        <p>
-                            <span class="profile-first-name">Frankie</span>
-                            <span class="profile-last-name">Ying</span>
-                        </p>
-                    </div>
-
-                    <!--                country-->
-                    <!--                county-->
-                    <div class="profile-location">
-                        <p>Dublin, Ireland</p>
-                    </div>
-
-                </div>
-            </div><br>
-            <div class="search-result-profile">
-                <div class="profile-image">
-                    <img class="profile-pic" src="http://previews.123rf.com/images/gabivali/gabivali1002/gabivali100200010/6353499-Profile-of-pretty-face-model-as-Prom-Queen-at-party-Stock-Photo.jpg">
-                </div>
-
-                <div class="profile-info">
-                    <div class="profile-age">
-                        <p>25</p>
-                    </div>
-                    <!--                user_id-->
-                    <!--                first_name-->
-                    <!--                last_name-->
-                    <div class="profile-name">
-                        <p>
-                            <span class="profile-first-name">Sarah</span>
-                            <span class="profile-last-name">Kelly</span>
-                        </p>
-                    </div>
-
-                    <!--                country-->
-                    <!--                county-->
-                    <div class="profile-location">
-                        <p>Dublin, Ireland</p>
-                    </div>
-
-                </div>
-            </div>
-            <div class="search-result-profile">
-                <div class="profile-image">
-                    <img class="profile-pic" src="https://www.xing.com/image/7_f_e_8fa603d62_16371245_5/stefanie-hermann-foto.1024x1024.jpg">
-                </div>
-
-                <div class="profile-info">
-                    <div class="profile-age">
-                        <p>26</p>
-                    </div>
-                    <!--                user_id-->
-                    <!--                first_name-->
-                    <!--                last_name-->
-                    <div class="profile-name">
-                        <p>
-                            <span class="profile-first-name">Mary</span>
-                            <span class="profile-last-name">Butler</span>
-                        </p>
-                    </div>
-
-                    <!--                country-->
-                    <!--                county-->
-                    <div class="profile-location">
-                        <p>Clare, Ireland</p>
-                    </div>
-
-                </div>
-            </div>
-
-            <div class="search-result-profile">
-                <div class="profile-image">
-                    <img class="profile-pic" src="http://img05.deviantart.net/038e/i/2010/150/b/0/me_2010_by_axy_stock.jpg">
-                </div>
-
-                <div class="profile-info">
-                    <div class="profile-age">
-                        <p>20</p>
-                    </div>
-                    <!--                user_id-->
-                    <!--                first_name-->
-                    <!--                last_name-->
-                    <div class="profile-name">
-                        <p>
-                            <span class="profile-first-name">Emily</span>
-                            <span class="profile-last-name">O'Brien</span>
-                        </p>
-                    </div>
-
-                    <!--                country-->
-                    <!--                county-->
-                    <div class="profile-location">
-                        <p>Dublin, Ireland</p>
-                    </div>
-
-                </div>
-            </div><br>
-
-
-
-            <?php
-            $n = 1;
-            $lastBrAt = 0;
-            for ($i = 1; $i < 15; $i++) {
-                if ($n % 5 === 0 && $lastBrAt !== 5) {
-                    echo '<br />';
-                    $lastBrAt = 5;
-                    $n = 1;
-                } else if ($n % 4 === 0 && $lastBrAt !== 4 && $i !== 4) {
-                    echo '<br />';
-                    $lastBrAt = 4;
-                    $n = 1;
+                <?php
                 }
-                $n++;
-            ?>
-            <div class="search-result-profile">
-                <div class="profile-image">
-                    <img class="profile-pic" src=<?php echo get_profile_image(300); ?>>
-                </div>
+                ?>
 
-                <div class="profile-info">
-                    <div class="profile-age">
-                        <p>22</p>
-                    </div>
-                    <!--                user_id-->
-                    <!--                first_name-->
-                    <!--                last_name-->
-                    <div class="profile-name">
-                        <p>
-                            <span class="profile-first-name">Jane</span>
-                            <span class="profile-last-name">Doe</span>
-                        </p>
-                    </div>
-
-                    <!--                country-->
-                    <!--                county-->
-                    <div class="profile-location">
-                        <p>Dublin, Ireland</p>
-                    </div>
-
-                </div>
+                <script>
+                    function get_profile(id) {
+                        event.preventDefault()
+                        $.post('ajax/get_profile.php', {id:id}, function(data) {
+                            // Callback function
+                            show_modal(data);
+                        });
+                    }
+                </script>
             </div>
-            <?php
-            }
-            ?>
         </article>
     </main><!-- #main -->
 </div><!-- #primary -->

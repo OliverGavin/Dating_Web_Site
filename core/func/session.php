@@ -1,4 +1,6 @@
 <?php
+global $pathToRoot;
+require_once $pathToRoot.'core/func/profiles.php';
 
 session_start();
 
