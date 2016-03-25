@@ -1,24 +1,25 @@
 <?php
 require_once 'core/init.php';
+require_once 'core/func/profiles.php';
 
 verify_login();
-// TODO permissions
+// TODO permissions and validation
 
 if (isset($_GET['id']) && !empty($_GET['id'])) {
     $user_id = $_GET['id'];
-    $owner = false;
 } else {
     $user_id = $_SESSION['user_id'];
-    $owner = true;
 }
+
+$is_owner = ($user_id == $_SESSION['user_id']);
 
 
 // TODO add edit / edit_others permission
-$can_edit = ($user_id === $_SESSION['user_id'] && true);
+$can_edit = ($is_owner && true);
 $can_edit_others = false;
 
 // Unauthorised user
-if (!$owner && !$can_edit_others) {
+if (!$is_owner && !$can_edit_others) {
     header("Location: 401.php");        //TODO
     exit();
 }
@@ -29,82 +30,42 @@ if (!$can_edit) {
 }
 
 
-if (isset($_POST['action']) && $_POST['action']==='Save') {
+if (isset($_GET['action']) && $_GET['action']==='delete') {
+    delete_profile($user_id);
+    header("Location: profile.php");        //TODO
+    exit();
+
+} else if (isset($_POST['action']) && $_POST['action']==='Save') {
     // Submit changes to DB
 
-    $user_id        =   $_POST['user_id'];
-    $first_name     =   $_POST['first_name'];
-    $last_name      =   $_POST['last_name'];
-    $DOB_day        =   $_POST['DOB_day'];
-    $DOB_month      =   $_POST['DOB_month'];
-    $DOB_year       =   $_POST['DOB_year'];
-    $DOB            =   "$DOB_year-$DOB_month-$DOB_day";
-    $sex            =   $_POST['sex'];
-    $description    =   $_POST['description'];
-    $country        =   $_POST['country'];
-    $county         =   $_POST['county'];
-    $looking_for    =   $_POST['looking_for'];
-    $min_age        =   $_POST['min_age'];
-    $max_age        =   $_POST['max_age'];
-    $date_time_updated  =   date_create()->format("Y-m-d h:i:s");
+    $user_id = $_POST['user_id'];
+    $profile = new Profile($user_id);
+    $profile->submit();
 
-    // TODO validation
-    $prepared = $db->prepare("
-              UPDATE users
-              SET first_name = ?, last_name = ?
-              WHERE user_id = ?
-            ");
 
-    $prepared->bind_param('ssi', $first_name, $last_name, $user_id);
-    $prepared->execute();
-
-    $prepared = $db->prepare("
-              UPDATE profiles
-              SET DOB = ?, sex = ?, description = ?,
-                  country = ?, county = ?, looking_for = ?, min_age = ?, max_age = ?,
-                  date_time_updated = ?
-              WHERE user_id = ?
-            ");
-
-    $prepared->bind_param('sisssiiisi', $DOB, $sex, $description,
-                                        $country, $county, $looking_for, $min_age, $max_age,
-                                        $date_time_updated, $user_id);
-    $prepared->execute();
+    if ($profile->error) {
+        // TODO error
+    }
 
 } else {
-    // TODO move to include/function? same code as profile.php
     // Load data from DB
-    $prepared = $db->prepare("
-              SELECT    first_name, last_name,
-                        DOB, sex, description, country,
-                        county, looking_for, min_age,
-                        max_age, date_time_updated
-              FROM users NATURAL JOIN profiles
-              WHERE user_id = ?
-            ");
+    $profile = new Profile($user_id);
+    $profile->fetch();
 
-    $prepared->bind_param('s', $user_id);
 
-    $prepared->execute();
-    // TODO error detection
-    $prepared->bind_result( $first_name, $last_name,
-                            $DOB, $sex, $description, $country,
-                            $county, $looking_for, $min_age,
-                            $max_age, $date_time_updated); //i.e. binding to SELECTed attributes
+    if ($profile->error) {
+        if ($user_id == $_SESSION['user_id']) {
+            // create profile
+            $profile->first_name = $_SESSION['first_name'];
+            $profile->last_name = $_SESSION['last_name'];
 
-    $profile_exists = $prepared->fetch();
-    if (!$profile_exists) {
-        header("Location: 404.php");
+        } else {
+            header("Location: 404.php");
+            exit();
+        }
     }
 
 }
-
-$DOB = date_create($DOB);
-$DOB_year = $DOB->format('Y');
-$DOB_month = $DOB->format('m');
-$DOB_day = $DOB->format('d');
-
-$age = date_diff($DOB, date_create('now'))->y;
 
 ?>
 
@@ -131,20 +92,20 @@ $age = date_diff($DOB, date_create('now'))->y;
                     <!--                last_name-->
                     <div class="profile-field profile-name">
                         <label for="first_name" hidden="hidden">First name</label>
-                        <input type="text" id="first_name" name="first_name" size="8" maxlength="30" value="<?php echo $first_name; ?>"/>
+                        <input type="text" id="first_name" name="first_name" size="8" maxlength="30" value="<?php echo $profile->first_name; ?>" placeholder="First Name" />
 
                         <label for="last_name" hidden="hidden">Last name</label>
-                        <input type="text" id="last_name" name="last_name" size="12" maxlength="30" value="<?php echo $last_name; ?>"/>
+                        <input type="text" id="last_name" name="last_name" size="12" maxlength="30" value="<?php echo $profile->last_name; ?>" placeholder="Last Name" />
                     </div>
 
     <!--                Photo: <input type="file">-->
 
                     <div class="profile-field profile-DOB">
-                        <label for="DOB_day" hidden="hidden">Day of birth</label>
+                        <label for="DOB_day" hidden="hidden">Date of birth</label>
                         <select id="DOB_day" name="DOB_day">
                             <?php
                             for($i = 1; $i <= 31; $i++) {
-                                $default = (($i == $DOB_day) ? "selected=\"selected\"" : "");
+                                $default = (($i == $profile->DOB_day) ? "selected=\"selected\"" : "");
                                 echo "<option " . $default . " value=\"$i\">$i</option>";
                             }
                             ?>
@@ -155,7 +116,7 @@ $age = date_diff($DOB, date_create('now'))->y;
                             $months = array("January", "February", "March", "April", "May", "June", "July",
                                 "August", "September", "October", "November", "December");
                             for($i = 0; $i < 12; $i++) {
-                                $default = (($i + 1 == $DOB_month) ? "selected=\"selected\"" : "");
+                                $default = (($i + 1 == $profile->DOB_month) ? "selected=\"selected\"" : "");
                                 echo "<option " . $default . " value=\"" . ($i+1) . "\">$months[$i]</option>";
                             }
                             ?>
@@ -165,7 +126,7 @@ $age = date_diff($DOB, date_create('now'))->y;
                             <?php
                             $current_year = date("Y");
                             for($i = $current_year; $i > $current_year - 100; $i--) {
-                                $default = (($i == $DOB_year) ? "selected=\"selected\"" : "");
+                                $default = (($i == $profile->DOB_year) ? "selected=\"selected\"" : "");
                                 echo "<option " . $default . " value=\"$i\">$i</option>";
                             }
                             ?>
@@ -175,14 +136,14 @@ $age = date_diff($DOB, date_create('now'))->y;
                     <div class="profile-field profile-sex">
                         <label for="sex" hidden="hidden">Sex</label>
                         <select id="sex" name="sex">
-                            <option <?php echo (($sex == 1) ? "selected=\"selected\"" : ""); ?> value="1">Man</option>
-                            <option <?php echo (($sex == 0) ? "selected=\"selected\"" : ""); ?> value="0">Woman</option>
+                            <option <?php echo (($profile->sex == 1) ? "selected=\"selected\"" : ""); ?> value="1">Man</option>
+                            <option <?php echo (($profile->sex == 0) ? "selected=\"selected\"" : ""); ?> value="0">Woman</option>
                         </select>
                     </div>
 
                     <div class="profile-field profile-description">
                         <label for="description">Description</label>
-                        <textarea id="description" name="description" cols="60" rows="10" placeholder="Tell us a little about yourself..."><?php echo $description; ?></textarea>
+                        <textarea id="description" name="description" cols="60" rows="10" placeholder="Tell us a little about yourself..."><?php echo $profile->description; ?></textarea>
                     </div>
                     <!--                country-->
                     <!--                county-->
@@ -205,8 +166,8 @@ $age = date_diff($DOB, date_create('now'))->y;
                     <div class="profile-field profile-looking-for">
                         <label for="looking_for">Looking for:</label>
                         <select id="looking_for" name="looking_for">
-                            <option <?php echo (($looking_for == 1) ? "selected=\"selected\"" : ""); ?> value="1">Man</option>
-                            <option <?php echo (($looking_for == 0) ? "selected=\"selected\"" : ""); ?> value="0">Woman</option>
+                            <option <?php echo (($profile->looking_for == 1) ? "selected=\"selected\"" : ""); ?> value="1">Man</option>
+                            <option <?php echo (($profile->looking_for == 0) ? "selected=\"selected\"" : ""); ?> value="0">Woman</option>
                         </select>
                     </div>
                     <!--                min_age-->
@@ -218,7 +179,7 @@ $age = date_diff($DOB, date_create('now'))->y;
                             <select id="min_age" name="min_age">
                                 <?php
                                 for($i = 18; $i <= 100; $i++) {
-                                    $default = (($i == (isset($min_age) ? $min_age : $age)) ? "selected=\"selected\"" : "");
+                                    $default = (($i == (isset($profile->min_age) ? $profile->min_age : $profile->age)) ? "selected=\"selected\"" : "");
                                     echo "<option " . $default . " value=\"$i\">$i</option>";
                                 }
                                 ?>
@@ -228,7 +189,7 @@ $age = date_diff($DOB, date_create('now'))->y;
                             <select id="max_age" name="max_age">
                                 <?php
                                 for($i = 18; $i <= 100; $i++) {
-                                    $default = (($i == (isset($max_age) ? $max_age : $age)) ? "selected=\"selected\"" : "");
+                                    $default = (($i == (isset($profile->max_age) ? $profile->max_age : $profile->age)) ? "selected=\"selected\"" : "");
                                     echo "<option " . $default . " value=\"$i\">$i</option>";
                                 }
                                 ?>
