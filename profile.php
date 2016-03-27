@@ -1,6 +1,7 @@
 <?php
 require_once 'core/init.php';
 require_once 'core/func/profiles.php';
+require_once 'core/func/users.php';
 
 verify_login();
 // TODO permissions
@@ -11,6 +12,11 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     $user_id = $_SESSION['user_id'];
 }
 
+
+if (isset($_GET['id']) && isset($_GET['status'])) {
+    // Fallback if their is no JavaScript for an Ajax request
+    set_relationship($_GET['id'], $_GET['status']);
+}
 
 ?>
 

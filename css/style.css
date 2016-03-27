@@ -641,20 +641,22 @@ body {
     box-shadow: rgba(97, 97, 97, 0.4) 0 0 10px 0;
 }
 
+.profile .profile-actions .action p {
+font-size: 10px;
+color: white;
+}
+
+.profile .profile-actions .action p .fa {
+margin-top: 10px;
+font-size: 26px;
+}
+
+.profile .profile-actions .status-action.current-status .action,
 .profile .profile-actions .action:hover {
     background-color: #333;
 }
 
-.profile .profile-actions .action p {
-    font-size: 10px;
-    color: white;
-}
-
-.profile .profile-actions .action p .fa {
-    margin-top: 10px;
-    font-size: 26px;
-}
-
+.profile .profile-actions .status-action.current-status .action p,
 .profile .profile-actions .action:hover p {
     color: #E91E63;
 }

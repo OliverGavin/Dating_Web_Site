@@ -5,6 +5,8 @@ $is_owner = ($profile->user_id == $_SESSION['user_id']);
 $can_edit = ($is_owner && true);
 $can_edit_others = false;
 
+$status = get_relationship($user_id);
+
 ?>
 <article>
     <div class="profile-actions profile-actions-bad">
@@ -28,10 +30,12 @@ $can_edit_others = false;
                     <p>BAN</p>
                 </div>
             <?php       } else { ?>
-                <div class="action action-block">
-                    <p><i class="fa fa-times"></i></p>
-                    <p>BLOCK</p>
-                </div>
+                <a href="<?=$_SERVER['REQUEST_URI']?>&status=BLOCK" class="status-action <?=($status=='BLOCK'? 'current-status':'')?>" onclick="set_relationship(<?=$user_id?>, 'BLOCK', this);">
+                    <div class="action action-block">
+                        <p><i class="fa fa-times"></i></p>
+                        <p>BLOCK</p>
+                    </div>
+                </a>
                 <div class="action action-report">
                     <p><i class="fa fa-flag"></i></p>
                     <p>REPORT</p>
@@ -45,10 +49,12 @@ $can_edit_others = false;
         <img class="profile-pic" src="<?php echo get_profile_image(300, $user_id); ?>">
         <div class="profile-actions profile-actions-good">
             <?php if (!$is_owner && !$can_edit_others) { ?>
-                <div class="action action-like">
-                    <p><i class="fa fa-heart"></i></p>
-                    <p>LIKE</p>
-                </div>
+                <a href="<?=$_SERVER['REQUEST_URI']?>&status=LIKE" class="status-action <?=($status=='LIKE'? 'current-status':'')?>" onclick="set_relationship(<?=$user_id?>, 'LIKE', this);">
+                    <div class="action action-like">
+                        <p><i class="fa fa-heart"></i></p>
+                        <p>LIKE</p>
+                    </div>
+                </a>
             <?php } ?>
         </div>
     </div>
@@ -120,3 +126,16 @@ $can_edit_others = false;
 
     </div>
 </article>
+
+<script>
+    function set_relationship(target_user_id, status_name, el) {
+        event.preventDefault()
+        $.post('ajax/set_relationship.php', {id:target_user_id, status:status_name}, function(data) {
+            // Callback function
+            if (data == 'success') {
+                $('.status-action').removeClass('current-status');
+                $(el).addClass('current-status');
+            }
+        });
+    }
+</script>
