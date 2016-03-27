@@ -18,6 +18,7 @@
     ## Dashboard
 	## Settings
 	## ...
+# Modal
 --------------------------------------------------------------*/
 
 /*--------------------------------------------------------------
@@ -44,6 +45,28 @@ body {
 # Elements
 --------------------------------------------------------------*/
 
+html,
+body {
+    height: 100%;
+}
+
+#page {
+    min-height: 100%;
+    position:relative;
+}
+
+#content {
+    padding-bottom: 50px; /* height of footer */
+}
+
+#main-footer {
+    width: 100%;
+    height: 50px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
 .site-content {
     padding-top: 60px;
 }
@@ -66,36 +89,121 @@ body {
 # Forms
 --------------------------------------------------------------*/
 
-select,
-input[type="text"] {
-border: none;
-/* border-bottom: 2px solid #E91E63; */
-padding: 2px 3px 2px 3px;
-background: linear-gradient(#777, #777), linear-gradient(#777, #777), linear-gradient(#777, #777);
-background-size: 1px 20%, 100% 1px, 1px 20%;
-background-position: bottom left, bottom center, bottom right;
-background-repeat: no-repeat;
-outline: 0;
+.style-underline select,
+.style-underline input[type="text"] {
+    border: none;
+    /* border-bottom: 2px solid #E91E63; */
+    padding: 2px 3px 2px 3px;
+    background: linear-gradient(#777, #777), linear-gradient(#777, #777), linear-gradient(#777, #777);
+    background-size: 1px 20%, 100% 1px, 1px 20%;
+    background-position: bottom left, bottom center, bottom right;
+    background-repeat: no-repeat;
+    outline: 0;
 }
 
-select:focus,
-input[type="text"]:focus {
+.style-underline select:focus,
+.style-underline input[type="text"]:focus {
     background: linear-gradient(#E91E63, #E91E63), linear-gradient(#E91E63, #E91E63), linear-gradient(#E91E63, #E91E63);
     background-size: 2px 20%, 100% 2px, 2px 20%;
     background-position: bottom left, bottom center, bottom right;
     background-repeat: no-repeat;
 }
 
-textarea {
+.style-underline textarea {
     padding: 5px 10px;
     border: 1px solid #777;
     border-radius: 8px 8px 2px 8px;
 }
 
-textarea:focus {
+.style-underline textarea:focus {
     border-width: 2px;
     border-color: #E91E63;
     outline: 0;
+}
+
+
+
+.style-rounded-dark fieldset {
+    border: none;
+    overflow: hidden;
+    display: inline;
+}
+
+.style-rounded-dark .group {
+    background-color: #666666;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.style-rounded-dark .left-rounded,
+.style-rounded-dark .both-rounded {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.style-rounded-dark .right-rounded,
+.style-rounded-dark .both-rounded {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.style-rounded-dark label.visible,
+.style-rounded-dark .numeric-field-range,
+.style-rounded-dark input[type='text'],
+.style-rounded-dark select,
+.style-rounded-dark input[type='number'],
+.style-rounded-dark input[type='submit'] {
+    border: none;
+    padding: 10px 4px;
+    margin: 0 -2px;
+    background-color: rgb(102, 102, 102);
+    background-color: rgba(102, 102, 102, 0);
+    color: white;
+    font-size: 16px;
+}
+
+.style-rounded-dark input[type='text']:focus,
+.style-rounded-dark select:focus,
+.style-rounded-dark input[type='number']:focus,
+.style-rounded-dark input[type='submit']:focus {
+    outline:0;
+}
+
+.style-rounded-dark input[type="text"] {
+    padding-left: 10px;
+}
+
+.style-rounded-dark select {
+    padding-top: 9px;
+}
+
+.style-rounded-dark select.male {
+    color: deepskyblue;
+}
+
+.style-rounded-dark select.female {
+    color: #E91E63;
+}
+
+.style-rounded-dark label.visible {
+    padding-left: 15px;
+    padding-right: 10px;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.style-rounded-dark input[type='submit'] {
+    padding-left: 5px;
+    padding-right: 5px;
+    background-color: #E91E63;
+    border-radius: 10px 10px 10px 10px;
+}
+
+.style-rounded-dark input[type='submit']:hover {
+    background-color: #db1c5d;
+}
+
+.style-rounded-dark input[type='submit']:focus {
+    background-color: #ac1649;
 }
 
 /*--------------------------------------------------------------
@@ -144,10 +252,15 @@ textarea:focus {
 }
 
 .nav-menu > li {
+    max-height: 42px;
     margin: 10px 20px 0 0;
     background-color: #222222;
     display: inline-block;
     vertical-align: top;
+}
+
+.nav-menu > li:hover {
+    max-height: 1000px;
 }
 
 .nav-menu > li.menu-default {
@@ -218,9 +331,6 @@ textarea:focus {
 
 .nav-menu li.menu-item-has-children ul.sub-menu {
     overflow-y: hidden;
-    transition: all .5s ease-in-out;
-    -moz-transition: all .5s ease-in-out;
-    -webkit-transition: all .5s ease-in-out;
     max-height: 0;
     visibility: hidden;
     opacity: 0;
@@ -235,14 +345,20 @@ textarea:focus {
 }
 
 .nav-menu > li.menu-item-has-children:hover > ul.sub-menu {
-    transition: all .5s ease-in-out;
-    -moz-transition: all .5s ease-in-out;
-    -webkit-transition: all .5s ease-in-out;
     max-height: 400px;
     visibility: visible;
     opacity: 1;
     padding: 2px 0;
     /*display: block;*/
+}
+
+.nav-menu > li,
+.nav-menu > li:hover,
+.nav-menu li.menu-item-has-children ul.sub-menu,
+.nav-menu > li.menu-item-has-children:hover > ul.sub-menu {
+    transition: all .5s ease-in-out;
+    -moz-transition: all .5s ease-in-out;
+    -webkit-transition: all .5s ease-in-out;
 }
 
 .nav-menu > li.menu-messages.menu-item-has-children:hover > ul.sub-menu,
@@ -329,10 +445,6 @@ textarea:focus {
 # Content
 --------------------------------------------------------------*/
 
-.site-main {
-            min-height: 100px;
-}
-
 .content-area {
     padding-top: 10px;
     padding-bottom: 10px;
@@ -355,87 +467,67 @@ textarea:focus {
 
 }
 
-.search .search-form-container .search-form fieldset {
-    padding: 0;
-    margin: 0;
-    border: none;
-    background-color: #666666;
-    border-radius: 10px 0 0 10px;
-    overflow: hidden;
-    display: inline;
-}
-
-.search .search-form-container .search-form .search-field-label,
-.search .search-form-container .search-form .search-field,
-.search .search-form-container .search-form .select-field,
-.search .search-form-container .search-form .numeric-field,
-.search .search-form-container .search-form input[type='submit'] {
-    border: none;
-    /*border: solid #aeaeae;*/
-    /*border-top-width: 1px;*/
-    /*border-right-style: none;*/
-    /*border-bottom-width: 1px;*/
-    /*border-left-style: none;*/
-    padding: 10px 4px;
-    margin: 0 -2px;
-    background-color: #666666;
-    color: white;
-    font-size: 16px;
-    user-focus: none;
-}
-
-.search .search-form-container .search-form .search-field:focus,
-.search .search-form-container .search-form .select-field:focus,
-.search .search-form-container .search-form .numeric-field:focus,
-.search .search-form-container .search-form input[type='submit']:focus {
-    outline:0;
-}
-
-.search .search-form-container .search-form .search-field {
-    /*border-left: 1px solid;*/
+.search .search-form-container .search-form input[name="search_text"] {
     width: 300px;
-    padding-left: 10px;
 }
 
-.search .search-form-container .search-form .select-field {
-    padding-top: 9px;
+.search .search-form-container .search-form select {
     width: 52px;
 }
 
-.search .search-form-container .search-form .male {
-    color: deepskyblue;
-}
-
-.search .search-form-container .search-form .female {
-    color: #E91E63;
-}
-
-.search .search-form-container .search-form .numeric-field {
+.search .search-form-container .search-form input[name='min_age'],
+.search .search-form-container .search-form input[name='max_age'] {
     width: 34px;
 }
 
-.search .search-form-container .search-form .search-field-label {
+.search .search-form-container .search-form .numeric-field-range {
     padding: 10px 12px 11px 0;
     margin-left: -6px;
 }
 
-.search .search-form-container .search-form input[name='likes'],
+.search .search-form-container .search-form input[name='search_text'],
 .search .search-form-container .search-form select[name='sex'],
 .search .search-form-container .search-form input[name='max-age'] {
     border-right: 1px solid #777;
 }
+
 .search .search-form-container .search-form input[type='submit'] {
-    background-color: #E91E63;
-    padding-left: 5px;
     padding-right: 10px;
     border-radius: 0 10px 10px 0;
     vertical-align: top;
 }
 
 .search .search-form-container .search-form .search-more-options {
-    padding: 11px 12px 11px 12px;
+    padding: 7px 8px 7px 8px;
     color: #E91E63;
     position: absolute;
+}
+
+.search .search-form-container .search-form .search-more-options i {
+    padding: 4px;
+    color: #E91E63;
+}
+
+.search .search-form-container .search-form .search-more-options:hover i {
+    color: #ac1649;
+    background-color: rgba(119, 119, 119, 0.5);
+    border-radius: 50%;
+}
+
+
+
+.search .search-form-container .search-form #advanced-search {
+    max-height: 0;
+    visibility: hidden;
+    display: block;
+    max-width: 500px;
+    margin: auto;
+    text-align: center;
+}
+
+.search .search-form-container .search-form #advanced-search.expanded {
+    max-height: 300px;
+    visibility: visible;
 }
 
 .fontAwesome,
@@ -717,10 +809,10 @@ textarea:focus {
 .index .radioGender label:before {
 	content: "";
 	display: inline-block;
-	
+
 	width: 16px;
 	height: 16px;
-	
+
 	margin-right: 10px;
 	position: absolute;
 	left: 0;
@@ -766,10 +858,10 @@ textarea:focus {
 .index .checkboxR label:before {
 	content: "";
     display: inline-block;
- 
+
     width: 16px;
     height: 16px;
- 
+
     margin-right: 10px;
     position: absolute;
     left: 0;
@@ -799,35 +891,24 @@ textarea:focus {
 .modal {
     position: fixed;
     z-index: 1; /*Display above content but under navigation*/
-    padding-top: 80px; /* Location of the box */
-    left: 0;
+    padding-top: 80px; /* Location of modal */
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
+    left: 0;
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.6);
 }
 
-/* Modal Content */
 .modal-content {
     position: relative;
-    /*background-color: #fefefe;*/
     margin: auto;
     padding: 0;
-    /*border: 1px solid #888;*/
     width: 900px;
-    /*box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);*/
-    -webkit-animation-name: animatetop;
-    -webkit-animation-duration: 0.4s;
+    /*-webkit-animation-name: animatetop;*/
+    /*-webkit-animation-duration: 0.4s;*/
     animation-name: animatetop;
     animation-duration: 0.4s
-}
-
-/* Add Animation */
-@-webkit-keyframes animatetop {
-    from {top:-300px; opacity:0}
-    to {top:0; opacity:1}
 }
 
 @keyframes animatetop {
@@ -835,16 +916,15 @@ textarea:focus {
     to {top:0; opacity:1}
 }
 
-/* The Close Button */
-.close {
+.modal-close {
     color: white;
     float: right;
     font-size: 28px;
     font-weight: bold;
 }
 
-.close:hover,
-.close:focus {
+.modal-close:hover,
+.modal-close:focus {
     color: #000;
     text-decoration: none;
     cursor: pointer;

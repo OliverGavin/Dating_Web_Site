@@ -41,8 +41,8 @@ class Profile {
         $this->sex            =   $_POST['sex'];
 
         $prepared = $db->prepare("
-                INSERT INTO profiles (user_id, DOB, sex)
-                VALUES (?, ?, ?)
+                INSERT INTO profiles (user_id, DOB, sex, date_time_updated)
+                VALUES (?, ?, ?, NOW())
             ");
 
         $prepared->bind_param('isi', $this->user_id, $this->DOB, $this->sex); //s - string
@@ -129,7 +129,7 @@ class Profile {
         $this->looking_for    =   $_POST['looking_for'];
         $this->min_age        =   $_POST['min_age'];
         $this->max_age        =   $_POST['max_age'];
-        $this->date_time_updated  =   date_create()->format("Y-m-d h:i:s");
+//        $this->date_time_updated  =   date_create()->format("Y-m-d h:i:s");
 
         // TODO validation? and create
         $prepared = $db->prepare("
@@ -145,11 +145,11 @@ class Profile {
               UPDATE profiles
               SET DOB = ?, sex = ?, description = ?,
                   country = ?, county = ?, looking_for = ?, min_age = ?, max_age = ?,
-                  date_time_updated = ?
+                  date_time_updated = NOW()
               WHERE user_id = ?
             ");
 
-        $prepared->bind_param('sisssiiisi',
+        $prepared->bind_param('sisssiiii',
             $this->DOB,
             $this->sex,
             $this->description,
@@ -158,7 +158,7 @@ class Profile {
             $this->looking_for,
             $this->min_age,
             $this->max_age,
-            $this->date_time_updated,
+//            $this->date_time_updated,
             $this->user_id
         );
 
@@ -263,8 +263,31 @@ function delete_profile($user_id) {
 
 }
 
-function get_profiles() {
+// Gets profiles based on the query passed
+// A SQL injection safe query is built using prepared statements
+function get_profiles($query_stmt_parts, $query_param_values, $query_param_types) {
     global $db;
+
+    // Default
+    $query_parts = "";
+    $param_values = array($_SESSION['user_id']);
+    $param_types = 'i';
+
+    // Check that the query passed has the same amount of params and values
+    if (count($query_param_values) > 0 && count($query_param_values) == substr_count($query_stmt_parts, '?')) {
+        $query_parts  = " AND ".$query_stmt_parts;
+        $param_values = array_merge($param_values, $query_param_values);
+        $param_types  = $param_types . $query_param_types;
+    }
+
+    //First parameter of mysqli bind_param
+    $ref_args = array($param_types);
+    // bind_param requires parameters to be references rather than values
+    // create array of references
+    foreach ($param_values as $key => $value)
+        $ref_args[] = &$param_values[$key];
+
+
     // TODO check permissions and if blocked
     $profiles = array();
 
@@ -273,18 +296,20 @@ function get_profiles() {
               SELECT    user_id, first_name, last_name,
                         DOB, country, county
               FROM users NATURAL JOIN profiles
-              WHERE user_id != ?
-            ");
+              WHERE user_id != ? $query_parts"
+    );
 
-    $prepared->bind_param('s', $_SESSION['user_id']);
+    // calls $prepared->bind_param($ref_args[0], $ref_args[1]... );
+    call_user_func_array(array($prepared, 'bind_param'), $ref_args);
 
     $prepared->execute();
 
     $prepared->store_result();
 
     if ($prepared->num_rows == 0){
-        $this->error_push('Not found???');
-        return false;
+//        TODO
+//        error_push('Not found???');
+//        return null;
     }
 
     // TODO error detection

@@ -3,7 +3,7 @@ function show_modal(content) {
     var modal =
         '<div id="modal" class="modal">' +
         '<div class="modal-content">' +
-        '<span class="close">×</span>' +
+        '<span id="modal-close" class="modal-close">×</span>' +
         content +
         '</div>' +
         '</div>';
@@ -11,7 +11,7 @@ function show_modal(content) {
     $('#main').append(modal);
 
     modal = document.getElementById('modal');
-    var close = document.getElementsByClassName("close")[0];
+    var close = document.getElementById("modal-close");
 
     close.onclick = function () {
         // remove modal

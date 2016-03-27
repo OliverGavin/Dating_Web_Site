@@ -81,7 +81,7 @@ if (isset($_GET['action']) && $_GET['action']==='delete') {
                 }
             }
             ?>
-            <form action="" method="post" onSubmit="">
+            <form action="" method="post" onSubmit="" class="style-underline">
                 <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
                 <div class="profile-image">
                     <img class="profile-pic" src="<?php echo get_profile_image(500, $user_id)?>">
