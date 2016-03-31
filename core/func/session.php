@@ -159,8 +159,8 @@ function verify_login() {
 
     } else {
         // remember where the user was going
-        if (!isset($_GET['logout']) && isset($_SERVER[REQUEST_URI])) {
-            $current_page = $_SERVER[REQUEST_URI];
+        if (!isset($_GET['logout']) && isset($_SERVER['REQUEST_URI'])) {
+            $current_page = $_SERVER['REQUEST_URI'];
             header("Location: index.php?redirect=$current_page");
             exit();
         }

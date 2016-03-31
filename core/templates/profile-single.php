@@ -129,7 +129,7 @@ $status = get_relationship($user_id);
 
 <script>
     function set_relationship(target_user_id, status_name, el) {
-        event.preventDefault()
+        event.preventDefault();
         $.post('ajax/set_relationship.php', {id:target_user_id, status:status_name}, function(data) {
             // Callback function
             if (data == 'success') {
