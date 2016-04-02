@@ -104,25 +104,40 @@ $status = get_relationship($user_id);
                 <?php echo (isset($profile->max_age) ? $profile->max_age : $profile->age)?>
             </p>
         </div>
-        <!-- TODO likes/dislikes -->
-        <div class="profile-field profile-likes">
-            <h3>Likes</h3>
-            <ul>
-                <li>Horse riding</li>
-                <li>Walking</li>
-                <li>Talking</li>
-                <li>Movies</li>
-            </ul>
-        </div>
 
-        <div class="profile-field profile-dislikes">
-            <h3>Dislikes</h3>
-            <ul>
-                <li>Sports</li>
-                <li>Card games</li>
-                <li>Spicy food</li>
-            </ul>
-        </div>
+        <?php
+        $likes = get_interests($user_id, true);
+
+        if (isset($likes) && !empty($likes)) {
+            echo '<div class="profile-field profile-likes">';
+                echo '<h3>Likes</h3>';
+                echo '<ul>';
+
+                foreach ($likes as $like) {
+                    echo '<li>' . $like->content . '</li>';
+                }
+
+                echo '</ul>';
+            echo '</div>';
+        }
+        ?>
+
+        <?php
+        $dislikes = get_interests($user_id, false);
+
+        if (isset($dislikes) && !empty($dislikes)) {
+            echo '<div class="profile-field profile-dislikes">';
+                echo '<h3>Dislikes</h3>';
+                echo '<ul>';
+
+                foreach ($dislikes as $dislike) {
+                    echo '<li>' . $dislike->content . '</li>';
+                }
+
+                echo '</ul>';
+            echo '</div>';
+        }
+        ?>
 
     </div>
 </article>

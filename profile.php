@@ -2,6 +2,7 @@
 require_once 'core/init.php';
 require_once 'core/func/profiles.php';
 require_once 'core/func/users.php';
+require_once 'core/func/interests.php';
 
 verify_login();
 // TODO permissions

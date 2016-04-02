@@ -3,6 +3,7 @@ $pathToRoot = '../';
 require_once $pathToRoot.'core/init.php';
 require_once $pathToRoot.'core/func/profiles.php';
 require_once $pathToRoot.'core/func/users.php';
+require_once $pathToRoot.'core/func/interests.php';
 
 verify_login();
 

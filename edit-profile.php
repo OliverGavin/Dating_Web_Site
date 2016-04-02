@@ -1,6 +1,7 @@
 <?php
 require_once 'core/init.php';
 require_once 'core/func/profiles.php';
+require_once 'core/func/interests.php';
 
 verify_login();
 // TODO permissions and validation
@@ -30,7 +31,14 @@ if (!$can_edit) {
 }
 
 
-if (isset($_GET['action']) && $_GET['action']==='delete') {
+if (isset($_GET['delete_interest']) && !empty($_GET['delete_interest'])) {
+    // rollback if no JavaScript
+    // Validation
+    remove_interest($user_id, $_GET['delete_interest']);
+    header("Location: edit-profile.php?id=$user_id");        //TODO
+    exit();
+
+} else if (isset($_GET['action']) && $_GET['action']==='delete') {
     delete_profile($user_id);
     header("Location: profile.php");        //TODO
     exit();
@@ -42,9 +50,16 @@ if (isset($_GET['action']) && $_GET['action']==='delete') {
     $profile = new Profile($user_id);
     $profile->submit();
 
-
     if ($profile->error) {
         // TODO error
+    }
+
+    if (isset($_POST['new_interest_like']) && !empty($_POST['new_interest_like'])) {
+        add_interest($user_id, true, $_POST['new_interest_like']);
+    }
+
+    if (isset($_POST['new_interest_dislike']) && !empty($_POST['new_interest_dislike'])) {
+        add_interest($user_id, false, $_POST['new_interest_dislike']);
     }
 
 } else {
@@ -198,37 +213,77 @@ if (isset($_GET['action']) && $_GET['action']==='delete') {
                     </div>
                     <br />
 
-                    <!-- TODO likes/dislikes -->
-                    <div class="profile-field profile-likes">
-                        <h3>Likes</h3>
-                            <input type="text" value="Horse riding" />
-                            <i class="fa fa-times"></i>
-                            <br />
-                            <input type="text" value="Walking" />
-                            <i class="fa fa-times"></i>
-                            <br />
-                            <input type="text" value="Talking" />
-                            <i class="fa fa-times"></i>
-                            <br />
-                            <input type="text" value="Movies" />
-                            <i class="fa fa-times"></i>
-                            <br />
-                            <input type="text" value="" />
+                    <div id="profile-interests-container">
+                        <?php include 'core/templates/edit-profile-interests.php'; ?>
                     </div>
+                    <script>
+                        var like_input = $('#new_interest_like');
+                        var dislike_input = $('#new_interest_dislike');
 
-                    <div class="profile-field profile-dislikes">
-                        <h3>Dislikes</h3>
-                            <input type="text" value="Sports" />
-                            <i class="fa fa-times"></i>
-                            <br />
-                            <input type="text" value="Card games" />
-                            <i class="fa fa-times"></i>
-                            <br />
-                            <input type="text" value="Spicy food" />
-                            <i class="fa fa-times"></i>
-                            <br />
-                            <input type="text" value="" />
-                    </div>
+                        // Sets up listeners
+                        function init() {
+
+                            like_input = $('#new_interest_like');
+
+                            like_input.keyup(function(e){
+                                if(e.keyCode == 13)
+                                {
+                                    add_interest(like_input, 'like');
+                                }
+                            });
+
+                            dislike_input = $('#new_interest_dislike');
+
+                            dislike_input.keyup(function(e){
+                                if(e.keyCode == 13)
+                                {
+                                    add_interest(dislike_input, 'dislike');
+                                }
+                            });
+
+                        }
+
+                        // Blocks enter key submit
+                        $(window).keydown(function(e){
+                            if(e.keyCode == 13) {
+                                e.preventDefault();
+                                return false;
+                            }
+                            init();
+                        });
+
+                        // remove
+                        function remove_interest(el, interest_id) {
+                            event.preventDefault();
+                            var id = <?=$user_id?>;
+                            $.post('ajax/add_remove_interest.php', {id:id, delete_interest:interest_id}, function(data) {
+                                // Callback function
+                                if (data == 'success') {
+                                    $(el).parent().remove();
+                                }
+                            });
+                        }
+
+                        // add and reload
+                        function add_interest(el, likes) {
+                            var id = <?=$user_id?>;
+                            $.post('ajax/add_remove_interest.php', {id:id, add_interest:el.val(), likes:likes}, function(data) {
+                                // Callback function
+                                if (data != 'failed') {
+                                    // swap
+                                    $('#profile-interests-container').html(data);
+                                    init();
+                                    if (likes == 'like') {
+                                        like_input.focus();
+                                    } else {
+                                        dislike_input.focus();
+                                    }
+                                }
+                            });
+                        }
+
+
+                    </script>
 
                     <input type="submit" name="action" value="Save">
 
