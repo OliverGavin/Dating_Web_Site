@@ -1,81 +1,160 @@
 <?php
-	//You might just want to hard code the values and just run roles.php and forget the function for now.
-function user_can($permission)
-{
+// Constants useful for IDE auto-complete and refactoring
+DEFINE('PERM_DELETE_USERS',				'delete_users');
+DEFINE('PERM_BAN_USERS',				'ban_users');
+DEFINE('PERM_EDIT_USERS',				'edit_users');
+DEFINE('PERM_LIST_USERS',				'list_users');
+DEFINE('PERM_EDIT_OTHERS_PROFILE',		'edit_others_profile');
+DEFINE('PERM_DELETE_OTHERS_PROFILE',	'delete_others_profile');
+DEFINE('PERM_VIEW_ADMIN_DASHBOARD',		'view_admin_dashboard');
+DEFINE('PERM_CREATE_PROFILE',			'create_profile');
+DEFINE('PERM_EDIT_PROFILE',				'edit_profile');
+DEFINE('PERM_VIEW_PROFILES',			'view_profiles');
+DEFINE('PERM_SEND_MESSAGES',			'send_messages');
+DEFINE('PERM_DELETE_PROFILE',			'delete_profile');
+DEFINE('PERM_SEARCH_PROFILES',			'search_profiles');
+DEFINE('PERM_EDIT_SETTINGS',			'edit_settings');
+DEFINE('PERM_VIEW_USER_DASHBOARD',		'view_user_dashboard');
+
+DEFINE('ROLE_ADMIN',			'Admin');
+DEFINE('ROLE_BANNED',			'Banned');
+DEFINE('ROLE_DELETED',			'Deleted');
+DEFINE('ROLE_FREE',				'Free');
+DEFINE('ROLE_PAID',				'Paid');
+DEFINE('ROLE_SUPER_ADMIN',		'Super admin');
+
+
+function user_can($permission, $user_id = null) {
+
 	global $db;
-    	$user_id = $_SESSION['user_id']; //could pass in the user id with the permission an set it to null
-	
-	//MYSQLI
-	
+	if ($user_id == null)
+		// defaults to the current user
+    	$user_id = $_SESSION['user_id'];
+
 	$db->real_escape_string($permission);
 
-	$query = $db->prepare("SELECT CAST(? AS unsigned integer) FROM `users` NATURAL JOIN `roles` WHERE `user_id` = ?");
-	
-	$query->bind_param('si', $permission, $user_id);
+	// The problem was that a string was passed in the select part for an attribute
+	// SQL->				SELECT 'edit_settings' FROM....
+	// When it should be	SELECT  edit_settings FROM....
+	// Prepared statements cannot do this:
+	// http://stackoverflow.com/questions/11312737/can-i-parameterize-the-table-name-in-a-prepared-statement
+	// It's ok as the data will always be safe from sql injection as the user never submits this parameter
+	// $db->real_escape_string($permission); does the job even though it isn't hugely needed
+	$query = $db->prepare("SELECT ".$permission." FROM `users` NATURAL JOIN `roles` WHERE `user_id` = ?");
+
+	if ($db->error) {
+		// An error may occur if the permission does not exist
+		return false;
+	}
+
+	$query->bind_param('i', $user_id);
 	
 	$query->execute();
 	
-	$query->bind_result($role);
-	
-	while($query->fetch()){
-		echo $role . '<br />'; //i think the problem might be here it always echos 0.
-	}
-	
-	/*if(!$role)
-	{
-		$result = FALSE;
-	}*/
-	
-	/*I was just trying everything i used === to try and find out what type
-	$role and $query were giving me obviously you can change them to ==*/
-	
-	if($role === 1)//IF 1
-	{
-		$result = true;
-		echo "TRUE role <br />";
-	}
-	else if($role === 0)
-	{
-		$result = FALSE;
-		echo "FALSE role <br />";
-	}
-	
-	if($role === "1")//IF 2
-	{
-		$result = true;
-		echo "TRUE role String <br />";
-	}
-	else if($role === "0")
-	{
-		$result = FALSE;
-		echo "FALSE role String<br />";
-	}
-	
-	if($query === TRUE)//IF 3
-	{
-		$result = true;
-		echo "TRUE query <br />";
-	}
-	else if($query === FALSE)
-	{
-		$result = FALSE;
-		echo "FALSE query <br />";
-	}
-	
-	if($query === 1)//IF 4
-	{
-		$result = true;
-		echo "TRUE query no <br />";
-	}
-	else if($query === 0)
-	{
-		$result = FALSE;
-		echo "FALSE query no <br />";
-	}
+	$query->bind_result($can);
+
+	$query->fetch();
 	
 	$query->free_result();
 	
-	return $result;
+	return $can;
+}
+
+//// To test...
+//if (user_can(PERM_EDIT_OTHERS_PROFILE)) {
+//	echo 'can';
+//} else {
+//	echo 'can\'t';
+//}
+//echo '<br>';
+//if (user_is_at_least_role(ROLE_BANNED)) {
+//	echo 'is';
+//} else {
+//	echo 'isn\'t';
+//}
+
+// Gets a users role name
+function get_user_role_name($user_id = null) {
+
+	global $db;
+	if ($user_id == null)
+		// defaults to the current user
+		$user_id = $_SESSION['user_id'];
+
+	$query = $db->prepare("SELECT name FROM `users` NATURAL JOIN `roles` WHERE `user_id` = ?");
+
+	$query->bind_param('i', $user_id);
+
+	$query->execute();
+
+	$query->bind_result($name);
+
+	$query->fetch();
+
+	$query->free_result();
+
+	return $name;
+}
+
+// Gets a users role weight
+function get_user_role_weight($user_id = null) {
+
+	global $db;
+	if ($user_id == null)
+		// defaults to the current user
+		$user_id = $_SESSION['user_id'];
+
+	$query = $db->prepare("SELECT weight FROM `users` NATURAL JOIN `roles` WHERE `user_id` = ?");
+
+	$query->bind_param('i', $user_id);
+
+	$query->execute();
+
+	$query->bind_result($weight);
+
+	$query->fetch();
+
+	$query->free_result();
+
+	return $weight;
+}
+
+// Gets the weight of a role
+function get_role_weight($role) {
+
+	global $db;
+
+	$query = $db->prepare("SELECT weight FROM `roles` WHERE `name` = ?");
+
+	$query->bind_param('s', $role);
+
+	$query->execute();
+
+	$query->bind_result($weight);
+
+	$query->fetch();
+
+	$query->free_result();
+
+	return $weight;
+}
+
+// Checks if a user has a certain role
+function user_is_role($role, $user_id = null) {
+	if ($user_id == null)
+		// defaults to the current user
+		$user_id = $_SESSION['user_id'];
+
+	return get_user_role_weight($user_id) === get_role_weight($role);
+}
+
+// Checks if a user has at least a certain role
+function user_is_at_least_role($role, $user_id = null) {
+	if ($user_id == null)
+		// defaults to the current user
+		$user_id = $_SESSION['user_id'];
+
+	return get_user_role_weight($user_id) >= get_role_weight($role);
 }
 
 ?>

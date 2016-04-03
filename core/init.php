@@ -20,6 +20,7 @@ if (isset($pathToRoot)) {
 }
 require_once $initPathToRoot.'db/connect.php';
 require_once $initPathToRoot.'func/session.php';
+require_once $initPathToRoot.'func/roles.php';
 require_once $initPathToRoot.'func/functions.php';
 require_once $initPathToRoot.'func/navigation.php';
 
