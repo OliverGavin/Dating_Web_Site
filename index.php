@@ -30,7 +30,7 @@ require_once 'core/init.php';
 			?>
 
 			<form action="<?php echo $_SERVER['PHP_SELF'] . '?login=1' . $redirect?>" method="post" onSubmit="">
-				<input class="textbox" type="text" size="30" placeholder="Email" name="email"><br>
+				<input class="textbox" type="email" size="30" placeholder="Email" name="email"><br>
 				<input class="textbox" type="password" size="30" placeholder="Password" name="password">
 
 			<!-- SHOW / HIDE STARTS HERE -->

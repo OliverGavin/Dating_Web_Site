@@ -150,6 +150,8 @@ body {
 .style-rounded-dark label.visible,
 .style-rounded-dark .numeric-field-range,
 .style-rounded-dark input[type='text'],
+.style-rounded-dark input[type='email'],
+.style-rounded-dark input[type='password'],
 .style-rounded-dark select,
 .style-rounded-dark input[type='number'],
 .style-rounded-dark input[type='submit'] {
@@ -169,7 +171,9 @@ body {
     outline:0;
 }
 
-.style-rounded-dark input[type="text"] {
+.style-rounded-dark input[type="text"],
+.style-rounded-dark input[type="email"],
+.style-rounded-dark input[type="password"] {
     padding-left: 10px;
 }
 
@@ -746,26 +750,13 @@ font-size: 26px;
 	}
 .generalSettings form {
 	width: 500px;
-	text-align: center;
+	/*text-align: right;*/
 	margin: 0 auto;
 	}
 .generalSettings label {
 	display: inline-block;
-	width: 80px;
-	text-align: left;
-	}
-.generalSettings .clear {
-	clear: both;
-	height: 0;
-	line-height: 0;
-	}
-.button{
-	-moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    border-radius: 5px;
-	font-size: 17px;
-	margin: 0 0 15px -80px;
-	background-color: #e1d9ec;
+	width: 135px;
+	/*text-align: left;*/
 	}
 
 /*--------------------------------------------------------------
