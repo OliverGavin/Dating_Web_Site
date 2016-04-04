@@ -61,7 +61,7 @@
                         'parent'    => new MenuItem("Hello, ".$_SESSION['first_name'], null, "menu-default", null, $profile_thumb_extra),
                         'child'     => array(
                                             array(
-                                                'parent'    => new MenuItem("Dashboard", null, null, null, null)
+                                                'parent'    => new MenuItem("Dashboard", "dashboard.php", null, null, null)
                                             ),
                                             array(
                                                 'parent'    => new MenuItem("My Profile", "profile.php", null, null, null)
