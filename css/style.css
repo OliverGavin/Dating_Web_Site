@@ -644,8 +644,6 @@ body {
     display: inline-block;
     text-align: center;
     box-shadow: rgba(97, 97, 97, 0.4) 0 0 10px 0;
-    border: none !important;
-    cursor: pointer !important;
 }
 
 .profile .profile-actions .action p,
@@ -746,6 +744,8 @@ font-size: 26px;
     float: right;
     margin-top: -40px;
     margin-right: 10px;
+    border: none !important;
+    cursor: pointer !important;
 }
 
 .edit-profile button.action-save:focus {

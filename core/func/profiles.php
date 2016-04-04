@@ -263,9 +263,13 @@ function delete_profile($user_id) {
 
 }
 
+function get_all_profiles() {
+    return get_profiles('', array(), '', '', '');
+}
+
 // Gets profiles based on the query passed
 // A SQL injection safe query is built using prepared statements
-function get_profiles($query_stmt_parts, $query_param_values, $query_param_types) {
+function get_profiles($query_stmt_parts, $query_param_values, $query_param_types, $query_join_parts, $query_end_parts) {
     global $db;
 
     // Default
@@ -274,10 +278,11 @@ function get_profiles($query_stmt_parts, $query_param_values, $query_param_types
     $param_types = 'i';
 
     // Check that the query passed has the same amount of params and values
-    if (count($query_param_values) > 0 && count($query_param_values) == substr_count($query_stmt_parts, '?')) {
-        $query_parts  = " AND ".$query_stmt_parts;
-        $param_values = array_merge($param_values, $query_param_values);
-        $param_types  = $param_types . $query_param_types;
+    if (count($query_param_values) > 0
+        && count($query_param_values) == substr_count($query_stmt_parts, '?')+substr_count($query_join_parts, '?')) {
+            $query_parts  = $query_stmt_parts.' AND ';
+            $param_values = array_merge($query_param_values, $param_values);
+            $param_types  = $query_param_types . $param_types;
     }
 
     //First parameter of mysqli bind_param
@@ -295,8 +300,9 @@ function get_profiles($query_stmt_parts, $query_param_values, $query_param_types
     $prepared = $db->prepare("
               SELECT    user_id, first_name, last_name,
                         DOB, country, county
-              FROM users NATURAL JOIN profiles
-              WHERE user_id != ? $query_parts"
+              FROM users NATURAL JOIN profiles $query_join_parts
+              WHERE $query_parts user_id != ?
+              $query_end_parts"
     );
 
     // calls $prepared->bind_param($ref_args[0], $ref_args[1]... );
