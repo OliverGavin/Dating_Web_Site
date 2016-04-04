@@ -756,6 +756,172 @@ font-size: 26px;
     ## Dashboard
 --------------------------------------------------------------*/
 
+#featured{
+	margin: 20px 15px 0 15px;
+	width: 870px;
+	height: 150px;
+	border: 2px solid #DC086B;
+	border-radius: 25px;
+	}
+.featuredHead{
+	width: 870px;
+	height: 25px;
+	border-radius: 23px 23px 0 0;
+	background-color: #e1d9ec;
+	text-align: center;
+	}
+.featuredHead p{
+	color: #DC086B;
+	top: 4px;
+	position: relative;
+	}
+#featured img {
+	width: 80px;
+	height: 80px;
+	border-radius: 150px;
+	-webkit-border-radius: 150px;
+	-moz-border-radius: 150px;
+}
+#featured .pictures {
+  display: block;
+}
+#featured .pictures ul {
+  list-style: none;
+
+}
+#featured .pictures ul li {
+    background: #fff;
+	display: inline;
+	list-style: none;
+  	float: left;
+    margin: 8px 20px 8px 0;
+  	padding: 0;
+  	text-align:center; 
+    color: #000;
+}
+#featured .pictures ul li a {
+  display: block;
+  margin-bottom: 2px; 
+  opacity: 0.75;
+  font-size: 11px;
+  text-decoration: none;
+  letter-spacing: 1px;
+  -webkit-transition: all 0.3s linear;
+  -moz-transition: all 0.3s linear;
+  transition: all 0.3s linear;
+}
+#featured .pictures ul li a:hover {
+  opacity: 1.0;
+}
+
+#featured .pictures ul li a img {
+  border: 3px solid #e1d9ec;
+}
+#notifications{
+	margin: 15px 0 20px 15px;
+	width: 690px;
+	height: 525px;
+	border: 2px solid #DC086B;
+	border-radius: 25px;
+	float: left;
+	}
+.notificationHead{
+	width: 690px;
+	height: 25px;
+	border-radius: 23px 23px 0 0;
+	background-color: #e1d9ec;
+	text-align: center;	
+	}
+.notificationHead p{
+	color: #DC086B;
+	top: 4px;
+	position: relative;
+	}
+#notifications .notePictures{
+	float: left;
+	}
+#notifications .notePictures img {
+	width: 45px;
+	height: 45px;
+	border-radius: 150px;
+	margin: 5px;
+	-webkit-border-radius: 150px;
+	-moz-border-radius: 150px;
+	vertical-align: middle;
+	display: inline-block;
+}
+#notifications .notePictures {
+  display: block;
+}
+#notifications .notePictures ul {
+  list-style: none;
+
+}
+#notifications .notePictures ul li {
+    background: #fff;
+	list-style: none;
+    margin: 8px 20px 8px 0;
+  	padding: 0; 
+    color: #000;
+}
+#pOverview{
+	margin: 15px 0 0 15px;
+	width: 165px;
+	height: 242px;
+	border: 2px solid #DC086B;
+	border-radius: 25px;
+	float: left;
+	text-align: center;
+	}
+.pOverviewLink{
+	width: 165px;
+	height:50px;
+	border-radius: 23px 23px 0 0;
+	background-color: #e1d9ec;
+	}
+.pOverviewLink p{
+	color: #DC086B;
+	font-size: 13px;
+	}
+.fa-user{
+	color: #DC086B;
+	}
+.fa-trash{
+	color: #C00206;
+	}
+#pOverview img {
+	width: 100px;
+	height: 100px;
+	border-radius: 150px;
+	-webkit-border-radius: 150px;
+	-moz-border-radius: 150px;
+	margin: 15px 0 0 0;
+	}
+#recentlyViewedYou{
+	margin: 15px 0 20px 15px;
+	width: 165px;
+	height: 260px;
+	border: 2px solid #DC086B;
+	border-radius: 25px;
+	float: left;
+	}
+.recentlyViewedYouHead{
+	width: 165px;
+	height: 25px;
+	border-radius: 23px 23px 0 0;
+	background-color: #e1d9ec;
+	text-align: center;	
+	}
+.recentlyViewedYouHead p{
+	color: #DC086B;
+	top: 4px;
+	font-size: 13px;
+	position: relative;
+	}
+#clearDash{
+	clear: both;
+}
+
 /*--------------------------------------------------------------
     ## Settings
 --------------------------------------------------------------*/
