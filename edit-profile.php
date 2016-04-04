@@ -285,7 +285,12 @@ if (isset($_GET['delete_interest']) && !empty($_GET['delete_interest'])) {
 
                     </script>
 
-                    <input type="submit" name="action" value="Save">
+                    <button type="submit" name="action" value="Save" class="action action-save">
+                        <div class="action">
+                            <p><i class="fa fa-floppy-o"></i></p>
+                            <p>SAVE</p>
+                        </div>
+                    </button>
 
                 </div>
 

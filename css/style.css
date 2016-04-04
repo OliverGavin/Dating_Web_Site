@@ -634,7 +634,8 @@ body {
     margin-top: 50px;
 }
 
-.profile .profile-actions .action {
+.profile .profile-actions .action,
+.edit-profile .action {
     width: 60px;
     height: 60px;
     /*line-height: 100px;*/
@@ -643,25 +644,31 @@ body {
     display: inline-block;
     text-align: center;
     box-shadow: rgba(97, 97, 97, 0.4) 0 0 10px 0;
+    border: none !important;
+    cursor: pointer !important;
 }
 
-.profile .profile-actions .action p {
+.profile .profile-actions .action p,
+.edit-profile .action p {
 font-size: 10px;
 color: white;
 }
 
-.profile .profile-actions .action p .fa {
+.profile .profile-actions .action p .fa,
+.edit-profile .action p .fa {
 margin-top: 10px;
 font-size: 26px;
 }
 
 .profile .profile-actions .status-action.current-status .action,
-.profile .profile-actions .action:hover {
+.profile .profile-actions .action:hover,
+.edit-profile .action:hover {
     background-color: #333;
 }
 
 .profile .profile-actions .status-action.current-status .action p,
-.profile .profile-actions .action:hover p {
+.profile .profile-actions .action:hover p,
+.edit-profile .action:hover p {
     color: #E91E63;
 }
 
@@ -735,6 +742,15 @@ font-size: 26px;
 /*--------------------------------------------------------------
     ## Edit Profile
 --------------------------------------------------------------*/
+.edit-profile button.action-save {
+    float: right;
+    margin-top: -40px;
+    margin-right: 10px;
+}
+
+.edit-profile button.action-save:focus {
+    outline: none;
+}
 
 /*--------------------------------------------------------------
     ## Dashboard
