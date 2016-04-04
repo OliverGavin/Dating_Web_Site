@@ -24,7 +24,7 @@
         <div class="site-wrapper">
             <div class="site-branding">
                 <h1 class="site-title">
-<!--                    Swoon-->
+<!--                    Swoon--><img src="Images/logo.png">
                 </h1>
             </div>
 
