@@ -30,6 +30,9 @@ if (!$can_edit) {
     exit();
 }
 
+if(isset($_FILES['fileToUpload']) && file_exists($_FILES['fileToUpload']['tmp_name']) && is_uploaded_file($_FILES['fileToUpload']['tmp_name'])) {
+    require_once 'core/func/image-upload.php';
+}
 
 if (isset($_GET['delete_interest']) && !empty($_GET['delete_interest'])) {
     // rollback if no JavaScript
@@ -96,12 +99,13 @@ if (isset($_GET['delete_interest']) && !empty($_GET['delete_interest'])) {
                 }
             }
             ?>
-            <form action="" method="post" onSubmit="" class="style-underline">
+            <form action="" method="post" enctype="multipart/form-data" onSubmit="" class="style-underline">
                 <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
                 <div class="profile-image">
-                    <img class="profile-pic" src="<?php echo get_profile_image(500, $user_id)?>">
+                    <img class="profile-pic" src="<?php echo get_profile_image(IMG_MEDIUM, $user_id)?>">
                 </div>
                 <div class="profile-info">
+                    <input type="file" name="fileToUpload" id="fileToUpload">
                     <!--                user_id-->
                     <!--                first_name-->
                     <!--                last_name-->

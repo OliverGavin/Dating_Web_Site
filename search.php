@@ -51,7 +51,7 @@ verify_login();
                     <div id="profile_<?=$profile->user_id?>" class="search-result-profile">
                         <a href="" onclick="get_profile(<?=$profile->user_id?>)">
                             <div class="profile-image">
-                                <img class="profile-pic" src=<?php echo get_profile_image(300, $profile->user_id); ?>>
+                                <img class="profile-pic" src=<?php echo get_profile_image(IMG_SMALL, $profile->user_id); ?>>
                             </div>
 
                             <div class="profile-info">

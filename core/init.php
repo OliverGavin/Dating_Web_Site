@@ -8,6 +8,16 @@ date_default_timezone_set('GMT');
 
 define("ROOT", '//'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).'/');
 
+DEFINE('ERROR',		            "an error occurred");
+DEFINE('NOT_FOUND',		        "not found");
+DEFINE('BLOCKED',		        "user is blocked");
+DEFINE('INCORRECT_PASSWORD',	"user is blocked");
+
+DEFINE('IMG_LARGE',		500);
+DEFINE('IMG_MEDIUM',	250);
+DEFINE('IMG_SMALL',		150);
+DEFINE('IMG_THUMB',		60);
+
 // reinitialise error/success messages
 $message = array();
 $message['error'] = array();

@@ -24,14 +24,14 @@
         <div class="site-wrapper">
             <div class="site-branding">
                 <h1 class="site-title">
-<!--                    Swoon--><img src="Images/logo.png">
+<!--                    Swoon--><img src="images/logo.png">
                 </h1>
             </div>
 
             <?php
             if (is_user_logged_in()) {
                 $profile_thumb_extra = '<div class="profile-image">
-                                            <img class="profile-pic" src="' . get_profile_image(45) . '">
+                                            <img class="profile-pic" src="' . get_profile_image(IMG_THUMB) . '">
                                             <div class="profile-notification-counter">
                                                 <p>2</p>
                                             </div>

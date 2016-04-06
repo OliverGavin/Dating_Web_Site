@@ -1,23 +1,41 @@
 <?php
+/**
+ * Displays the site header
+ */
 function get_header() {
     require_once 'header.php';
 }
 
+/**
+ * Displays the site footer
+ */
 function get_footer() {
     require_once 'footer.php';
 }
 
+/**
+ * Gets the users profile image
+ * @param $size
+ * @param null $user_id
+ * @return string
+ */
 function get_profile_image($size, $user_id = null) {
     if ($user_id == null && is_user_logged_in()) $user_id = $_SESSION['user_id'];
-
-    if (false) {
-
+    $img = 'images/profiles/'.$size.'_'.$user_id.'.jpg';
+    if (file_exists($img) || file_exists('../'.$img)) {
+        return $img;
     } else {
         // no image found
+        // TODO
         return "http://offline.fcwinti.com/wp-content/uploads/default-avatar-500x550.jpg";
     }
 }
 
+/**
+ * Checks if the password for the current user is correct
+ * @param $pass
+ * @return bool
+ */
 function check_password($pass) {
     global $db;
 
@@ -31,7 +49,9 @@ function check_password($pass) {
 
     $users->bind_param('is', $user_id, $password);
 
-    $users->execute();
+    if (!$users->execute()) {
+        $message['error'][] = ERROR;
+    }
 
     $users->bind_result($count);
 
@@ -41,7 +61,7 @@ function check_password($pass) {
     $users->free_result();
 
     if ($count != 1) {
-//        array_push($message['error'], "Incorrect password");
+        $message['error'][] = INCORRECT_PASSWORD;
         return false;
     }
 

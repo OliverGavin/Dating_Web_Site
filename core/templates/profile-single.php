@@ -46,7 +46,7 @@ $status = get_relationship($user_id);
     </div>
 
     <div class="profile-image">
-        <img class="profile-pic" src="<?php echo get_profile_image(300, $user_id); ?>">
+        <img class="profile-pic" src="<?php echo get_profile_image(IMG_MEDIUM, $user_id); ?>">
         <div class="profile-actions profile-actions-good">
             <?php if (!$is_owner && !$can_edit_others) { ?>
                 <a href="<?=$_SERVER['REQUEST_URI']?>&status=LIKE" class="status-action <?=($status=='LIKE'? 'current-status':'')?>" onclick="set_relationship(<?=$user_id?>, 'LIKE', this);">
