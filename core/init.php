@@ -10,8 +10,11 @@ define("ROOT", '//'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).'/');
 
 DEFINE('ERROR',		            "an error occurred");
 DEFINE('NOT_FOUND',		        "not found");
+DEFINE('ALREADY_EXISTS',		"already exists");
 DEFINE('BLOCKED',		        "user is blocked");
-DEFINE('INCORRECT_PASSWORD',	"user is blocked");
+DEFINE('INCORRECT_PASSWORD',	"incorrect password");
+DEFINE('INCORRECT_USER_PASS',	"incorrect username or password");
+DEFINE('MISSING_FIELDS',	    "missing fields");
 
 DEFINE('IMG_LARGE',		500);
 DEFINE('IMG_MEDIUM',	250);

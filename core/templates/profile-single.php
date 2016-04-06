@@ -1,9 +1,9 @@
 <?php
 $is_owner = ($profile->user_id == $_SESSION['user_id']);
 
-// TODO add edit / edit_others permission
-$can_edit = ($is_owner && true);
-$can_edit_others = false;
+// TODO ban block report
+$can_edit = user_can(PERM_EDIT_PROFILE);
+$can_edit_others = user_can(PERM_EDIT_OTHERS_PROFILE);
 
 $status = get_relationship($user_id);
 
@@ -23,14 +23,15 @@ $status = get_relationship($user_id);
                     <p>DELETE</p>
                 </div>
             </a>
-        <?php   } else if (!$is_owner) {
+        <?php   }
+        if (!$is_owner) {
             if ($can_edit_others) { ?>
                 <div class="action action-ban">
                     <p><i class="fa fa-times"></i></p>
                     <p>BAN</p>
                 </div>
             <?php       } else { ?>
-                <a href="<?=$_SERVER['REQUEST_URI']?>&status=BLOCK" class="status-action <?=($status=='BLOCK'? 'current-status':'')?>" onclick="set_relationship(<?=$user_id?>, 'BLOCK', this);">
+                <a href="<?=$_SERVER['REQUEST_URI']?>&status=<?=BLOCK?>" class="status-action <?=($status==BLOCK? 'current-status':'')?>" onclick="set_relationship(<?=$user_id?>, '<?=BLOCK?>', this);">
                     <div class="action action-block">
                         <p><i class="fa fa-times"></i></p>
                         <p>BLOCK</p>
@@ -42,14 +43,13 @@ $status = get_relationship($user_id);
                 </div>
             <?php       }
         } ?>
-        <!-- TODO add delete and ban -->
     </div>
 
     <div class="profile-image">
         <img class="profile-pic" src="<?php echo get_profile_image(IMG_MEDIUM, $user_id); ?>">
         <div class="profile-actions profile-actions-good">
             <?php if (!$is_owner && !$can_edit_others) { ?>
-                <a href="<?=$_SERVER['REQUEST_URI']?>&status=LIKE" class="status-action <?=($status=='LIKE'? 'current-status':'')?>" onclick="set_relationship(<?=$user_id?>, 'LIKE', this);">
+                <a href="<?=$_SERVER['REQUEST_URI']?>&status=<?=LIKE?>" class="status-action <?=($status==LIKE? 'current-status':'')?>" onclick="set_relationship(<?=$user_id?>, '<?=LIKE?>', this);">
                     <div class="action action-like">
                         <p><i class="fa fa-heart"></i></p>
                         <p>LIKE</p>

@@ -16,8 +16,8 @@ $is_owner = ($user_id == $_SESSION['user_id']);
 
 
 // TODO add edit / edit_others permission
-$can_edit = ($is_owner && true);
-$can_edit_others = false;
+$can_edit = user_can(PERM_EDIT_PROFILE);
+$can_edit_others = user_can(PERM_EDIT_OTHERS_PROFILE);
 
 // Unauthorised user
 if (!$is_owner && !$can_edit_others) {
@@ -30,6 +30,7 @@ if (!$can_edit) {
     exit();
 }
 
+// TODO function
 if(isset($_FILES['fileToUpload']) && file_exists($_FILES['fileToUpload']['tmp_name']) && is_uploaded_file($_FILES['fileToUpload']['tmp_name'])) {
     require_once 'core/func/image-upload.php';
 }
@@ -43,7 +44,7 @@ if (isset($_GET['delete_interest']) && !empty($_GET['delete_interest'])) {
 
 } else if (isset($_GET['action']) && $_GET['action']==='delete') {
     delete_profile($user_id);
-    header("Location: profile.php");        //TODO
+    header("Location: dashboard.php");
     exit();
 
 } else if (isset($_POST['action']) && $_POST['action']==='Save') {
@@ -92,13 +93,6 @@ if (isset($_GET['delete_interest']) && !empty($_GET['delete_interest'])) {
 <div id="primary" class="content-area">
     <main id="main" class="site-main" role="main">
         <article>
-            <?php
-            if (isset($message['error'])) {
-                foreach ($message['error'] as $error) {
-                    echo 'Error: ' . $error;
-                }
-            }
-            ?>
             <form action="" method="post" enctype="multipart/form-data" onSubmit="" class="style-underline">
                 <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
                 <div class="profile-image">

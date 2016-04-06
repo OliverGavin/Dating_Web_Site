@@ -1,4 +1,8 @@
 <?php
+
+/**
+ * Class Profile represents a users profile
+ */
 class Profile {
 
     public $user_id;
@@ -48,11 +52,9 @@ class Profile {
         $prepared->bind_param('isi', $this->user_id, $this->DOB, $this->sex); //s - string
 
         if (!$prepared->execute()) {
-            $this->error_push('failed');
+            $this->error_push(ERROR);
             return;
         }
-
-        // TODO error check
 
         return;
     }
@@ -71,8 +73,11 @@ class Profile {
 
         $prepared->bind_param('s', $this->user_id);
 
-        $prepared->execute();
-        // TODO error detection
+        if (!$prepared->execute()) {
+            $this->error_push(ERROR);
+            return false;
+        }
+
         $prepared->bind_result(
             $this->first_name,
             $this->last_name,
@@ -87,12 +92,9 @@ class Profile {
             $this->date_time_updated
         );
 
-        $success = $prepared->fetch();
-
-        if (!$success) {
-            $this->error_push('Not found???');
-            return;
-            // TODO error message.. not found
+        if (!$prepared->fetch()) {
+            $this->error_push(NOT_FOUND);
+            return false;
         }
 
         $this->DOB = date_create($DOB);
@@ -102,7 +104,7 @@ class Profile {
 
         $this->age = date_diff($this->DOB, date_create('now'))->y;
 
-        return;
+        return true;
     }
 
     // Updates a profile for a given user_id
@@ -115,7 +117,7 @@ class Profile {
         }
 
         // Submit changes to DB
-
+        // TODO remove and use Profile?
         $this->first_name     =   $_POST['first_name'];
         $this->last_name      =   $_POST['last_name'];
         $this->DOB_day        =   $_POST['DOB_day'];
@@ -129,9 +131,7 @@ class Profile {
         $this->looking_for    =   $_POST['looking_for'];
         $this->min_age        =   $_POST['min_age'];
         $this->max_age        =   $_POST['max_age'];
-//        $this->date_time_updated  =   date_create()->format("Y-m-d h:i:s");
 
-        // TODO validation? and create
         $prepared = $db->prepare("
               UPDATE users
               SET first_name = ?, last_name = ?
@@ -139,7 +139,11 @@ class Profile {
             ");
 
         $prepared->bind_param('ssi', $this->first_name, $this->last_name, $this->user_id);
-        $prepared->execute();
+
+        if (!$prepared->execute()) {
+            $this->error_push(ERROR);
+            return false;
+        }
 
         $prepared = $db->prepare("
               UPDATE profiles
@@ -158,40 +162,48 @@ class Profile {
             $this->looking_for,
             $this->min_age,
             $this->max_age,
-//            $this->date_time_updated,
             $this->user_id
         );
 
-        $prepared->execute();
+        if (!$prepared->execute()) {
+            $this->error_push(ERROR);
+            return false;
+        }
 
-        // TODO errors
-
-        $_SESSION['first_name'] = $this->first_name;
-        $_SESSION['last_name'] = $this->last_name;
+        if ($this->user_id == $_SESSION['user_id']) {
+            $_SESSION['first_name'] = $this->first_name;
+            $_SESSION['last_name'] = $this->last_name;
+        }
 
         return true;
     }
 
 }
 
+
+/**
+ * Gets the profile of a user
+ * @param $user_id
+ * @return bool|Profile
+ */
 function get_profile($user_id) {
+    global $message;
 
     if (!exists_profile($user_id)) {
-        //
+        $message['error'][] = NOT_FOUND;
         return false;
     }
 
     $is_blocked_by_owner = false;           // TODO
     // Unauthorised user - blocked
     if ($is_blocked_by_owner) {
-//        header("Location: 401.php");        //TODO errors
+        $message['error'][] = BLOCKED;
         return false;
     }
 
-    $can_view = true;   // TODO permissions
-    // Authorised, but not permitted to view (upgrade required)
-    if (!$can_view) {
-//        header("Location: upgrade.php");
+    if (!user_can(PERM_VIEW_PROFILES)) {
+        // Authorised, but not permitted to view (upgrade required)
+        $message['error'][] = MSG_UPGRADE_REQUIRED;
         return false;
     }
 
@@ -199,7 +211,7 @@ function get_profile($user_id) {
     $profile->fetch();
 
     if ($profile->error) {
-//        header("Location: 404.php");
+//        header("Location: 404.php");      // TODO
         return false;
     }
 
@@ -211,8 +223,14 @@ function submit_profile() {
 
 }
 
+/**
+ * Checks if a profile exists
+ * @param $user_id
+ * @return bool
+ */
 function exists_profile($user_id) {
     global $db;
+    global $message;
 
     $prepared = $db->prepare("
             SELECT `user_id`
@@ -220,27 +238,36 @@ function exists_profile($user_id) {
             WHERE user_id=?
     ");
 
-    if ($prepared){
+    $prepared->bind_param("i", $user_id);
 
-        $prepared->bind_param("i", $user_id);
-
-        if($prepared->execute()){
-            $prepared->store_result();
-            $prepared->bind_result($id);
-            $prepared->fetch();
-
-            if ($prepared->num_rows == 1){
-                return true;
-            }
-        }
+    if (!$prepared->execute()) {
+        $message['error'][] = ERROR;
+        return false;
     }
-    return false;
+
+    $prepared->store_result();
+    $prepared->bind_result($id);
+    $prepared->fetch();
+
+    if ($prepared->num_rows != 1){
+        $message['error'][] = NOT_FOUND;
+        return false;
+    }
+
+    return true;
 }
 
+/**
+ * Deletes a profile
+ * @param $user_id
+ * @return bool
+ */
 function delete_profile($user_id) {
+    global $message;
+
     // TODO permissions
     if (!exists_profile($user_id)) {
-        //
+        $message['error'][] = NOT_FOUND;
         return false;
     }
 
@@ -251,15 +278,14 @@ function delete_profile($user_id) {
             WHERE user_id=?
     ");
 
-    if ($prepared){
+    $prepared->bind_param("i", $user_id);
 
-        $prepared->bind_param("i", $user_id);
-
-        if($prepared->execute()){
-            return true;
-        }
+    if(!$prepared->execute()){
+        $message['error'][] = ERROR;
+        return false;
     }
-    return false;
+
+    return true;
 
 }
 
@@ -267,10 +293,24 @@ function get_all_profiles() {
     return get_profiles('', array(), '', '', '');
 }
 
-// Gets profiles based on the query passed
-// A SQL injection safe query is built using prepared statements
+/**
+ * Gets profiles based on the query passed
+ * A SQL injection safe query is built using prepared statements
+ * @param string $query_stmt_parts         SQL in WHERE clause
+ * @param array  $query_param_values       list of values to bind
+ * @param string $query_param_types        value types e.g. 'issis'
+ * @param string $query_join_parts         SQL in JOIN clause
+ * @param string $query_end_parts          SQL after WHERE clause
+ * @return array|boolean                   false on error
+ */
 function get_profiles($query_stmt_parts, $query_param_values, $query_param_types, $query_join_parts, $query_end_parts) {
     global $db;
+    global $message;
+    // TODO refactor
+    if (!user_can(PERM_VIEW_PROFILES)) {
+        $message['error'][] = MSG_PERMISSION_DENIED;
+        return false;
+    }
 
     // Default
     $query_parts = "";
@@ -293,7 +333,7 @@ function get_profiles($query_stmt_parts, $query_param_values, $query_param_types
         $ref_args[] = &$param_values[$key];
 
 
-    // TODO check permissions and if blocked
+    // TODO check if blocked
     $profiles = array();
 
     // TODO add limit and ignore list??
@@ -308,17 +348,11 @@ function get_profiles($query_stmt_parts, $query_param_values, $query_param_types
     // calls $prepared->bind_param($ref_args[0], $ref_args[1]... );
     call_user_func_array(array($prepared, 'bind_param'), $ref_args);
 
-    $prepared->execute();
-
-    $prepared->store_result();
-
-    if ($prepared->num_rows == 0){
-//        TODO
-//        error_push('Not found???');
-//        return null;
+    if (!$prepared->execute()) {
+        $message['error'][] = ERROR;
+        return false;
     }
 
-    // TODO error detection
     $prepared->bind_result(
         $user_id,
         $first_name,

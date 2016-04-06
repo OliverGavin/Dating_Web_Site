@@ -1,12 +1,24 @@
 <?php
 
+/**
+ * Class MenuItem represents a particular item in a navigation menu
+ */
 class MenuItem {
+
     public $title;
     public $link;
     public $class;
     public $counter;
     public $extra_html;
 
+    /**
+     * MenuItem constructor.
+     * @param $title
+     * @param null $link
+     * @param null $class
+     * @param null $counter
+     * @param null $extra_html
+     */
     public function __construct($title, $link=null, $class=null, $counter=null, $extra_html=null) {
         $this->title = $title;
         $this->link = $link;
@@ -16,6 +28,10 @@ class MenuItem {
     }
 }
 
+/**
+ * Recursively generates multilevel menus
+ * @param MenuItem[]|array $menu_items
+ */
 function create_navigation_menu_items($menu_items) {
     $current_script_name = basename($_SERVER["SCRIPT_FILENAME"]);
     foreach ($menu_items as $item) {

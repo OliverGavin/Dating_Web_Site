@@ -39,7 +39,7 @@
 
                 $notifications_extra = '<div class="scroll"><div style="height: 600px">Add here!</div></div>';
                 $messages_extra = '<div class="scroll"><div style="height: 600px">Add here!</div></div>';
-
+                // TODO permissions
                 $menu_items = array(
                     array(
                         'parent'    => new MenuItem('<i class="fa fa-comments"></i>', null, "menu-messages", null, null),

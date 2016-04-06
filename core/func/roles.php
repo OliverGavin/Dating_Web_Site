@@ -23,7 +23,16 @@ DEFINE('ROLE_FREE',				'Free');
 DEFINE('ROLE_PAID',				'Paid');
 DEFINE('ROLE_SUPER_ADMIN',		'Super admin');
 
+DEFINE('MSG_PERMISSION_DENIED',		"permission denied");
+DEFINE('MSG_UPGRADE_REQUIRED',		"upgrade required");
 
+
+/**
+ * Checks if a user has a permission
+ * @param string			$permission
+ * @param integer|null		$user_id
+ * @return bool				true if the user can
+ */
 function user_can($permission, $user_id = null) {
 
 	global $db;
@@ -56,7 +65,7 @@ function user_can($permission, $user_id = null) {
 	$query->fetch();
 	
 	$query->free_result();
-	
+
 	return $can;
 }
 
@@ -73,7 +82,11 @@ function user_can($permission, $user_id = null) {
 //	echo 'isn\'t';
 //}
 
-// Gets a users role name
+/**
+ * Gets a users role name
+ * @param integer|null $user_id
+ * @return string
+ */
 function get_user_role_name($user_id = null) {
 
 	global $db;
@@ -96,7 +109,11 @@ function get_user_role_name($user_id = null) {
 	return $name;
 }
 
-// Gets a users role weight
+/**
+ * Gets a users role weight
+ * @param integer|null $user_id
+ * @return integer
+ */
 function get_user_role_weight($user_id = null) {
 
 	global $db;
@@ -119,7 +136,11 @@ function get_user_role_weight($user_id = null) {
 	return $weight;
 }
 
-// Gets the weight of a role
+/**
+ * Gets the weight of a role
+ * @param $role
+ * @return mixed
+ */
 function get_role_weight($role) {
 
 	global $db;
@@ -140,6 +161,11 @@ function get_role_weight($role) {
 }
 
 // Checks if a user has a certain role
+/**
+ * @param $role
+ * @param integer|null $user_id
+ * @return integer
+ */
 function user_is_role($role, $user_id = null) {
 	if ($user_id == null)
 		// defaults to the current user
@@ -149,6 +175,11 @@ function user_is_role($role, $user_id = null) {
 }
 
 // Checks if a user has at least a certain role
+/**
+ * @param string $role
+ * @param integer|null $user_id
+ * @return bool
+ */
 function user_is_at_least_role($role, $user_id = null) {
 	if ($user_id == null)
 		// defaults to the current user
@@ -157,4 +188,7 @@ function user_is_at_least_role($role, $user_id = null) {
 	return get_user_role_weight($user_id) >= get_role_weight($role);
 }
 
+function set_user_role() {
+	// TODO
+}
 ?>

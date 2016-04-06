@@ -1,5 +1,7 @@
 <?php
 require_once 'core/init.php';
+
+// TODO redirect to dashboard if logged in
 ?>
 
 <?php get_header(); ?>

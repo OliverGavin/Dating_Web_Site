@@ -1,21 +1,30 @@
 <?php
-function get_interest() {
-
-}
-
+/**
+ * Adds a like/dislike for a user
+ * @param integer $user_id      the user's id for which to add the like/dislike
+ * @param boolean $likes        true for a like, false for a dislike
+ * @param string $content       what the interest is
+ * @return bool                 true on success, false on error/permission denied
+ */
 function add_interest($user_id, $likes, $content) {
     global $db;
 
-    $content = ucfirst($content);
-
     $is_owner = ($user_id == $_SESSION['user_id']);
-    $can_edit_others = false;   // TODO change to admin?
 
-    if (!$is_owner && !$can_edit_others) {
+    if (!$is_owner && !user_can(PERM_EDIT_OTHERS_PROFILE)) {
         // Owner or admin are allowed to make this change
         // Exit otherwise
+        $message['error'][] = MSG_PERMISSION_DENIED;
         return false;
     }
+    if (!user_can(PERM_EDIT_PROFILE)) {
+        // Owner must be allowed to edit their profile
+        // Exit otherwise
+        $message['error'][] = MSG_UPGRADE_REQUIRED;
+        return false;
+    }
+
+    $content = ucfirst($content);
 
     $prepared = $db->prepare("
             CALL add_interest( ?, ?, ? );
@@ -24,7 +33,7 @@ function add_interest($user_id, $likes, $content) {
     $prepared->bind_param('iis', $user_id, $likes, $content);
 
     if (!$prepared->execute()) {
-        // error push('failed');
+        $message['error'][] = 'an error occurred';
         return false;
     }
 
@@ -32,15 +41,27 @@ function add_interest($user_id, $likes, $content) {
 
 }
 
+/**
+ * Removes a like/dislike for a user
+ * @param integer $user_id      the user's id for which to remove the like/dislike
+ * @param $interests_id         the id of the like/dislike which is to be removed
+ * @return bool                 true on success, false on error/permission denied
+ */
 function remove_interest($user_id, $interests_id) {
     global $db;
 
     $is_owner = ($user_id == $_SESSION['user_id']);
-    $can_edit_others = false;   // TODO change to admin?
 
-    if (!$is_owner && !$can_edit_others) {
+    if (!$is_owner && !user_can(PERM_EDIT_OTHERS_PROFILE)) {
         // Owner or admin are allowed to make this change
         // Exit otherwise
+        $message['error'][] = MSG_PERMISSION_DENIED;
+        return false;
+    }
+    if (!user_can(PERM_EDIT_PROFILE)) {
+        // Owner must be allowed to edit their profile
+        // Exit otherwise
+        $message['error'][] = MSG_UPGRADE_REQUIRED;
         return false;
     }
 
@@ -52,7 +73,7 @@ function remove_interest($user_id, $interests_id) {
     $prepared->bind_param('ii', $user_id, $interests_id);
 
     if (!$prepared->execute()) {
-        // error push('failed');
+        $message['error'][] = 'an error occurred';
         return false;
     }
 
@@ -61,8 +82,19 @@ function remove_interest($user_id, $interests_id) {
 }
 
 
+/**
+ * Gets all the users like/dislikes (interests)
+ * @param $user_id          the user's id for which we are getting the likes of
+ * @param null $likes       true to return like only, false to return dislikes only
+ * @return array            a list of interests
+ */
 function get_interests($user_id, $likes = null) {  // TODO add extra query conditions? sorting?
     global $db;
+
+    if (!user_can(PERM_VIEW_PROFILES)) {
+        $message['error'][] = MSG_PERMISSION_DENIED;
+        return false;
+    }
 
     $query_parts  = "";
     if (isset($likes))
@@ -80,8 +112,11 @@ function get_interests($user_id, $likes = null) {  // TODO add extra query condi
 
     $prepared->bind_param('i', $user_id);
 
-    $prepared->execute();
-    // TODO error detection
+    if (!$prepared->execute()) {
+        $message['error'][] = ;
+        return false;
+    }
+
     $prepared->bind_result(
         $interests_id,
         $likes,

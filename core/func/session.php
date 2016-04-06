@@ -19,7 +19,7 @@ else if (isset($_GET['login']) && isset($_POST['action'])) {
     }
 }
 
-function logout() {
+function logout($timeout = null) {
 
     unset($_SESSION);
 
@@ -31,7 +31,12 @@ function logout() {
     session_destroy();
 
     // redirect to the main page
-    header('Location: index.php');
+    if ($timeout) {
+        $current_page = $_SERVER['REQUEST_URI'];
+        header("Location: index.php?timeout=true&redirect=$current_page");
+    } else {
+        header('Location: index.php');
+    }
     exit();
 
 }
@@ -63,7 +68,7 @@ function login() {
         $users->free_result();
 
         if (!$user_id) {
-            array_push($message['error'], "Login failed");
+            array_push($message['error'], INCORRECT_USER_PASS);
             return;
         }
 
@@ -121,15 +126,15 @@ function register() {
         } else {
             // Error code 1062 - duplicate
             if($prepared->errno === 1062) {
-                array_push($message['error'], "Sorry, this email already exists");
+                array_push($message['error'], ALREADY_EXISTS);
             } else if ($prepared->errno) {
-                array_push($message['error'], "Sorry, an error occurred");
+                array_push($message['error'], ERROR);
             }
         }
 
         $prepared->free_result();
     } else {
-        array_push($message['error'], "Sorry, please fill all the fields");
+        array_push($message['error'], MISSING_FIELDS);
     }
 
 }
@@ -153,7 +158,7 @@ function verify_login() {
         $timeout = 60*60*0.5;   // 30 minutes
         if (isset($_SESSION['LAST_REQUEST']) && (time() - $_SESSION['LAST_REQUEST'] > $timeout)) {
             // last request was more than 30 minutes ago
-            logout();
+            logout(true);
         }
         $_SESSION['LAST_REQUEST'] = time();
 

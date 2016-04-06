@@ -38,6 +38,7 @@ function get_profile_image($size, $user_id = null) {
  */
 function check_password($pass) {
     global $db;
+    global $message;
 
     $user_id = $_SESSION['user_id'];
     $password = hash("sha256", $pass, false);
