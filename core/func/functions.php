@@ -27,7 +27,7 @@ function get_profile_image($size, $user_id = null) {
     } else {
         // no image found
         // TODO
-        return "http://offline.fcwinti.com/wp-content/uploads/default-avatar-500x550.jpg";
+        return 'images/'.$size.'_default.jpg';
     }
 }
 
