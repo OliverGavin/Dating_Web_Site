@@ -50,10 +50,10 @@ if (isset($_POST['sex'])) $search_sex = $_POST['sex'];
 else                                    $search_sex = ($current_user_profile->looking_for ?: !$current_user_profile->sex);
 
 if (isset($_POST['min_age'])) $search_min_age = $_POST['min_age'];
-else                                    $search_min_age = ($current_user_profile->min_age ?: $current_user_profile->age - 5);
+else                                    $search_min_age = (isset($current_user_profile->min_age) ? $current_user_profile->min_age : (isset($current_user_profile->age) ? max($current_user_profile->age - 5, 18) : 18) );
 
 if (isset($_POST['max_age'])) $search_max_age = $_POST['max_age'];
-else                                    $search_max_age = ($current_user_profile->max_age ?: $current_user_profile->age + 5);
+else                                    $search_max_age = (isset($current_user_profile->max_age) ? $current_user_profile->max_age : (isset($current_user_profile->age) ? min($current_user_profile->age + 5, 100) : 100) );
 
 ?>
 
@@ -106,7 +106,7 @@ if (isset($search_text) && !empty($search_text)) {
         RIGHT JOIN
             (SELECT user_id, COUNT(*) as like_score
              FROM profile_interests LEFT JOIN interests USING(interests_id)
-             WHERE  MATCH (content) AGAINST (?)
+             WHERE  MATCH (content) AGAINST (?) AND likes = TRUE
              GROUP BY user_id) t USING(user_id)
         ";
 
@@ -130,5 +130,8 @@ if (isset($search_text) && !empty($search_text)) {
     $query_end_part = " ORDER BY like_score DESC";
     $query = query_add($query, null, null, null, null, $query_end_part);
 }
+
+// Search using query built
+$profiles = get_profiles($query->stmt_parts, $query->param_values, $query->param_types, $query->join_parts, $query->end_parts);
 
 ?>

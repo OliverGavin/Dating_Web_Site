@@ -1,0 +1,123 @@
+<?php   // TODO refactor and add reverse checks
+/**
+ * Builds query parts ready for use with prepared statements
+ * @param object $query
+ * @param string $stmt_part
+ * @param array|integer $param_value
+ * @param string $param_type
+ * @param string $join_part
+ * @return object mixed
+ */
+function query_add($query, $stmt_part, $param_value = null, $param_type = null, $join_part = null, $end_part = null) {
+
+    $query->stmt_parts  .= ' '.$stmt_part;
+    if (isset($param_value) && isset($param_type)) {
+        if (is_array($param_value)) {
+            $query->param_values = array_merge($query->param_values, $param_value);
+        } else {
+            array_push($query->param_values, $param_value);
+        }
+        $query->param_types .= $param_type;
+    }
+    $query->join_parts  .= $join_part;
+    $query->end_parts  .= $end_part;
+
+    return $query;
+}
+
+$query = (object) array(
+    'stmt_parts'   => '',
+    'param_values' => array(),
+    'param_types'  => '',
+    'join_parts'  => '',
+    'end_parts'  => ''
+);
+
+// Load users preferences as the default search values
+$current_user_id = $_SESSION['user_id'];
+$current_user_profile = new Profile($current_user_id);
+
+if (!$current_user_profile->fetch()) {
+    echo 'You need to create a profile first!';
+    $profiles = null;
+} else {
+
+
+    $search_text = null;
+    $search_sex = null;
+    $search_min_age = null;
+    $search_max_age = null;
+
+    if (isset($_POST['search_text'])) $search_text = $_POST['search_text'];
+    else                                    $search_text = "";
+
+    if (isset($_POST['sex'])) $search_sex = $_POST['sex'];
+    else                                    $search_sex = ($current_user_profile->looking_for ?: !$current_user_profile->sex);
+
+    if (isset($_POST['min_age'])) $search_min_age = $_POST['min_age'];
+    else                                    $search_min_age = (isset($current_user_profile->min_age) ? $current_user_profile->min_age : (isset($current_user_profile->age) ? max($current_user_profile->age - 5, 18) : 18) );
+
+    if (isset($_POST['max_age'])) $search_max_age = $_POST['max_age'];
+    else                                    $search_max_age = (isset($current_user_profile->max_age) ? $current_user_profile->max_age : (isset($current_user_profile->age) ? min($current_user_profile->age + 5, 100) : 100) );
+
+    ?>
+
+
+    <?php
+
+    $search_text = "dummy";
+    $search_like_text = "swimming";
+    $search_dislike_text = "soccer cooking";
+
+    $search_like_text = implode(', ', array_map(function($like) {
+                                            return $like->content;
+                                        }, get_interests($current_user_id, true)));
+
+    $search_dislike_text = implode(', ', array_map(function($dislike) {
+                                            return $dislike->content;
+                                        }, get_interests($current_user_id, false)));
+
+    //-- ALTER TABLE interests ADD FULLTEXT index_name(content);
+
+    //$search_text = preg_replace("/[ ]*,[ ]*/", " ", $search_text);
+
+    $join_part = "
+    RIGHT JOIN
+        (SELECT user_id, SUM(like_dislike_score) as match_score
+         FROM
+            (SELECT user_id, if(likes = true, 1, -0.5) as like_dislike_score
+             FROM profile_interests LEFT JOIN interests USING(interests_id)
+             WHERE  MATCH (content) AGAINST (?)
+             UNION
+             SELECT user_id, if(likes = false, 1, -0.5) as like_dislike_score
+             FROM profile_interests LEFT JOIN interests USING(interests_id)
+             WHERE  MATCH (content) AGAINST (?)
+            ) t
+         GROUP BY user_id
+         HAVING SUM(like_dislike_score) > 0) t USING(user_id)";
+    // ? is list of MY likes. 1 point if they like it too, -0.5 if they don't
+    // ? is list of MY dislikes. 1 point if they dislike it too, -0.5 if they do
+
+    $query = query_add($query, null, array($search_like_text, $search_dislike_text), "ss", $join_part);
+
+    if (isset($search_sex)) {
+        $query = query_add($query, 'sex = ?', $search_sex, 'i');
+    }
+
+    if (isset($search_min_age)) {
+        // Get the difference in days between DOB and now. Divide by 365.25 to get difference in years. Round down to get age.
+        $query = query_add($query, 'AND FLOOR( DATEDIFF(CURDATE(), DOB)/365.25 ) >= ?', $search_min_age, 'i');
+    }
+
+    if (isset($search_max_age)) {
+        $query = query_add($query, 'AND FLOOR( DATEDIFF(CURDATE(), DOB)/365.25 ) <= ?', $search_max_age, 'i');
+    }
+
+    if (isset($search_text) && !empty($search_text)) {
+        $query_end_part = " ORDER BY match_score DESC";
+        $query = query_add($query, null, null, null, null, $query_end_part);
+    }
+    // Search using query built
+    $profiles = get_profiles($query->stmt_parts, $query->param_values, $query->param_types, $query->join_parts, $query->end_parts);
+}
+?>

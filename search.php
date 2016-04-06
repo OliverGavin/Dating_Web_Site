@@ -1,6 +1,7 @@
 <?php
 require_once 'core/init.php';
 require_once 'core/func/profiles.php';
+require_once 'core/func/interests.php';
 
 verify_login();
 // TODO permissions
@@ -15,10 +16,10 @@ verify_login();
 
             <?php if (isset($_GET['action']) && $_GET['action'] == 'browse') {
                 $profiles = get_all_profiles();
-            }else {
+            } else if (isset($_GET['action']) && $_GET['action'] == 'suggestions') {
+                include 'core/templates/suggest-profiles.php';
+            } else {
                 include 'core/templates/search-profiles.php';
-                // Search using query built
-                $profiles = get_profiles($query->stmt_parts, $query->param_values, $query->param_types, $query->join_parts, $query->end_parts);
             } ?>
 
             <div class="search-results-container">
