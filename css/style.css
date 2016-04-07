@@ -875,7 +875,7 @@ font-size: 26px;
     color: #000;
     width: 650px;
 }
-#notifications .notePictures ul li:hover {
+.dashboard #notifications .notePictures ul li:hover {
 	background: #9DE8EF;
 }
 .dashboard #pOverview{
