@@ -7,6 +7,7 @@ verify_login();
 // TODO permissions
 
 $profiles = false;
+$msg = '';
 ?>
 
 <?php get_header(); ?>
@@ -34,7 +35,9 @@ $profiles = false;
                     }
                 } else {
 
-                    if (count($profiles) == 0) {
+                    if (strlen($msg) > 0) {
+                        echo '<p>'.$msg.'</p>';
+                    } else if (count($profiles) == 0) {
                         echo "<p>Sorry, we couldn't find any matches.</p>";
                         echo "<p>Try broadening your search!</p>";
                     }

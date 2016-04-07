@@ -7,32 +7,40 @@ require_once 'core/func/interests.php';
 verify_login();
 // TODO permissions
 
+$profile = false;
+$msg = '';
+
 if (isset($_GET['id']) && !empty($_GET['id'])) {
     $user_id = $_GET['id'];
 } else {
     $user_id = $_SESSION['user_id'];
 }
 
+$is_owner = $user_id == $_SESSION['user_id'];
 
-if (isset($_GET['id']) && isset($_GET['status'])) {
-    // Fallback if their is no JavaScript for an Ajax request
-    set_relationship($_GET['id'], $_GET['status']);
-}
+if ($is_owner && user_is_at_least_role(ROLE_ADMIN)) {
+    $msg = 'Admins cannot have a profile';
+} else {
+    if (isset($_GET['id']) && isset($_GET['status'])) {
+        // Fallback if their is no JavaScript for an Ajax request
+        set_relationship($_GET['id'], $_GET['status']);
+    }
 
-$profile = get_profile($user_id);
+    $profile = get_profile($user_id);
 
-if (!$profile) {
-    if ($user_id == $_SESSION['user_id'] && in_array(NOT_FOUND, $message['error'])) {
-        $msg  = 'No profile was found, would you like to create one?';
-        $msg .= '<a href="edit-profile.php">Create profile</a>';
-        // TODO template
-    } else if (in_array(MSG_UPGRADE_REQUIRED, $message['error'])) {
-        $msg  = 'You must upgrade your account to continue';
-        $msg .=  '<a href="payment.php">Upgrade</a>';
-        // TODO template
-    } else {
-        // TODO 404 template
-        header("Location: 404.php");
+    if (!$profile) {
+        if ($user_id == $_SESSION['user_id'] && in_array(NOT_FOUND, $message['error'])) {
+            $msg = 'No profile was found, would you like to create one?';
+            $msg .= '<a href="edit-profile.php">Create profile</a>';
+            // TODO template
+        } else if (in_array(MSG_UPGRADE_REQUIRED, $message['error'])) {
+            $msg = 'You must upgrade your account to continue';
+            $msg .= '<a href="payment.php">Upgrade</a>';
+            // TODO template
+        } else {
+            // TODO 404 template
+            header("Location: 404.php");
+        }
     }
 }
 

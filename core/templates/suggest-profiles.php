@@ -38,8 +38,11 @@ $query = (object) array(
 $current_user_id = $_SESSION['user_id'];
 $current_user_profile = new Profile($current_user_id);
 
-if (!$current_user_profile->fetch()) {
-    echo 'You need to create a profile first!';
+if (user_is_at_least_role(ROLE_ADMIN)) {
+    $msg = 'Admins cannot have suggestions';
+    $profiles = null;
+} else if (!$current_user_profile->fetch()) {
+    $msg .= 'You need to create a profile first!';
     $profiles = null;
 } else {
 
