@@ -90,9 +90,10 @@ function remove_interest($user_id, $interests_id) {
  */
 function get_interests($user_id, $likes = null) {  // TODO add extra query conditions? sorting?
     global $db;
+    global $message;
 
     if (!user_can(PERM_VIEW_PROFILES)) {
-        $message['error'][] = MSG_PERMISSION_DENIED;
+        $message['error'][] = MSG_UPGRADE_REQUIRED;
         return false;
     }
 
@@ -113,7 +114,7 @@ function get_interests($user_id, $likes = null) {  // TODO add extra query condi
     $prepared->bind_param('i', $user_id);
 
     if (!$prepared->execute()) {
-        $message['error'][] = ;
+        $message['error'][] = ERROR;
         return false;
     }
 

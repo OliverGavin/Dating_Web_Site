@@ -96,11 +96,7 @@ else                                    $search_max_age = (isset($current_user_p
 <?php
 
 if (isset($search_text) && !empty($search_text)) {
-    echo 'hello';
     $search_text = trim($search_text);
-    //-- ALTER TABLE interests ADD FULLTEXT index_name(content);
-
-    //$search_text = preg_replace("/[ ]*,[ ]*/", " ", $search_text);
 
     $join_part = "
         RIGHT JOIN

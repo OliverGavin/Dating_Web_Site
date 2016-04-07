@@ -308,7 +308,7 @@ function get_profiles($query_stmt_parts, $query_param_values, $query_param_types
     global $message;
     // TODO refactor
     if (!user_can(PERM_VIEW_PROFILES)) {
-        $message['error'][] = MSG_PERMISSION_DENIED;
+        $message['error'][] = MSG_UPGRADE_REQUIRED;
         return false;
     }
 
