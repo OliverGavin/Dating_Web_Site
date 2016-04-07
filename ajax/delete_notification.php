@@ -8,7 +8,7 @@ verify_login();
 
 if(isset($_POST['notification_id'])){
 	
-	if(deleteNote($_POST['notification_id'])){
+	if(delete_notification($_POST['notification_id'])){
 		
 		echo "success";
 	}

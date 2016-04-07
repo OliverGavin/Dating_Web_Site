@@ -1,6 +1,6 @@
 <?php
 	
-	function unseenNotificationCount($user_id)
+	function get_unseen_notification_count($user_id)
 	{
 		
 		global $db;
@@ -22,7 +22,7 @@
 		return $count;
 	}
 	
-	function deleteNote($notification_id)
+	function delete_notification($notification_id)
 	{
 		global $db;
 
@@ -38,7 +38,7 @@
 		$query->free_result();
 	}
 	
-	function setNotificationSeen($notification_id)
+	function set_notification_seen($notification_id)
 	{	
 		global $db;
 

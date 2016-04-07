@@ -8,7 +8,7 @@ verify_login();
 
 if(isset($_POST['notification_id'])){
 	
-	if(setNotificationSeen($_POST['notification_id'])){
+	if(set_notification_seen($_POST['notification_id'])){
 		
 		echo "success";
 	}
