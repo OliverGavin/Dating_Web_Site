@@ -1,17 +1,19 @@
+var mnum = 0;
 
-function show_modal(content) {
+function show_modal(content, style_class) {
+    mnum++;
     var modal =
-        '<div id="modal" class="modal">' +
+        '<div id="modal-'+mnum+'" class="modal '+style_class+'">' +
         '<div class="modal-content">' +
-        '<span id="modal-close" class="modal-close">×</span>' +
+        '<span id="modal-close-'+mnum+'" class="modal-close"><i class="fa fa-times"></i></span>' +
         content +
         '</div>' +
         '</div>';
 
     $('#main').append(modal);
 
-    modal = document.getElementById('modal');
-    var close = document.getElementById("modal-close");
+    modal = document.getElementById("modal-"+mnum);
+    var close = document.getElementById("modal-close-"+mnum);
 
     close.onclick = function () {
         // remove modal
