@@ -74,3 +74,8 @@ function get_relationship($target_user_id, $user_id = null) {
 
     return $status;
 }
+
+function user_is_blocked_by($target_user_id, $user_id = null) {
+    if (!isset($user_id)) $user_id = $_SESSION['user_id'];
+    return get_relationship($user_id, $target_user_id) === BLOCK;
+}

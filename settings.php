@@ -82,8 +82,6 @@ function set_email($email) {
 
 <div id="primary" class="content-area">
     <main id="main" class="site-main" role="main">
-        
-        <!-- CONTENT STARTS HERE -->
     
     	<div class="generalSettings">
     
@@ -91,6 +89,7 @@ function set_email($email) {
         
         	<form role="" method="post" class="style-rounded-dark" action="">
 
+<!--				TODO -->
 				<div class="group both-rounded">
 					<label for="firstname" class="visible">First name</label>
 					<input class="textbox" type="text" name="first_name" size="30" placeholder="<?=$first_name?>"/>
@@ -134,6 +133,8 @@ function set_email($email) {
 
 				<input class="button" type="submit" name="action" value="Save Changes" />
 		</form>
+
+		<a href="">Manage blocked users</a>
 	</div>
     
     	<!--CONTENT ENDS HERE -->

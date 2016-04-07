@@ -104,7 +104,7 @@ $profiles = false;
                         event.preventDefault()
                         $.post('ajax/get_profile.php', {id:id}, function(data) {
                             // Callback function
-                            show_modal(data);
+                            show_modal(data, 'modal-profile');
                         });
                     }
                 </script>

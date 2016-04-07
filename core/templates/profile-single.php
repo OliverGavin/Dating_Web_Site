@@ -26,10 +26,12 @@ $status = get_relationship($user_id);
         <?php   }
         if (!$is_owner) {
             if ($can_edit_others) { ?>
-                <div class="action action-ban">
-                    <p><i class="fa fa-times"></i></p>
-                    <p>BAN</p>
-                </div>
+                <a href="<?=$_SERVER['REQUEST_URI']?>&action=ban" class="ban-action" onclick="report_ban_user(<?=$user_id?>, 'ban');">
+                    <div class="action action-ban">
+                        <p><i class="fa fa-times"></i></p>
+                        <p>BAN</p>
+                    </div>
+                </a>
             <?php       } else { ?>
                 <a href="<?=$_SERVER['REQUEST_URI']?>&status=<?=BLOCK?>" class="status-action <?=($status==BLOCK? 'current-status':'')?>" onclick="set_relationship(<?=$user_id?>, '<?=BLOCK?>', this);">
                     <div class="action action-block">
@@ -37,10 +39,12 @@ $status = get_relationship($user_id);
                         <p>BLOCK</p>
                     </div>
                 </a>
-                <div class="action action-report">
-                    <p><i class="fa fa-flag"></i></p>
-                    <p>REPORT</p>
-                </div>
+                <a href="<?=$_SERVER['REQUEST_URI']?>&action=report" class="report-action" onclick="report_ban_user(<?=$user_id?>, 'report');">
+                    <div class="action action-report">
+                        <p><i class="fa fa-flag"></i></p>
+                        <p>REPORT</p>
+                    </div>
+                </a>
             <?php       }
         } ?>
     </div>
@@ -151,6 +155,14 @@ $status = get_relationship($user_id);
                 $('.status-action').removeClass('current-status');
                 $(el).addClass('current-status');
             }
+        });
+    }
+
+    function report_ban_user(target_user_id, action) {
+        event.preventDefault()
+        $.post('ajax/report_ban_user.php', {id:target_user_id, action:action, res:'get_form'}, function(data) {
+            // Callback function
+            show_modal(data, 'modal-dialog dialog-report');
         });
     }
 </script>

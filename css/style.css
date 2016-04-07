@@ -154,6 +154,8 @@ body {
 .style-rounded-dark input[type='password'],
 .style-rounded-dark select,
 .style-rounded-dark input[type='number'],
+.style-rounded-dark button,
+.style-rounded-dark input[type='button'],
 .style-rounded-dark input[type='submit'] {
     border: none;
     padding: 10px 4px;
@@ -195,6 +197,8 @@ body {
     background-color: rgba(255, 255, 255, 0.2);
 }
 
+.style-rounded-dark button,
+.style-rounded-dark input[type='button'],
 .style-rounded-dark input[type='submit'] {
     padding-left: 5px;
     padding-right: 5px;
@@ -202,8 +206,11 @@ body {
     border-radius: 10px 10px 10px 10px;
 }
 
+.style-rounded-dark button:hover,
+.style-rounded-dark input[type='button']:hover,
 .style-rounded-dark input[type='submit']:hover {
     background-color: #db1c5d;
+    cursor: pointer;
 }
 
 .style-rounded-dark input[type='submit']:focus {
@@ -1082,6 +1089,14 @@ font-size: 26px;
     background-color: rgba(0,0,0,0.6);
 }
 
+.modal-profile {
+    padding-top: 80px;
+}
+
+.modal-dialog {
+    padding-top: 160px;
+}
+
 .modal-content {
     position: relative;
     margin: auto;
@@ -1093,6 +1108,16 @@ font-size: 26px;
     animation-duration: 0.4s
 }
 
+.modal-dialog .modal-content {
+    width: 600px;
+    max-width: 90%;
+    min-height: 200px;
+    border-radius: 30px;
+    background-color: white;
+    box-shadow: rgba(97, 97, 97, 0.4) 0 0 10px 0;
+    padding: 20px;
+}
+
 @keyframes animatetop {
     from {top:-300px; opacity:0}
     to {top:0; opacity:1}
@@ -1101,13 +1126,47 @@ font-size: 26px;
 .modal-close {
     color: white;
     float: right;
+    position: relative;
     font-size: 28px;
     font-weight: bold;
+    background-color: #E91E63;
+    height: 40px;
+    width: 40px;
+    border-radius: 20px;
+    text-align: center;
+}
+
+.modal-close i.fa {
+    vertical-align: middle;
+    padding: 5px;
 }
 
 .modal-close:hover,
 .modal-close:focus {
-    color: #000;
+    color: #666666;
     text-decoration: none;
     cursor: pointer;
+}
+
+
+.modal-profile .modal-close {
+    right: 120px;
+    top: 60px;
+}
+
+.modal-profile .profile .profile-actions-bad {
+    margin-right: 180px;
+}
+
+#report-form fieldset {
+    display: block;
+    margin-top: 10px;
+}
+
+#report-form fieldset.actions {
+    text-align: right;
+}
+
+#report-form fieldset input.button {
+    margin: 5px;
 }

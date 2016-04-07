@@ -188,7 +188,68 @@ function user_is_at_least_role($role, $user_id = null) {
 	return get_user_role_weight($user_id) >= get_role_weight($role);
 }
 
-function set_user_role() {
+function set_user_role($role, $user_id = null) {
+	global $db;
+	if ($user_id == null)
+		// defaults to the current user
+		$user_id = $_SESSION['user_id'];
+
+	$prepared = $db->prepare("
+            UPDATE users
+			Set role_id = (SELECT role_id FROM roles WHERE name = ?)
+			Where user_id = ?
+        ");
+
+	$prepared->bind_param('si', $role, $user_id);
+
+	if (!$prepared->execute()) {
+		$message['error'][] = ERROR;
+		return false;
+	}
+
+	return true;
+}
+
+function ban_user($reason, $duration, $user_id) {
+	if(!set_user_role(ROLE_BANNED, $user_id)) {
+		return false;
+	}
+	add_ban_details($reason, $duration, $user_id);
+
+	return true;
+}
+
+function delete_user($reason, $user_id) {
+	if(!set_user_role(ROLE_DELETED, $user_id)) {
+		return false;
+	}
+	add_ban_details($reason, null, $user_id);
 	// TODO
+	delete_profile($user_id);
+
+	return true;
+}
+
+function add_ban_details($reason, $duration, $user_id) {
+	global $db;
+
+	$prepared = $db->prepare("
+            INSERT INTO user_bans (user_id, until_date_time, reason)
+            VALUES (
+                ?,
+                if(? IS NOT NULL, NOW() + INTERVAL ? DAY, NULL),
+                ?
+            )
+        ");
+
+	$prepared->bind_param('iiis', $user_id, $duration, $duration, $reason);
+
+	if (!$prepared->execute()) {
+		$message['error'][] = ERROR;
+		return false;
+	}
+
+	return true;
+
 }
 ?>

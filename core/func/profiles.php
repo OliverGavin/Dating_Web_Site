@@ -1,4 +1,6 @@
 <?php
+global $pathToRoot;
+require_once $pathToRoot.'core/func/users.php';
 
 /**
  * Class Profile represents a users profile
@@ -194,7 +196,7 @@ function get_profile($user_id) {
         return false;
     }
 
-    $is_blocked_by_owner = false;           // TODO
+    $is_blocked_by_owner = user_is_blocked_by($user_id);
     // Unauthorised user - blocked
     if ($is_blocked_by_owner) {
         $message['error'][] = BLOCKED;
@@ -264,6 +266,14 @@ function exists_profile($user_id) {
  */
 function delete_profile($user_id) {
     global $message;
+
+    $is_owner = ($user_id == $_SESSION['user_id']);
+    $can_edit_others = user_can(PERM_EDIT_OTHERS_PROFILE);
+
+    if (!$is_owner && !$can_edit_others) {
+        $message['error'][] = MSG_PERMISSION_DENIED;
+        return false;
+    }
 
     // TODO permissions
     if (!exists_profile($user_id)) {
@@ -353,6 +363,8 @@ function get_profiles($query_stmt_parts, $query_param_values, $query_param_types
         return false;
     }
 
+    $prepared->store_result();
+
     $prepared->bind_result(
         $user_id,
         $first_name,
@@ -363,17 +375,19 @@ function get_profiles($query_stmt_parts, $query_param_values, $query_param_types
     );
 
     while ($prepared->fetch()) {
-        $profile = new Profile($user_id);
-        $profile->first_name = $first_name;
-        $profile->last_name = $last_name;
-        $profile->DOB = date_create($DOB);
+        if (!user_is_blocked_by($user_id) && !user_is_blocked_by($_SESSION['user_id'], $user_id)) {
+            $profile = new Profile($user_id);
+            $profile->first_name = $first_name;
+            $profile->last_name = $last_name;
+            $profile->DOB = date_create($DOB);
 
-        $profile->age = date_diff($profile->DOB, date_create('now'))->y;
+            $profile->age = date_diff($profile->DOB, date_create('now'))->y;
 
-        $profile->country = $country;
-        $profile->county = $county;
+            $profile->country = $country;
+            $profile->county = $county;
 
-        array_push($profiles, $profile);
+            array_push($profiles, $profile);
+        }
     }
 
     return $profiles;
