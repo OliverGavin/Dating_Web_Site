@@ -1,5 +1,8 @@
 <?php
 require_once 'core/init.php';
+require_once 'core/func/notifications.php';
+
+verify_login();
 ?>
 
 <?php get_header(); ?>
@@ -51,37 +54,40 @@ require_once 'core/init.php';
         </div>
     	<div class="notePictures">
             
-            <ul>
-          		<li><span><img src="profile.png"></span>
-                <span>Hi, i'm jane wanna go out tonight?</span>
-                <span><i class="fa fa-trash" onClick=""></i></span>
-                </li>
-                
-                <li><span><img src="profile.png"></span>
-                <span>Jane Doe has liked your profile, like back to chat.</span>
-                <span><i class="fa fa-trash" onClick=""></i></span>
-                </li>
-                
-                <li><span><img src="profile.png"></span>
-                <span>Hello</span>
-                <span><i class="fa fa-trash" onClick=""></i></span>
-                </li>
-                
-                <li><span><img src="profile.png"></span>
-                <span>Jane Doe has disliked your profile, see are tips to get more likes!</span>
-                <span><i class="fa fa-trash" onClick=""></i></span>
-                </li>
-                
-                <li><span><img src="profile.png"></span>
-                <span>Jane Doe has liked your profile, like back to chat.</span>
-                <span><i class="fa fa-trash" onClick=""></i></span>
-                </li>
-                
-                <li><span><img src="profile.png"></span>
-                <span>You have been giving a warning by an admin, be careful!</span>
-                <span><i class="fa fa-trash" onClick=""></i></span>
-                </li>
-			</ul>
+            	<ul>
+          		<?php
+			global $db;
+				
+			$user_id = $_SESSION['user_id'];
+
+			$query = $db->prepare("SELECT `content`, `notification_id` FROM `notifications` WHERE `user_id`=?");
+	
+			$query->bind_param('i', $user_id);
+	
+			$query->execute();
+       			
+			$query->bind_result($content, $notification_id);
+				
+			$counter = 0;
+			$max = 30;
+				
+			/*if (countNotifications($user_id) == 0) {
+                    	echo "You have no notifications.";
+                	}*/
+				
+			while(($row = $query->fetch()) and ($counter < $max)){
+			?>
+                   
+                    		<li onClick="seen_notification(<?=$notification_id?>)"><span><img src="profile.png"></span><!-- Get image from folder THE SENDER_ID -->
+                    		<span><?php echo $content . " (" . $notification_id . ")"?></span>
+                    		<i class="fa fa-trash" onClick="delete_notification(this, <?=$notification_id?>)"></i><!-- link to some script which gets the notification id sents it to the delter script and remove the notificatio from the data base -->
+                    		</li>
+                    
+                	<?php
+			$counter++;
+			}
+			?>
+          	</ul>
             
         </div>
     </div>
@@ -107,6 +113,25 @@ require_once 'core/init.php';
     <div id="clearDash"></div>
     
     <!--CONTENT HERE -->
+
+	<script type="text/javascript">
+	function delete_notification(el, notification_id) {
+		event.preventDefault();
+		$.post( "ajax/delete_notification.php", {notification_id:notification_id}, function( data ) {
+		  if (data == 'success') {
+    			$(el).parent().remove();
+			}
+		});
+	}
+	function seen_notification(notification_id){
+		event.preventDefault();
+		$.post("ajax/set_notification.php", {notification_id:notification_id}, function( data ) {
+			if (data == 'success') {
+				//someting or other
+			}
+		});
+	}
+	</script>
 
     </main><!-- #main -->
 </div><!-- #primary -->
