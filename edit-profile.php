@@ -6,6 +6,7 @@ require_once 'core/func/interests.php';
 verify_login();
 // TODO permissions and validation
 
+$creating = false;
 $profile = false;
 $msg = '';
 
@@ -82,6 +83,7 @@ if ($is_owner && user_is_at_least_role(ROLE_ADMIN)) {
                 // create profile
                 $profile->first_name = $_SESSION['first_name'];
                 $profile->last_name = $_SESSION['last_name'];
+                $creating = true;
 
             } else {
                 header("Location: 404.php");
