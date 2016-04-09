@@ -252,4 +252,17 @@ function add_ban_details($reason, $duration, $user_id) {
 	return true;
 
 }
+
+function can_message_each_other($user_id1, $user_id2) {
+
+	if (user_is_at_least_role(ROLE_ADMIN, $user_id1) || user_is_at_least_role(ROLE_ADMIN, $user_id2)) {
+		// Everyone can talk to an admin
+		return true;
+	} else if (get_relationship($user_id1, $user_id2) == LIKE && get_relationship($user_id2, $user_id1) == LIKE) {
+		// If they like each other mutually
+		return true;
+	}
+
+	return false;
+}
 ?>

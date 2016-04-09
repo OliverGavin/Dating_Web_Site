@@ -3,6 +3,36 @@ DEFINE('BLOCK',		"BLOCK");
 DEFINE('DISLIKE',	"DISLIKE");
 DEFINE('LIKE',		"LIKE");
 
+
+function get_user_name($target_user_id) {
+    global $db;
+
+    $prepared = $db->prepare("
+            SELECT first_name, last_name
+            FROM users
+            WHERE user_id = ?
+        ");
+
+    $prepared->bind_param('i', $target_user_id);
+
+    if (!$prepared->execute()) {
+        $message['error'][] = ERROR;
+        return false;
+    }
+
+    $prepared->bind_result(
+        $first_name,
+        $last_name
+    );
+
+    $prepared->fetch();
+
+    return (object) array(
+            'first_name'    => $first_name,
+            'last_name'    => $last_name
+        );
+}
+
 /**
  * Sets the relationship between the current user and another user
  * @param integer $target_user_id

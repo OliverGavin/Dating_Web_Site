@@ -85,6 +85,24 @@ body {
     width: 100%;
 }
 
+.scroll::-webkit-scrollbar,
+.scroll::-webkit-scrollbar {
+    width: 4px;
+}
+
+.scroll::-webkit-scrollbar-track,
+.scroll::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    border-radius: 4px;
+}
+
+.scroll::-webkit-scrollbar-thumb,
+.scroll::-webkit-scrollbar-thumb {
+    border-radius: 2px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+    background-color: #E91E63;
+}
+
 /*--------------------------------------------------------------
 # Forms
 --------------------------------------------------------------*/
@@ -389,24 +407,6 @@ body {
 .nav-menu > li.menu-notifications.menu-item-has-children:hover > ul.sub-menu .scroll {
     max-height: 300px;
     overflow-y: scroll;
-}
-
-.nav-menu > li.menu-messages.menu-item-has-children:hover > ul.sub-menu .scroll::-webkit-scrollbar,
-.nav-menu > li.menu-notifications.menu-item-has-children:hover > ul.sub-menu .scroll::-webkit-scrollbar {
-    width: 4px;
-}
-
-.nav-menu > li.menu-messages.menu-item-has-children:hover > ul.sub-menu .scroll::-webkit-scrollbar-track,
-.nav-menu > li.menu-notifications.menu-item-has-children:hover > ul.sub-menu .scroll::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-    border-radius: 4px;
-}
-
-.nav-menu > li.menu-messages.menu-item-has-children:hover > ul.sub-menu .scroll::-webkit-scrollbar-thumb,
-.nav-menu > li.menu-notifications.menu-item-has-children:hover > ul.sub-menu .scroll::-webkit-scrollbar-thumb {
-    border-radius: 2px;
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
-    background-color: #E91E63;
 }
 
 .nav-menu li.menu-item-has-children:hover > ul.sub-menu.expanded {
@@ -1188,3 +1188,155 @@ font-size: 26px;
 #report-form fieldset input.button {
     margin: 5px;
 }
+
+
+/*--------------------------------------------------------------
+# Chat
+--------------------------------------------------------------*/
+#chat-container {
+    position: fixed;
+    bottom: 0;
+    right: 20px;
+    z-index: 5;
+    /*background-color: #C4CCDF;*/
+}
+
+.chat {
+    display: inline-block;
+    width: 300px;
+    border-radius: 35px 20px 0 0;
+    background-color: white;
+    box-shadow: rgba(97, 97, 97, 0.4) 0 0 10px 0;
+}
+
+.chat .chat-header,
+.chat .chat-messages,
+.chat .chat-input {
+    display: block;
+}
+
+.chat .chat-header {
+    /*background-color: #333333;*/
+    height: 40px;
+}
+
+.chat .chat-pic,
+.chat .chat-title,
+.chat .chat-close {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.chat .chat-pic {
+    height: 50px;
+    width: 50px;
+    margin-left: 10px;
+    margin-top: 10px;
+    border-radius: 50%;
+    position: relative;
+}
+
+.chat .chat-close {
+    color: white;
+    float: right;
+    top: 10px;
+    right: 10px;
+    position: relative;
+    font-size: 14px;
+    background-color: #E91E63;
+    height: 20px;
+    width: 20px;
+    border-radius: 20px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.chat .chat-close i.fa {
+    vertical-align: middle;
+    padding: 2px;
+}
+
+.chat .chat-messages {
+    height: 300px;
+    padding-top: 20px;
+    /*background-color: #aaaaaa;*/
+    overflow-y: scroll;
+}
+
+.chat .chat-input {
+    background-color: #E91E63;
+}
+
+.chat .chat-input .message-input {
+    /*background-color: #666666;*/
+    width: 230px;
+}
+
+.chat .chat-input button {
+    background-color: rgba(255, 255, 255, 0);
+    width: 50px;
+}
+
+.chat .chat-messages .message {
+    padding: 5px 15px;
+}
+
+.chat .chat-messages .message p {
+    display: inline-block;
+    padding: 4px 7px;
+    background-color: rgba(233, 30, 99, 0.38);
+    border-radius: 4px;
+}
+
+.chat .chat-messages .message-sent {
+    text-align: right;
+}
+
+.chat .chat-messages .message-received {
+    text-align: left;
+}
+
+/*////////////////*/
+
+
+.menu-messages ul.messages {
+    padding: 0;
+}
+
+.menu-messages .message a {
+    padding: 0;
+    width: 100%;
+}
+
+.menu-messages .message .message-text {
+    display: inline-block;
+    vertical-align: top;
+    width: calc(100% - 60px);
+    padding-top: 12px;
+}
+
+.menu-messages .message .message-pic  {
+    vertical-align: top;
+}
+
+.menu-messages .message .message-title {
+}
+
+.menu-messages .message .message-message {
+    display: block;
+    font-size: 0.8em;
+}
+
+.menu-messages .message .message-pic {
+    /*height: 50px;*/
+    /*width: 50px;*/
+    margin: 5px;
+    /*border-radius: 50%;*/
+    float: none;
+    position: relative;
+    top: 0;
+}
+
+
+
+

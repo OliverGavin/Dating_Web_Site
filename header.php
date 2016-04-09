@@ -1,5 +1,5 @@
 <?php
-
+require_once 'core/func/messaging.php';
 ?>
 <!DOCTYPE html>
 
@@ -38,7 +38,36 @@
                                         </div>';
 
                 $notifications_extra = '<div class="scroll"><div style="height: 600px">Add here!</div></div>';
-                $messages_extra = '<div class="scroll"><div style="height: 600px">Add here!</div></div>';
+
+                $messages_extra = '<ul class="scroll messages" style="height: 600px">';
+                    $messages = get_latest_messages();
+                    if ($messages) {
+                        foreach ($messages as $message) {
+                            $target_user_id = ($message->sender_id == $_SESSION['user_id']) ? $message->receiver_id : $message->sender_id;
+
+                            if (can_message_each_other($target_user_id, $_SESSION['user_id'])) {
+                                $messages_extra .=   '<li id="message-'.$target_user_id.'" class="message">';
+                                $messages_extra .=      '<a href="chat.php?id='.$target_user_id.'" class="message-action" onclick="open_chat('.$target_user_id.')">';
+                                $messages_extra .=          '<div class="profile-image message-pic">';
+                                $messages_extra .=              '<img class="profile-pic" src="'.get_profile_image(IMG_THUMB, $target_user_id).'">';
+                                if ($message->seen) {
+                                    $messages_extra .=          '<div class="profile-notification-counter">';
+                                    $messages_extra .=          '<p>' . $message->seen . '</p>';
+                                    $messages_extra .=          '</div>';
+                                }
+                                $messages_extra .=          '</div>';
+                                $messages_extra .=          '<div class="message-text">';
+                                $messages_extra .=              '<span class="message-title">'.$message->target_name.'</span>';
+                                $messages_extra .=              '<span class="message-message">'.$message->content.'</span>';
+                                $messages_extra .=          '</div>';
+                                $messages_extra .=      '</a>';
+                                $messages_extra .=  '</li>';
+                            }
+                        }
+                    }
+                $messages_extra .= '</ul>';
+
+
                 // TODO permissions
                 $menu_items = array(
                     array(
