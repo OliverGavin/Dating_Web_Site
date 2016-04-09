@@ -25,6 +25,14 @@ $status = get_relationship($user_id);
             </a>
         <?php   }
         if (!$is_owner) {
+            if (can_message_each_other($_SESSION['user_id'], $profile->user_id)) { ?>
+                <a href="chat.php?id=<?=$user_id?>" class="message-action" onclick="open_chat(<?=$user_id?>)">
+                    <div class="action action-ban">
+                        <p><i class="fa fa-comment"></i></p>
+                        <p>CHAT</p>
+                    </div>
+                </a>
+            <?php       }
             if ($can_edit_others) { ?>
                 <a href="<?=$_SERVER['REQUEST_URI']?>&action=ban" class="ban-action" onclick="report_ban_user(<?=$user_id?>, 'ban');">
                     <div class="action action-ban">
@@ -149,11 +157,13 @@ $status = get_relationship($user_id);
 <script>
     function set_relationship(target_user_id, status_name, el) {
         event.preventDefault();
+        if($(el).hasClass('current-status')) status_name = null;
         $.post('ajax/set_relationship.php', {id:target_user_id, status:status_name}, function(data) {
             // Callback function
             if (data == 'success') {
                 $('.status-action').removeClass('current-status');
-                $(el).addClass('current-status');
+                if (status_name != null)
+                    $(el).addClass('current-status');
             }
         });
     }
