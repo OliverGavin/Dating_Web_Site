@@ -60,7 +60,7 @@ if (user_is_at_least_role(ROLE_ADMIN)) {
     $search_like    = get_interests($current_user_id, true);
     $search_dislike = get_interests($current_user_id, false);
 
-    if (is_array($search_like ) && is_array($search_dislike)) {
+    if (is_array($search_like) && is_array($search_dislike)) {
 
         $search_like_text = implode(', ', array_map(function ($like) {
             return $like->content;
@@ -71,19 +71,18 @@ if (user_is_at_least_role(ROLE_ADMIN)) {
         }, $search_dislike));
 
         $join_part = "
-            RIGHT JOIN
+            LEFT JOIN
                 (SELECT user_id, SUM(like_dislike_score) as match_score
                  FROM
-                    (SELECT user_id, if(likes = true, 1, -0.5) as like_dislike_score
+                    (SELECT *, if(likes = true, 1, -0.5) as like_dislike_score
                      FROM profile_interests LEFT JOIN interests USING(interests_id)
                      WHERE  MATCH (content) AGAINST (?)
                      UNION
-                     SELECT user_id, if(likes = false, 1, -0.5) as like_dislike_score
+                     SELECT *, if(likes = false, 1, -0.5) as like_dislike_score
                      FROM profile_interests LEFT JOIN interests USING(interests_id)
                      WHERE  MATCH (content) AGAINST (?)
                     ) t
-                 GROUP BY user_id
-                 HAVING SUM(like_dislike_score) > 0) t USING(user_id)";
+                 GROUP BY user_id) t USING(user_id)";
         // ? is list of MY likes. 1 point if they like it too, -0.5 if they don't
         // ? is list of MY dislikes. 1 point if they dislike it too, -0.5 if they do
 
@@ -102,7 +101,7 @@ if (user_is_at_least_role(ROLE_ADMIN)) {
             $query = query_add($query, 'AND FLOOR( DATEDIFF(CURDATE(), DOB)/365.25 ) <= ?', $search_max_age, 'i');
         }
 
-        $query_end_part = " ORDER BY match_score DESC";
+        $query_end_part = " AND (match_score > 0 OR match_score IS NULL) ORDER BY match_score DESC";
         $query = query_add($query, null, null, null, null, $query_end_part);
 
         // Search using query built

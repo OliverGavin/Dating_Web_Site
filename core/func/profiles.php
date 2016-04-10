@@ -349,7 +349,7 @@ function get_profiles($query_stmt_parts, $query_param_values, $query_param_types
     // TODO add limit and ignore list??
     $prepared = $db->prepare("
               SELECT    user_id, first_name, last_name,
-                        DOB, country, county
+                        DOB, country, county -- , match_score
               FROM users NATURAL JOIN profiles $query_join_parts
               WHERE $query_parts user_id != ?
               $query_end_parts"
@@ -372,9 +372,11 @@ function get_profiles($query_stmt_parts, $query_param_values, $query_param_types
         $DOB,
         $country,
         $county
+//        ,$match_score
     );
 
     while ($prepared->fetch()) {
+//        echo $match_score.', ';
         if (!user_is_blocked_by($user_id) && !user_is_blocked_by($_SESSION['user_id'], $user_id)) {
             $profile = new Profile($user_id);
             $profile->first_name = $first_name;

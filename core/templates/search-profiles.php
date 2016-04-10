@@ -99,12 +99,36 @@ if (isset($search_text) && !empty($search_text)) {
     $search_text = trim($search_text);
 
     $join_part = "
-        RIGHT JOIN
-            (SELECT user_id, COUNT(*) as like_score
+        LEFT JOIN
+            (SELECT *, SUM(if(likes = true, 1, -0.5)) as like_score
              FROM profile_interests LEFT JOIN interests USING(interests_id)
-             WHERE  MATCH (content) AGAINST (?) AND likes = TRUE
+             WHERE  MATCH (content) AGAINST (?)
              GROUP BY user_id) t USING(user_id)
         ";
+
+
+//    $join_part = "
+//        RIGHT JOIN
+//            (SELECT user_id, COUNT(*) as like_score
+//             FROM profile_interests LEFT JOIN interests USING(interests_id)
+//             WHERE  MATCH (content) AGAINST (?) AND likes = TRUE
+//             GROUP BY user_id) t USING(user_id)
+//        ";
+//
+//
+//    $join_part = "
+//            LEFT JOIN
+//                (SELECT user_id, SUM(like_dislike_score) as match_score
+//                 FROM
+//                    (SELECT *, if(likes = true, 1, -0.5) as like_dislike_score
+//                     FROM profile_interests LEFT JOIN interests USING(interests_id)
+//                     WHERE  MATCH (content) AGAINST (?)
+//                     UNION
+//                     SELECT *, if(likes = false, 1, -0.5) as like_dislike_score
+//                     FROM profile_interests LEFT JOIN interests USING(interests_id)
+//                     WHERE  MATCH (content) AGAINST (?)
+//                    ) t
+//                 GROUP BY user_id) t USING(user_id)";
 
     $query = query_add($query, null, $search_text, "s", $join_part);
 }
@@ -123,7 +147,7 @@ if (isset($search_max_age)) {
 }
 
 if (isset($search_text) && !empty($search_text)) {
-    $query_end_part = " ORDER BY like_score DESC";
+    $query_end_part = " AND (like_score > 0 OR like_score IS NULL) ORDER BY like_score DESC";
     $query = query_add($query, null, null, null, null, $query_end_part);
 }
 
