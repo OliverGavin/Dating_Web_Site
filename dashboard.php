@@ -1,5 +1,6 @@
 <?php
 require_once 'core/init.php';
+require_once 'core/func/profiles.php';
 require_once 'core/func/notifications.php';
 
 verify_login();
