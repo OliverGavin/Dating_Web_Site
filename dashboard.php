@@ -27,7 +27,9 @@ verify_login();
 				
 			$user_id = $_SESSION['user_id'];
 
-			$query = $db->prepare("SELECT `user_id`, `first_name` FROM `users` ORDER BY RAND() LIMIT 8");
+			$query = $db->prepare("SELECT `user_id`, `first_name` FROM `users` WHERE `user_id`<>? ORDER BY RAND() LIMIT 8");
+	
+			$query->bind_param('i', $user_id);
 	
 			$query->execute();
        			
@@ -35,7 +37,7 @@ verify_login();
 					
 			while($row = $query->fetch()){
 		?>
-          	<li><span><a href="" onClick="get_profile(<?=$user_id?>)"><img src=<?php echo get_profile_image(300, $user_id); ?>></a></span>
+          	<li><span><a href="" onClick="get_profile(<?=$user_id?>)"><img src=<?php echo get_profile_image(IMG_SMALL, $user_id); ?>></a></span>
                 <span><?php echo $firstname ?></span>
                 </li>
                 <?php
@@ -74,7 +76,7 @@ verify_login();
 			while(($row = $query->fetch()) and ($counter < $max)){
 		?>
                    <!--  TODO change css -->
-                <li onClick="seen_notification(<?=$notification_id?>)"><span><img src=<?php echo get_profile_image(45, $sender_id); ?>></span>
+                <li onClick="seen_notification(<?=$notification_id?>)"><span><img src=<?php echo get_profile_image(IMG_THUMB, $sender_id); ?>></span>
                 <i class="fa fa-trash" onClick="delete_notification(this, <?=$notification_id?>)"></i>
                 <span><?php echo $content ?></span>
                 </li>
@@ -94,7 +96,7 @@ verify_login();
             <p><b>Your Profile</b></p>
         </div>
     
-    	<img src="profile.png">
+    	<a href="" onClick="get_profile(<?=$user_id?>)"><img src=<?php echo get_profile_image(IMG_MEDIUM, $user_id); ?>></a>
         <p>Jane Doe</p>
         <p>22, Single</p>
             
