@@ -18,32 +18,29 @@ verify_login();
         </div>
     	<div class="pictures">
             
-            <ul>
-          		<li><span><a href="#"><img src="profile.png"></a></span>
-                <span>Jane Doe</span>
+            <ul><!-- Div will fit 8 profiles -->
+            
+            	<?php
+            		
+			global $db;
+				
+			$user_id = $_SESSION['user_id'];
+
+			$query = $db->prepare("SELECT `user_id`, `first_name` FROM `users` ORDER BY RAND() LIMIT 8");
+	
+			$query->execute();
+       			
+			$query->bind_result($user_id, $firstname);
+					
+			while($row = $query->fetch()){
+		?>
+          	<li><span><a href="" onClick="get_profile(<?=$user_id?>)"><img src=<?php echo get_profile_image(300, $user_id); ?>></a></span>
+                <span><?php echo $firstname ?></span>
                 </li>
-          		<li><span><a href="#"><img src="profile.png"></a></span>
-                <span>Jane Doe</span>
-                </li>
-          		<li><span><a href="#"><img src="profile.png"></a></span>
-                <span>Jane Doe</span>
-                </li>
-          		<li><span><a href="#"><img src="profile.png"></a></span>
-                <span>Jane Doe</span>
-                </li>
-                <li><span><a href="#"><img src="profile.png"></a></span>
-                <span>Jane Doe</span>
-                </li>
-                <li><span><a href="#"><img src="profile.png"></a></span>
-                <span>Jane Doe</span>
-                </li>
-                <li><span><a href="#"><img src="profile.png"></a></span>
-                <span>Jane Doe</span>
-                </li>
-                <li><span><a href="#"><img src="profile.png"></a></span>
-                <span>Jane Doe</span>
-                </li>
-			</ul>
+                <?php
+			}
+		?>
+	    </ul>
             
         </div>
     </div>
@@ -131,6 +128,14 @@ verify_login();
 			}
 		});
 	}
+	
+	function get_profile(id) {
+    	event.preventDefault()
+    	$.post('ajax/get_profile.php', {id:id}, function(data) {
+    		// Callback function
+    		show_modal(data);
+    		});
+    	}
 	</script>
 
     </main><!-- #main -->
