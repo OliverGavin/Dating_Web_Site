@@ -52,39 +52,37 @@ verify_login();
     	<div class="notePictures">
             
             	<ul>
-          		<?php
+            	<?php
 			global $db;
 				
 			$user_id = $_SESSION['user_id'];
 
-			$query = $db->prepare("SELECT `content`, `notification_id` FROM `notifications` WHERE `user_id`=?");
+			$query = $db->prepare("SELECT `content`, `notification_id`, `sender_id`, `seen` FROM `notifications` WHERE `user_id`=?");
 	
 			$query->bind_param('i', $user_id);
 	
-			$query->execute();
+			if(!$query->execute()){
+				echo "You have no notifications.";
+			}
        			
-			$query->bind_result($content, $notification_id);
+			$query->bind_result($content, $notification_id, $sender_id, $seen);
 				
 			$counter = 0;
 			$max = 30;
 				
-			/*if (countNotifications($user_id) == 0) {
-                    	echo "You have no notifications.";
-                	}*/
-				
 			while(($row = $query->fetch()) and ($counter < $max)){
-			?>
-                   
-                    		<li onClick="seen_notification(<?=$notification_id?>)"><span><img src="profile.png"></span><!-- Get image from folder THE SENDER_ID -->
-                    		<span><?php echo $content . " (" . $notification_id . ")"?></span>
-                    		<i class="fa fa-trash" onClick="delete_notification(this, <?=$notification_id?>)"></i><!-- link to some script which gets the notification id sents it to the delter script and remove the notificatio from the data base -->
-                    		</li>
+		?>
+                   <!--  TODO change css -->
+                <li onClick="seen_notification(<?=$notification_id?>)"><span><img src=<?php echo get_profile_image(45, $sender_id); ?>></span>
+                <i class="fa fa-trash" onClick="delete_notification(this, <?=$notification_id?>)"></i>
+                <span><?php echo $content ?></span>
+                </li>
                     
-                	<?php
+                <?php
 			$counter++;
 			}
-			?>
-          	</ul>
+		?>
+		</ul>
             
         </div>
     </div>
