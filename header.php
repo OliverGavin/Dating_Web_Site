@@ -1,5 +1,7 @@
 <?php
 require_once 'core/func/messaging.php';
+require_once 'core/init.php';
+require_once 'core/func/notifications.php';
 ?>
 <!DOCTYPE html>
 
@@ -33,7 +35,7 @@ require_once 'core/func/messaging.php';
                 $profile_thumb_extra = '<div class="profile-image">
                                             <img class="profile-pic" src="' . get_profile_image(IMG_THUMB) . '">
                                             <div class="profile-notification-counter">
-                                                <p>2</p>
+                                                <p>'.get_unseen_notification_count($_SESSION['user_id']).'</p>
                                             </div>
                                         </div>';
 

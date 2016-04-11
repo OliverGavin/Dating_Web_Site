@@ -1,5 +1,6 @@
 <?php
 require_once 'core/init.php';
+require_once 'core/func/profiles.php';
 require_once 'core/func/notifications.php';
 
 verify_login();
@@ -18,32 +19,29 @@ verify_login();
         </div>
     	<div class="pictures">
             
-            <ul>
-          		<li><span><a href="#"><img src="profile.png"></a></span>
-                <span>Jane Doe</span>
+            <ul><!-- Div will fit 8 profiles -->
+            
+            	<?php
+            		
+			global $db;
+				
+			$user_id = $_SESSION['user_id'];
+
+			$query = $db->prepare("SELECT `user_id`, `first_name` FROM `users` ORDER BY RAND() LIMIT 8");
+	
+			$query->execute();
+       			
+			$query->bind_result($user_id, $firstname);
+					
+			while($row = $query->fetch()){
+		?>
+          	<li><span><a href="" onClick="get_profile(<?=$user_id?>)"><img src=<?php echo get_profile_image(300, $user_id); ?>></a></span>
+                <span><?php echo $firstname ?></span>
                 </li>
-          		<li><span><a href="#"><img src="profile.png"></a></span>
-                <span>Jane Doe</span>
-                </li>
-          		<li><span><a href="#"><img src="profile.png"></a></span>
-                <span>Jane Doe</span>
-                </li>
-          		<li><span><a href="#"><img src="profile.png"></a></span>
-                <span>Jane Doe</span>
-                </li>
-                <li><span><a href="#"><img src="profile.png"></a></span>
-                <span>Jane Doe</span>
-                </li>
-                <li><span><a href="#"><img src="profile.png"></a></span>
-                <span>Jane Doe</span>
-                </li>
-                <li><span><a href="#"><img src="profile.png"></a></span>
-                <span>Jane Doe</span>
-                </li>
-                <li><span><a href="#"><img src="profile.png"></a></span>
-                <span>Jane Doe</span>
-                </li>
-			</ul>
+                <?php
+			}
+		?>
+	    </ul>
             
         </div>
     </div>
@@ -55,39 +53,37 @@ verify_login();
     	<div class="notePictures">
             
             	<ul>
-          		<?php
+            	<?php
 			global $db;
 				
 			$user_id = $_SESSION['user_id'];
 
-			$query = $db->prepare("SELECT `content`, `notification_id` FROM `notifications` WHERE `user_id`=?");
+			$query = $db->prepare("SELECT `content`, `notification_id`, `sender_id`, `seen` FROM `notifications` WHERE `user_id`=?");
 	
 			$query->bind_param('i', $user_id);
 	
-			$query->execute();
+			if(!$query->execute()){
+				echo "You have no notifications.";
+			}
        			
-			$query->bind_result($content, $notification_id);
+			$query->bind_result($content, $notification_id, $sender_id, $seen);
 				
 			$counter = 0;
 			$max = 30;
 				
-			/*if (countNotifications($user_id) == 0) {
-                    	echo "You have no notifications.";
-                	}*/
-				
 			while(($row = $query->fetch()) and ($counter < $max)){
-			?>
-                   
-                    		<li onClick="seen_notification(<?=$notification_id?>)"><span><img src="profile.png"></span><!-- Get image from folder THE SENDER_ID -->
-                    		<span><?php echo $content . " (" . $notification_id . ")"?></span>
-                    		<i class="fa fa-trash" onClick="delete_notification(this, <?=$notification_id?>)"></i><!-- link to some script which gets the notification id sents it to the delter script and remove the notificatio from the data base -->
-                    		</li>
+		?>
+                   <!--  TODO change css -->
+                <li onClick="seen_notification(<?=$notification_id?>)"><span><img src=<?php echo get_profile_image(45, $sender_id); ?>></span>
+                <i class="fa fa-trash" onClick="delete_notification(this, <?=$notification_id?>)"></i>
+                <span><?php echo $content ?></span>
+                </li>
                     
-                	<?php
+                <?php
 			$counter++;
 			}
-			?>
-          	</ul>
+		?>
+		</ul>
             
         </div>
     </div>
@@ -131,6 +127,14 @@ verify_login();
 			}
 		});
 	}
+	
+	function get_profile(id) {
+    	event.preventDefault()
+    	$.post('ajax/get_profile.php', {id:id}, function(data) {
+    		// Callback function
+    		show_modal(data);
+    		});
+    	}
 	</script>
 
     </main><!-- #main -->
