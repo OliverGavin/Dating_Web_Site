@@ -201,6 +201,10 @@ body {
     padding-top: 9px;
 }
 
+.style-rounded-dark option {
+    background-color: #666666;
+}
+
 .style-rounded-dark select.male {
     color: deepskyblue;
 }
@@ -1296,8 +1300,10 @@ font-size: 26px;
     text-align: left;
 }
 
-/*////////////////*/
 
+/*--------------------------------------------------------------
+# Messages
+--------------------------------------------------------------*/
 
 .menu-messages ul.messages {
     padding: 0;
@@ -1336,6 +1342,20 @@ font-size: 26px;
     position: relative;
     top: 0;
 }
+
+
+/*--------------------------------------------------------------
+# Payment
+--------------------------------------------------------------*/
+
+.payment input[type=submit] {
+    vertical-align: top;
+    margin-left: 5px;
+}
+
+
+
+
 
 
 
