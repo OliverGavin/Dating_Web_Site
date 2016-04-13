@@ -14,15 +14,38 @@ require_once 'core/init.php';
 		<div class="loginOrRegister">
 
 			<?php
-			if (isset($message['error'])) {
+			if (isset($message['error']) && !empty($message['error'])) {
+				echo '<div class="notice error">';
+				echo '<h6 class="notice-title">WARNING</h6>';
 				foreach ($message['error'] as $msg) {
-					echo 'Error: ' . $msg;
+					echo '<p>';
+					switch ($msg) {
+						case USER_BANNED:
+							echo 'You have been temporarily banned until ' . get_ban_details()->until_date_time;
+							break;
+
+						case USER_DELETED:
+							echo 'You have been permanently banned from access to the site';
+							break;
+
+						case INCORRECT_USER_PASS:
+							echo 'Incorrect username or password, please try again';
+							break;
+
+						default:
+							echo 'Error: ' . $msg;
+							break;
+					}
+					echo '</p>';
 				}
+				echo '</div>';
 			}
-			if (isset($message['success'])) {
+			if (isset($message['success']) && !empty($message['success'])) {
+				echo '<div class="notice success">';
 				foreach ($message['success'] as $msg) {
 					echo $msg;
 				}
+				echo '</div>';
 			}
 
 			$redirect = "";

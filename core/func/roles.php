@@ -250,7 +250,45 @@ function add_ban_details($reason, $duration, $user_id) {
 	}
 
 	return true;
+}
 
+function get_ban_details() {
+	global $db;
+	global $attempted_user_id;
+
+	$prepared = $db->prepare("
+			SELECT date_time, until_date_time, reason
+			FROM user_bans
+			WHERE user_id = ? AND
+				date_time >= ALL (
+						SELECT date_time
+						FROM user_bans
+						WHERE user_id = ?
+						)
+		");
+
+	$prepared->bind_param('ii', $attempted_user_id, $attempted_user_id);
+
+	if (!$prepared->execute()) {
+		$message['error'][] = ERROR;
+		return false;
+	}
+
+	$prepared->bind_result(
+		$date_time,
+		$until_date_time,
+		$reason
+	);
+
+	$prepared->fetch();
+
+	$prepared->free_result();
+
+	return (object) array(
+			'date_time'			=> $date_time,
+			'until_date_time'	=> $until_date_time,
+			'reason'			=> $reason
+		);
 }
 
 function can_message_each_other($user_id1, $user_id2) {

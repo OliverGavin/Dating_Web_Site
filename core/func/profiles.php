@@ -199,7 +199,7 @@ function get_profile($user_id) {
     $is_blocked_by_owner = user_is_blocked_by($user_id);
     // Unauthorised user - blocked
     if ($is_blocked_by_owner) {
-        $message['error'][] = BLOCKED;
+        $message['error'][] = USER_BLOCKED;
         return false;
     }
 

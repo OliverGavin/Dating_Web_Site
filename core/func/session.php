@@ -1,6 +1,9 @@
 <?php
 global $pathToRoot;
 require_once $pathToRoot.'core/func/profiles.php';
+require_once $pathToRoot.'core/func/roles.php';
+
+$attempted_user_id;
 
 session_start();
 
@@ -42,7 +45,7 @@ function logout($timeout = null) {
 }
 
 function login() {
-    global $db, $message;
+    global $db, $message, $attempted_user_id;
 
     if (isset($_POST['email'], $_POST['password']) &&
         !empty($_POST['email']) &&
@@ -69,6 +72,21 @@ function login() {
 
         if (!$user_id) {
             array_push($message['error'], INCORRECT_USER_PASS);
+            return;
+        }
+
+        if (user_is_role(ROLE_BANNED, $user_id)) {
+            $attempted_user_id = $user_id;
+            if (date_create() > date_create(get_ban_details()->until_date_time)) {
+                set_user_role(ROLE_FREE, $user_id);
+                // TODO add notification
+            } else {
+                array_push($message['error'], USER_BANNED);
+                return;
+            }
+        } else if (user_is_role(ROLE_DELETED, $user_id)) {
+            $attempted_user_id = $user_id;
+            array_push($message['error'], USER_DELETED);
             return;
         }
 
