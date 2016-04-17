@@ -21,13 +21,6 @@ else{
 
     <!-- CONTENT STARTS HERE -->
     
-    <?php 
-	$user = $_SESSION['user_id'];
-	$content = "BLAH BLAH BLAH BLAH";
-	$type = "LIKE";
-	create_notification($user, $content, $type);
-	?>
-    
 	<?php if($display == 2){?><!-- FEATURED USERS -->
     <div id="featured">
     	<div class="featuredHead">
