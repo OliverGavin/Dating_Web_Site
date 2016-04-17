@@ -829,6 +829,7 @@ font-size: 26px;
 	height: 150px;
 	border: 2px solid #DC086B;
 	border-radius: 25px;
+	background-color: white;
 	}
 .dashboard .featuredHead{
 	width: 870px;
@@ -890,6 +891,7 @@ font-size: 26px;
 	height: 525px;
 	border: 2px solid #DC086B;
 	border-radius: 25px;
+	background-color: white;
 	float: left;
 	}
 .dashboard #notifications .notificationHead{
@@ -948,6 +950,7 @@ font-size: 26px;
 	height: 525px;
 	border: 2px solid #DC086B;
 	border-radius: 25px;
+	background-color: white;
 	}
 .dashboard #notificationsadmin .notificationHead{
 	width: 900px;
@@ -1014,6 +1017,7 @@ font-size: 26px;
 	border-radius: 25px;
 	float: left;
 	text-align: center;
+	background-color: white;
 	}
 .dashboard .pOverviewLink{
 	width: 165px;
@@ -1057,6 +1061,7 @@ font-size: 26px;
 	border: 2px solid #DC086B;
 	border-radius: 25px;
 	float: left;
+	background-color: white;
 	}
 .dashboard .recentlyViewedYouHead{
 	width: 165px;
