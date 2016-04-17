@@ -13,7 +13,7 @@ $msg = '';
 <?php get_header(); ?>
 
 <div id="primary" class="content-area">
-    <main id="main" class="site-main" role="main">
+    <main id="main" class="site-main frame" role="main">
         <article class="entry">
 
             <?php if (isset($_GET['action']) && $_GET['action'] == 'browse') {
