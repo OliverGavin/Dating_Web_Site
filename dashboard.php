@@ -4,6 +4,14 @@ require_once 'core/func/profiles.php';
 require_once 'core/func/notifications.php';
 
 verify_login();
+
+if (user_is_at_least_role(ROLE_ADMIN)) {
+	$display = 1;
+} 
+else{ 
+	$display = 2;
+}
+
 ?>
 
 <?php get_header(); ?>
@@ -13,6 +21,7 @@ verify_login();
 
     <!-- CONTENT STARTS HERE -->
     
+	<?php if($display == 2){?><!-- FEATURED USERS -->
     <div id="featured">
     	<div class="featuredHead">
         	<p><b>Featured Users</b></p>
@@ -47,8 +56,10 @@ verify_login();
             
         </div>
     </div>
+    <?php } ?>
     
-    <div id="notifications">
+     <!-- NOTIFICATIONS -->
+    <div id="notifications<?php if($display == 1){echo 'admin';} ?>">
     	<div class="notificationHead">
         	<p><b>Notifications</b></p>
         </div>
@@ -56,60 +67,48 @@ verify_login();
             
             	<ul>
             	<?php
-			global $db;
-				
-			$user_id = $_SESSION['user_id'];
-
-			$query = $db->prepare("SELECT `content`, `notification_id`, `sender_id`, `seen` FROM `notifications` WHERE `user_id`=?");
-	
-			$query->bind_param('i', $user_id);
-	
-			if(!$query->execute()){
-				echo "You have no notifications.";
-			}
-       			
-			$query->bind_result($content, $notification_id, $sender_id, $seen);
-				
-			$counter = 0;
-			$max = 30;
-				
-			while(($row = $query->fetch()) and ($counter < $max)){
-		?>
-                   <!--  TODO change css -->
-                <li onClick="seen_notification(<?=$notification_id?>)"><span><img src=<?php echo get_profile_image(IMG_THUMB, $sender_id); ?>></span>
-                <i class="fa fa-trash" onClick="delete_notification(this, <?=$notification_id?>)"></i>
-                <span><?php echo $content ?></span>
+					$notifications = get_notifications($_SESSION['user_id']);
+					if ($notifications) {
+                		foreach ($notifications as $notification) {
+				?>
+                <li class="<?php if ($notification->seen) echo 'seen'; ?>" onClick="seen_notification(this, <?=$notification->notification_id?>)"><span><img src=<?php echo get_profile_image(IMG_THUMB, $notification->sender_id); ?>></span>
+                <i class="fa fa-trash" onClick="delete_notification(this, <?=$notification->notification_id?>)"></i>
+                <span><?php echo $notification->content ?></span>
                 </li>
                     
-                <?php
-			$counter++;
-			}
-		?>
+            <?php
+				}
+				}
+			?>
 		</ul>
             
         </div>
     </div>
+    <?php ?>
     
+    <?php if($display == 2){ ?><!-- PROFILE OVERVIEW -->
     <div id="pOverview">
     	<div class="pOverviewLink">
         	<i class="fa fa-user fa-2x"></i>
             <p><b>Your Profile</b></p>
         </div>
-    
-    	<a href="" onClick="get_profile(<?=$user_id?>)"><img src=<?php echo get_profile_image(IMG_MEDIUM, $user_id); ?>></a>
-        <p>Jane Doe</p>
-        <p>22, Single</p>
+    <?php $profile = get_profile($_SESSION['user_id'])?>
+    	<a href="" onClick="get_profile(<?=$user_id?>)"><img src=<?php echo get_profile_image(IMG_MEDIUM, $_SESSION['user_id']); ?>></a>
+        <p><?=$_SESSION['first_name']?> <?=$_SESSION['last_name']?></p>
+        <p><?php echo $profile->age; ?></p>
             
     </div>
+    <?php } ?>
     
+    <?php if($display == 2){ ?><!-- VIEWED YOU -->
     <div id="recentlyViewedYou">
     	<div class="recentlyViewedYouHead">
         	<p><b>Recently Viewed You</b></p>
         </div>
     
     </div>
+    <?php } ?>
     <div id="clearDash"></div>
-    
     <!--CONTENT HERE -->
 
 	<script type="text/javascript">
@@ -121,11 +120,12 @@ verify_login();
 			}
 		});
 	}
-	function seen_notification(notification_id){
+	function seen_notification(el,notification_id){
 		event.preventDefault();
 		$.post("ajax/set_notification.php", {notification_id:notification_id}, function( data ) {
 			if (data == 'success') {
-				//someting or other
+				//CSS
+				$(el).css('background-color','#FFFFFF');
 			}
 		});
 	}

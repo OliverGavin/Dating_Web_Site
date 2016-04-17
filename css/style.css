@@ -829,6 +829,7 @@ font-size: 26px;
 	height: 150px;
 	border: 2px solid #DC086B;
 	border-radius: 25px;
+	background-color: white;
 	}
 .dashboard .featuredHead{
 	width: 870px;
@@ -890,16 +891,17 @@ font-size: 26px;
 	height: 525px;
 	border: 2px solid #DC086B;
 	border-radius: 25px;
+	background-color: white;
 	float: left;
 	}
-.dashboard .notificationHead{
+.dashboard #notifications .notificationHead{
 	width: 690px;
 	height: 25px;
 	border-radius: 23px 23px 0 0;
 	background-color: #e1d9ec;
 	text-align: center;	
 	}
-.dashboard .notificationHead p{
+.dashboard #notifications .notificationHead p{
 	color: #DC086B;
 	top: 4px;
 	position: relative;
@@ -928,16 +930,85 @@ font-size: 26px;
 	width: 670px;
 }
 .dashboard #notifications .notePictures ul li {
-    background: #fff;
+    background: #e6e6e6;
 	list-style: none;
-    margin: 8px 20px 8px 0;
-  	padding: 0; 
+    margin: 0 20px 0 0;
+  	padding: 5px 0 5px 0; 
     color: #000;
     width: 650px;
+}
+.dashboard #notifications .notePictures ul li.seen {
+	background: #FFFFFF;
 }
 .dashboard #notifications .notePictures ul li:hover {
 	background: #9DE8EF;
 }
+/*CSS ADMIN*/
+.dashboard #notificationsadmin{
+	margin: 15px 0 20px 15px;
+	width: 900px;
+	height: 525px;
+	border: 2px solid #DC086B;
+	border-radius: 25px;
+	background-color: white;
+	}
+.dashboard #notificationsadmin .notificationHead{
+	width: 900px;
+	height: 25px;
+	border-radius: 23px 23px 0 0;
+	background-color: #e1d9ec;
+	text-align: center;	
+	}
+.dashboard #notificationsadmin .notificationHead p{
+	color: #DC086B;
+	top: 4px;
+	position: relative;
+	}
+.dashboard #notificationsadmin .notePictures{
+	float: left;
+	}
+.dashboard #notificationsadmin .notePictures img {
+	width: 45px;
+	height: 45px;
+	border-radius: 150px;
+	margin: 5px;
+	-webkit-border-radius: 150px;
+	-moz-border-radius: 150px;
+	vertical-align: middle;
+	display: inline-block;
+}
+.dashboard #notificationsadmin .notePictures {
+  display: block;
+}
+.dashboard #notificationsadmin .notePictures ul {
+  	list-style: none;
+	overflow-y: auto;
+	overflow-x: hidden;
+	height: 500px;
+	width: 880px;
+}
+.dashboard #notificationsadmin .notePictures ul li {
+    background: #e6e6e6;
+	list-style: none;
+    margin: 0 20px 0 0;
+  	padding: 5px 0 5px 0; 
+    color: #000;
+    width: 860px;
+}
+.dashboard #notificationsadmin .notePictures ul li.seen {
+	background: #FFFFFF;
+}
+.dashboard #notificationsadmin .notePictures ul li:hover {
+	background: #9DE8EF;
+}
+.dashboard #notificationsadmin .notePictures ul li .fa-trash{
+	color: #C00206;
+	position: relative;
+	line-height: 51px;
+	float:right;
+	margin-right: 10px;
+	}
+	
 .dashboard #pOverview{
 	margin: 15px 0 0 15px;
 	width: 165px;
@@ -946,6 +1017,7 @@ font-size: 26px;
 	border-radius: 25px;
 	float: left;
 	text-align: center;
+	background-color: white;
 	}
 .dashboard .pOverviewLink{
 	width: 165px;
@@ -989,6 +1061,7 @@ font-size: 26px;
 	border: 2px solid #DC086B;
 	border-radius: 25px;
 	float: left;
+	background-color: white;
 	}
 .dashboard .recentlyViewedYouHead{
 	width: 165px;
