@@ -33,7 +33,7 @@ else{
             	<?php
             		
 			global $db;
-				
+
 			$user_id = $_SESSION['user_id'];
 
 			$query = $db->prepare("SELECT `user_id`, `first_name` FROM `users` WHERE `user_id`<>? ORDER BY RAND() LIMIT 8");
@@ -42,11 +42,11 @@ else{
 	
 			$query->execute();
        			
-			$query->bind_result($user_id, $firstname);
+			$query->bind_result($featured_user_id, $firstname);
 					
 			while($row = $query->fetch()){
 		?>
-          	<li><span><a href="" onClick="get_profile(<?=$user_id?>)"><img src=<?php echo get_profile_image(IMG_SMALL, $user_id); ?>></a></span>
+          	<li><span><a href="" onClick="get_profile(<?=$featured_user_id?>)"><img src=<?php echo get_profile_image(IMG_SMALL, $featured_user_id); ?>></a></span>
                 <span><?php echo $firstname ?></span>
                 </li>
                 <?php
@@ -93,7 +93,7 @@ else{
             <p><b>Your Profile</b></p>
         </div>
     <?php $profile = get_profile($_SESSION['user_id'])?>
-    	<a href="" onClick="get_profile(<?=$user_id?>)"><img src=<?php echo get_profile_image(IMG_MEDIUM, $_SESSION['user_id']); ?>></a>
+    	<a href="" onClick="get_profile(<?=$_SESSION['user_id']?>)"><img src=<?php echo get_profile_image(IMG_MEDIUM, $_SESSION['user_id']); ?>></a>
         <p><?=$_SESSION['first_name']?> <?=$_SESSION['last_name']?></p>
         <p><?php echo $profile->age; ?></p>
             
@@ -134,7 +134,7 @@ else{
     	event.preventDefault()
     	$.post('ajax/get_profile.php', {id:id}, function(data) {
     		// Callback function
-    		show_modal(data);
+    		show_modal(data, 'modal-profile');
     		});
     	}
 	</script>
