@@ -1,5 +1,6 @@
 <?php
 require_once 'core/init.php';
+require_once 'core/func/validation.php';
 
 // TODO redirect to dashboard if logged in
 ?>
@@ -54,17 +55,90 @@ require_once 'core/init.php';
 			}
 			?>
 
-			<form action="<?php echo $_SERVER['PHP_SELF'] . '?login=1' . $redirect?>" method="post" onSubmit="">
-				<input class="textbox" type="email" size="30" placeholder="Email" name="email"><br>
-				<input class="textbox" type="password" size="30" placeholder="Password" name="password">
+			<form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?login=1' . $redirect?>" class="style-rounded-dark" onSubmit="">
+<!--				<input class="textbox" type="email" size="30" placeholder="Email" name="email"><br>-->
+<!--				<input class="textbox" type="password" size="30" placeholder="Password" name="password">-->
 
+				<div class="group both-rounded <?= get_form_field_status('email'); ?>">
+					<label for="email" class="visible">Email</label>
+					<input type="email" id="email" name="email" size="30" value="<?php if(isset($email)) echo $email?>" onblur="validate_field(this, $(this).val(), 'email', 'email')" />
+				</div>
+				<?= get_form_field_message('email');  ?>
+				<br>
+				<div class="group both-rounded <?= get_form_field_status('password'); ?>">
+					<label for="password" class="visible">Password</label>
+					<input type="password" id="password" name="password" size="30" value="<?php if(isset($password)) echo $password?>" onblur="validate_field(this, $(this).val(), 'password', 'password')" />
+				</div>
+				<?= get_form_field_message('password');  ?>
+				<br>
 			<!-- SHOW / HIDE STARTS HERE -->
 
-				<div class="hideRegister">
-					<input class="textbox" type="password" size="30" placeholder="Confirm password" name="password2"><br>
-					<input class="textbox" type="text" size="12" placeholder="First Name" name="first_name">
-					<input class="textbox" type="text" size="12" placeholder="Last Name" name="last_name">
+				<div id="registration" class="hidden">
+					<div class="group both-rounded <?= get_form_field_status('password2'); ?>">
+						<label for="password2" class="visible">Confirm Password</label>
+						<input type="password" id="password2" name="password2" size="30" value="<?php if(isset($password2)) echo $password2?>" onblur="check_same_password(this, 'password2', $(this).val(), $('#password').val())" />
+					</div>
+					<?= get_form_field_message('password');  ?>
 					<br>
+					<div class="group both-rounded <?= get_form_field_status('first_name'); ?>">
+						<label for="first_name" class="visible">First Name</label>
+						<input type="text" id="first_name" name="first_name" size="30" value="<?php if(isset($first_name)) echo $first_name?>" onblur="validate_field(this, $(this).val(), 'first_name', 'name')" />
+					</div>
+					<?= get_form_field_message('email');  ?>
+					<br>
+					<div class="group both-rounded <?= get_form_field_status('last_name'); ?>">
+						<label for="last_name" class="visible">Last Name</label>
+						<input type="text" id="last_name" name="last_name" size="30" value="<?php if(isset($last_name)) echo $last_name?>" onblur="validate_field(this, $(this).val(), 'last_name', 'name')" />
+					</div>
+					<?= get_form_field_message('email');  ?>
+					<br>
+					<div class="group both-rounded <?= get_form_field_status('DOB_date'); ?>">
+						<label for="DOB_day DOB_month DOB_year" class="visible">Date of Birth</label>
+						<select id="DOB_day" name="DOB_day" onchange="validate_date_fields(this)">
+							<option value="-">Day</option>
+							<?php
+							$default = (int)(isset($DOB_date))? $DOB_date->format('d') : '-';
+							for($i = 1; $i <= 31; $i++) {
+								$value = str_pad((string)$i, 2, "0", STR_PAD_LEFT);
+								$selected = ($i == $default)? 'selected="selected"': '';
+								echo "<option $selected value=\"$value\">$i</option>";
+							}
+							?>
+						</select>
+						<select id="DOB_month" name="DOB_month" onchange="validate_date_fields(this)">
+							<option value="-">Month</option>
+							<?php
+							$months = array("January", "February", "March", "April", "May", "June", "July",
+											"August", "September", "October", "November", "December");
+							$default = (int)(isset($DOB_date))? $DOB_date->format('m') : '-';
+							for($i = 0; $i < 12; $i++) {
+								$value = str_pad((string)($i+1), 2, "0", STR_PAD_LEFT);
+								$selected = ($i == $default)? 'selected="selected"': '';
+								echo "<option $selected value=\"$value\">$months[$i]</option>";
+							}
+							?>
+						</select>
+						<select id="DOB_year" name="DOB_year" onchange="validate_date_fields(this)">
+							<option value="-">Year</option>
+							<?php
+							$current_year = date("Y");
+							$default = (int)(isset($DOB_date))? $DOB_date->format('Y') : '-';
+							for($i = $current_year; $i > $current_year - 100; $i--) {
+								$selected = ($i == $default)? 'selected="selected"': '';
+								echo "<option $selected value=\"$i\">$i</option>";
+							}
+							?>
+						</select>
+						<script>
+							function validate_date_fields(el) {
+								if ($('#DOB_day').val() != '-' && $('#DOB_month').val() != '-' && $('#DOB_year').val() != '-')
+									validate_field(el, $('#DOB_day').val()+$('#DOB_month').val()+$('#DOB_year').val(), 'DOB_date', 'date_of_birth')
+							}
+						</script>
+					</div>
+					<?= get_form_field_message('DOB_date');  ?>
+
+
 					<div class="radioGender">
 						<input id="male" type="radio" name="sex" value="1">
 						<label for="male">Male</label>
@@ -72,63 +146,25 @@ require_once 'core/init.php';
 						<label for="female">Female</label>
 					</div>
 					<br>
-					<div class="selectLogin">
-						<select id="DOB_day" name="DOB_day">
-							<option value="-">Day</option>
-							<?php
-							for($i = 1; $i <= 31; $i++) {
-								echo "<option value=\"$i\">$i</option>";
-							}
-							?>
-						</select>
-						<select id="DOB_month" name="DOB_month">
-							<option value="-">Month</option>
-							<?php
-							$months = array("January", "February", "March", "April", "May", "June", "July",
-											"August", "September", "October", "November", "December");
-							for($i = 0; $i < 12; $i++) {
-								echo "<option value=\"$i\">$months[$i]</option>";
-							}
-							?>
-						</select>
-						<select id="DOB_year" name="DOB_year">
-							<option value="-">Year</option>
-							<?php
-							$current_year = date("Y");
-							for($i = $current_year; $i > $current_year - 100; $i--) {
-								echo "<option value=\"$i\">$i</option>";
-							}
-							?>
-						</select>
-					</div>
-				</div>
-				<div class="checkboxR">
-					<input type="checkbox" name="check" id="check" onclick="showHide()"/>
-					<label for="check">Register</label>
 				</div>
 
 				<div class="action-submit">
 					<input type="submit" name="action" value="Login">
-					<input type="submit" name="action" value="Register">
+					<input type="submit" name="action" value="Register" onclick="register()">
 				</div>
 			</form>
+			<script src="js/validation.js" type="text/javascript"></script>
 		</div>
-<!-- Just put this here for now your more than welcome to move it -->
-	<script type="text/javascript">
-		function showHide(){
-			var checkbox = document.getElementById("check");
-			var hiddeninputs = document.getElementsByClassName("hideRegister");
-			
-			for(var i = 0; i != hiddeninputs.length; i++){
-				if(checkbox.checked){
-						hiddeninputs[i].style.display = "block";
-				}
-				else{
-					hiddeninputs[i].style.display = "none";
+
+		<script type="text/javascript">
+			function register() {
+				if($('#registration').hasClass('hidden')) {
+					event.preventDefault();
+					$('#registration').toggleClass('hidden');
+					$('input[value=Login]').remove();
 				}
 			}
-		}
-    	</script>
+		</script>
         
     </main><!-- #main -->
 </div><!-- #primary -->

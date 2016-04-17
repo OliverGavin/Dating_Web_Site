@@ -45,6 +45,16 @@ body {
 # Elements
 --------------------------------------------------------------*/
 
+html {
+    /*background: url(http://i.huffpost.com/gen/1218696/images/o-HOLDING-HANDS-facebook.jpg) no-repeat center 0px fixed;*/
+    /*background: url(https://bipolaronlinesite.files.wordpress.com/2015/03/people.jpg) no-repeat center 0px fixed;*/
+    background: url(http://img1.goodfon.ru/original/4272x2848/3/bd/priroda-more-zakat-lyubov-ruki.jpg) no-repeat center -382px fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
 html,
 body {
     height: 100%;
@@ -237,6 +247,45 @@ body {
 
 .style-rounded-dark input[type='submit']:focus {
     background-color: #ac1649;
+}
+
+
+.style-rounded-dark .group {
+    margin: 2px;
+}
+
+.style-rounded-dark .group.valid {
+    box-shadow: 0px 0px 6px 1px greenyellow;
+}
+
+.style-rounded-dark .group.invalid {
+    box-shadow: 0px 0px 6px 1px red;
+}
+
+.style-rounded-dark .field-message {
+    display: none;
+}
+
+.style-rounded-dark .field-message.valid {
+    color: greenyellow;
+    display: inline-block;
+    vertical-align: top;
+    padding: 12px 5px;
+    font-size: 1.4em;
+}
+
+.style-rounded-dark .field-message.invalid {
+    color: red;
+    display: block;
+    padding: 2px 10px;
+}
+
+.valid i:before{
+    content: "\f058 ";
+}
+
+.invalid i:before{
+    content: "\f06a  ";
 }
 
 /*--------------------------------------------------------------
@@ -981,27 +1030,72 @@ font-size: 26px;
     ## Login
 --------------------------------------------------------------*/
 
+.index .loginOrRegister {
+    background-color: rgba(255, 240, 221, 0.67);
+    padding: 18px 0 18px 0;
+    margin-top: 200px;
+    border-radius: 30px;
+    display: inline-block;
+}
+
+.index .loginOrRegister .action-submit {
+    text-align: right;
+}
+
+.index .loginOrRegister .action-submit input[type="submit"] {
+    margin: 2px 7px 0 0 !important;
+}
+
 .index .loginOrRegister form {
-	text-align: center;
-	margin: 0 auto;
+    /*text-align: center;*/
+    /* margin: 0 auto; */
+    padding: 0 20px;
 }
 
-.index .textbox {
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    border: 1px solid #848484;
-	background-color:#1B1B1B;
-	color: #FFFFFF;
-    outline:0;
-    height:30px;
-    width: 275px;
-    margin: 3px;
-	font-size: 17px;
+.index form.style-rounded-dark label.visible {
+    width: 140px;
+    display: inline-block;
+    text-align: left;
 }
 
-.index .hideRegister{
+.index form.style-rounded-dark input[type=text],
+.index form.style-rounded-dark input[type=password],
+.index form.style-rounded-dark input[type=email] {
+    width: 250px;
+}
+
+.index form.style-rounded-dark .field-message.valid {
+    padding: 7px 5px;
+}
+
+/*.index .textbox {*/
+    /*-webkit-border-radius: 5px;*/
+    /*-moz-border-radius: 5px;*/
+    /*border-radius: 5px;*/
+    /*border: 1px solid #848484;*/
+	/*background-color:#1B1B1B;*/
+	/*color: #FFFFFF;*/
+    /*outline:0;*/
+    /*height:30px;*/
+    /*width: 275px;*/
+    /*margin: 3px;*/
+	/*font-size: 17px;*/
+/*}*/
+
+/*.index .hideRegister{*/
+	/*display: none;*/
+/*}*/
+
+.index #registration {
+	display: block;
+}
+
+.index #registration.hidden {
 	display: none;
+}
+
+.index .radioGender {
+    padding: 10px 20px 0px;
 }
 
 .index .radioGender label {
@@ -1041,55 +1135,55 @@ font-size: 26px;
 	line-height: 18px;
 }
 
-.index .selectLogin select {
-	-webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-	border: 1px solid #848484;
-    font-size: 15px;
-    color: #fff;
-    background: #1B1B1B;
-    padding: 5px;
-	margin-bottom: 5px;
-}
+/*.index .selectLogin select {*/
+	/*-webkit-border-radius: 5px;*/
+    /*-moz-border-radius: 5px;*/
+    /*border-radius: 5px;*/
+	/*border: 1px solid #848484;*/
+    /*font-size: 15px;*/
+    /*color: #fff;*/
+    /*background: #1B1B1B;*/
+    /*padding: 5px;*/
+	/*margin-bottom: 5px;*/
+/*}*/
 
-.index .checkboxR label {
-	display: inline-block;
-    cursor: pointer;
-    position: relative;
-    padding-left: 25px;
-    margin-right: 15px;
-    font-size: 15px;
-}
+/*.index .checkboxR label {*/
+	/*display: inline-block;*/
+    /*cursor: pointer;*/
+    /*position: relative;*/
+    /*padding-left: 25px;*/
+    /*margin-right: 15px;*/
+    /*font-size: 15px;*/
+/*}*/
 
-.index .checkboxR input[type=checkbox] {
-	display: none;
-}
+/*.index .checkboxR input[type=checkbox] {*/
+	/*display: none;*/
+/*}*/
 
-.index .checkboxR label:before {
-	content: "";
-    display: inline-block;
+/*.index .checkboxR label:before {*/
+	/*content: "";*/
+    /*display: inline-block;*/
 
-    width: 16px;
-    height: 16px;
+    /*width: 16px;*/
+    /*height: 16px;*/
 
-    margin-right: 10px;
-    position: absolute;
-    left: 0;
-    bottom: 1px;
-    background-color: #aaa;
-    box-shadow: inset 0px 2px 3px 0px rgba(0, 0, 0, .3), 0px 1px 0px 0px rgba(255, 255, 255, .8);
-	border-radius: 3px;
-}
+    /*margin-right: 10px;*/
+    /*position: absolute;*/
+    /*left: 0;*/
+    /*bottom: 1px;*/
+    /*background-color: #aaa;*/
+    /*box-shadow: inset 0px 2px 3px 0px rgba(0, 0, 0, .3), 0px 1px 0px 0px rgba(255, 255, 255, .8);*/
+	/*border-radius: 3px;*/
+/*}*/
 
-.index .checkboxR input[type=checkbox]:checked + label:before {
-    content: "\2713";
-    text-shadow: 1px 1px 1px rgba(0, 0, 0, .2);
-    font-size: 15px;
-    color: #f3f3f3;
-    text-align: center;
-    line-height: 15px;
-}
+/*.index .checkboxR input[type=checkbox]:checked + label:before {*/
+    /*content: "\2713";*/
+    /*text-shadow: 1px 1px 1px rgba(0, 0, 0, .2);*/
+    /*font-size: 15px;*/
+    /*color: #f3f3f3;*/
+    /*text-align: center;*/
+    /*line-height: 15px;*/
+/*}*/
 
 /*--------------------------------------------------------------
 	## ...
@@ -1348,10 +1442,83 @@ font-size: 26px;
 # Payment
 --------------------------------------------------------------*/
 
+.payment form {
+    max-width: 500px;
+    margin: auto;
+}
+
+.payment form .group {
+    margin: 5px 2px;
+}
+
 .payment input[type=submit] {
     vertical-align: top;
     margin-left: 5px;
+    float: right;
+    margin-right: 55px;
 }
+
+.payment input[name="card_number"] {
+    max-width: 170px;
+}
+
+.payment input[name="card_cvc"] {
+    max-width: 60px;
+    text-align: center;
+}
+
+
+
+
+/* idea? */
+main.frame {
+    background-color: rgba(255, 240, 221, 0.67);
+    padding: 15px 0 30px 0;
+    margin-top: 60px;
+    border-radius: 30px;
+    min-height: 470px;
+}
+
+/*--------------------------------------------------------------
+# Error messages
+--------------------------------------------------------------*/
+
+.notice {
+    width: 500px;
+    margin: 5px auto 10px;
+    padding: 10px 20px;
+    border: 2px solid blue;
+    border-radius: 20px;
+    background-color: white;
+}
+
+.notice.error {
+    border-color: red;
+}
+
+.notice.error .notice-title {
+    color: red;
+}
+
+.notice.success {
+    border-color: green;
+}
+
+.notice.success .notice-title {
+    color: green;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
