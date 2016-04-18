@@ -47,9 +47,8 @@ if (!user_is_at_least_role(ROLE_ADMIN)) {       // Admins can see all users i.e.
                 SELECT target_user_id
                 FROM user_relationships NATURAL JOIN user_relationship_status
                 WHERE status = 'BLOCK' AND user_id = ? AND target_user_id = users.user_id
-            )"
-        .(isset($_GET['blocked']) ? ' OR ':' AND ' )
-        ."user_id $in_or_not (      -- current user has been blocked
+            )
+        AND user_id NOT IN (      -- current user has been blocked
                 SELECT user_id
                 FROM user_relationships NATURAL JOIN user_relationship_status
                 WHERE status = 'BLOCK' AND user_id = users.user_id AND target_user_id = ?
