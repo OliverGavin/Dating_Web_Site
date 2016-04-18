@@ -48,7 +48,8 @@ body {
 html {
     /*background: url(http://i.huffpost.com/gen/1218696/images/o-HOLDING-HANDS-facebook.jpg) no-repeat center 0px fixed;*/
     /*background: url(https://bipolaronlinesite.files.wordpress.com/2015/03/people.jpg) no-repeat center 0px fixed;*/
-    background: url(http://img1.goodfon.ru/original/4272x2848/3/bd/priroda-more-zakat-lyubov-ruki.jpg) no-repeat center -382px fixed;
+    /*http://img1.goodfon.ru/original/4272x2848/3/bd/priroda-more-zakat-lyubov-ruki.jpg*/
+    background: url(../images/background-medium.jpg) no-repeat center bottom fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -66,7 +67,7 @@ body {
 }
 
 #content {
-    padding-bottom: 50px; /* height of footer */
+    padding-bottom: 90px; /* height of footer */
 }
 
 #main-footer {
@@ -566,6 +567,8 @@ body {
     padding-right: 10px;
     border-radius: 0 10px 10px 0;
     vertical-align: top;
+    margin-top: 2px;
+    margin-left: -7px;
 }
 
 .search .search-form-container .search-form .search-more-options {
@@ -1581,7 +1584,46 @@ main.frame {
     color: green;
 }
 
+/*--------------------------------------------------------------
+# Pagination
+--------------------------------------------------------------*/
 
+.search-navigation {
+    margin-top: -380px;
+}
+
+.search-navigation-left {
+    float: left;
+    margin-left: -85px;
+}
+
+.search-navigation-right {
+    float: right;
+    margin-right: -85px;
+}
+
+.first-page .search-navigation-left {
+    display: none;
+}
+
+.last-page .search-navigation-right {
+    display: none;
+}
+
+.search-navigation .fa-stack.fa-lg {
+    font-size: 155px;
+    height: 135px;
+    width: 135px;
+    line-height: initial
+}
+
+.search-navigation .fa-stack.fa-lg .fa-circle {
+    color: rgba(255, 240, 221, 0.9);
+}
+
+.search-navigation .fa-stack.fa-lg:hover {
+    color: white;
+}
 
 
 

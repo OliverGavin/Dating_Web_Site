@@ -101,7 +101,29 @@ if (user_is_at_least_role(ROLE_ADMIN)) {
             $query = query_add($query, 'AND FLOOR( DATEDIFF(CURDATE(), DOB)/365.25 ) <= ?', $search_max_age, 'i');
         }
 
+        $query = query_add($query,
+            "AND user_id NOT IN (      -- user has not been blocked by the current user
+                    SELECT target_user_id
+                    FROM user_relationships NATURAL JOIN user_relationship_status
+                    WHERE status = 'BLOCK' AND user_id = ? AND target_user_id = users.user_id
+                )
+            AND user_id NOT IN (      -- current user has been blocked
+                    SELECT user_id
+                    FROM user_relationships NATURAL JOIN user_relationship_status
+                    WHERE status = 'BLOCK' AND user_id = users.user_id AND target_user_id = ?
+                )",
+            array(
+                $_SESSION['user_id'],
+                $_SESSION['user_id']
+            ),
+            'ii'
+        );
+
         $query_end_part = " AND (match_score > 0 OR match_score IS NULL) ORDER BY match_score DESC";
+        $query = query_add($query, null, null, null, null, $query_end_part);
+
+        $limit_from = $profiles_per_page*$page_number-$profiles_per_page;
+        $query_end_part = " LIMIT $limit_from,$profiles_per_page";
         $query = query_add($query, null, null, null, null, $query_end_part);
 
         // Search using query built

@@ -134,7 +134,7 @@ function set_email($email) {
 				<input class="button" type="submit" name="action" value="Save Changes" />
 		</form>
 
-		<a href="">Manage blocked users</a>
+		<a href="search.php?action=browse&blocked=true">Manage blocked users</a>
 	</div>
     
     	<!--CONTENT ENDS HERE -->
