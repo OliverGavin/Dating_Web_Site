@@ -2,9 +2,9 @@
 require_once 'core/init.php';
 require_once 'core/func/profiles.php';
 require_once 'core/func/interests.php';
+require_once 'core/func/validation.php';
 
 verify_login();
-// TODO permissions and validation
 
 $creating = false;
 $profile = false;
@@ -32,7 +32,7 @@ if ($is_owner && user_is_at_least_role(ROLE_ADMIN)) {
     }
     // Authorised, but not permitted to edit (upgrade required)
     if (!$can_edit) {
-        header("Location: upgrade.php");    //TODO
+        header("Location: payment.php");    //TODO message
         exit();
     }
 
@@ -58,18 +58,40 @@ if ($is_owner && user_is_at_least_role(ROLE_ADMIN)) {
 
         $user_id = $_POST['user_id'];
         $profile = new Profile($user_id);
-        $profile->submit();
 
-        if ($profile->error) {
-            // TODO error
-        }
+        $profile->first_name     =   validate_name($_POST['first_name'], 'first_name');
+        $profile->last_name      =   validate_name($_POST['last_name'], 'last_name');
 
-        if (isset($_POST['new_interest_like']) && !empty($_POST['new_interest_like'])) {
-            add_interest($user_id, true, $_POST['new_interest_like']);
-        }
+        $profile->DOB_day        =   $_POST['DOB_day'];
+        $profile->DOB_month      =   $_POST['DOB_month'];
+        $profile->DOB_year       =   $_POST['DOB_year'];
+        validate_date_of_birth($profile->DOB_day, $profile->DOB_month, $profile->DOB_year, 'DOB_date');
+        $profile->DOB            =   "$profile->DOB_year-$profile->DOB_month-$profile->DOB_day";
 
-        if (isset($_POST['new_interest_dislike']) && !empty($_POST['new_interest_dislike'])) {
-            add_interest($user_id, false, $_POST['new_interest_dislike']);
+        $profile->sex            =   (int) $_POST['sex'];
+        $profile->description    =   validate_text($_POST['description'], 'description');
+        $profile->country        =   $_POST['country']; // todo
+        $profile->county         =   $_POST['county'];  // todo
+        $profile->looking_for    =   (int) $_POST['looking_for'];
+        $profile->min_age        =   max((int)$_POST['min_age'], 18);
+        $profile->max_age        =   min((int)$_POST['max_age'], 100);
+
+        if (empty($_SESSION['form_errors'])) {
+            $profile->submit();
+
+            if ($profile->error) {
+                // TODO error
+            }
+
+            if (isset($_POST['new_interest_like']) && !empty($_POST['new_interest_like'])) {
+                $like = validate_text($_POST['new_interest_like'], 'new_interest_like');
+                add_interest($user_id, true, $like);
+            }
+
+            if (isset($_POST['new_interest_dislike']) && !empty($_POST['new_interest_dislike'])) {
+                $dislike = validate_text($_POST['new_interest_dislike'], 'new_interest_dislike');
+                add_interest($user_id, false, $dislike);
+            }
         }
 
     } else {
@@ -101,7 +123,7 @@ if ($is_owner && user_is_at_least_role(ROLE_ADMIN)) {
     <main id="main" class="site-main" role="main">
         <?php
         if ($profile) {
-            include 'core/templates/edit-profile-single.php';
+            require 'core/templates/edit-profile-single.php';
         } else {
             echo $msg;
         }

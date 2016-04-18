@@ -24,7 +24,11 @@ function add_interest($user_id, $likes, $content) {
         return false;
     }
 
-    $content = ucfirst($content);
+    $content = ucfirst(trim($content));
+    if (strlen($content) == 0) {
+        $message['error'][] = 'empty string provided';
+        return false;
+    }
 
     $prepared = $db->prepare("
             CALL add_interest( ?, ?, ? );

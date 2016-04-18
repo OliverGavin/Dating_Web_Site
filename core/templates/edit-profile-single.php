@@ -1,47 +1,51 @@
 <article>
-    <form action="" method="post" enctype="multipart/form-data" onSubmit="" class="style-underline">
+    <form action="" method="post" enctype="multipart/form-data" onSubmit="" class="style-underline no-valid-messages">
         <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
         <div class="profile-image">
             <img class="profile-pic" src="<?php echo get_profile_image(IMG_MEDIUM, $user_id)?>">
         </div>
         <div class="profile-info">
+
+<!--            TODO-->
             <input type="file" name="fileToUpload" id="fileToUpload">
             <!--                user_id-->
             <!--                first_name-->
             <!--                last_name-->
-            <div class="profile-field profile-name">
+            <div class="profile-field profile-name group <?= get_form_field_status('first_name'); ?> <?= get_form_field_status('last_name'); ?>">
                 <label for="first_name" hidden="hidden">First name</label>
                 <input type="text" id="first_name" name="first_name" size="8" maxlength="30" value="<?php echo $profile->first_name; ?>" placeholder="First Name" />
 
                 <label for="last_name" hidden="hidden">Last name</label>
                 <input type="text" id="last_name" name="last_name" size="12" maxlength="30" value="<?php echo $profile->last_name; ?>" placeholder="Last Name" />
             </div>
+            <?= get_form_field_message('first_name');  ?>
+            <?= get_form_field_message('last_name');  ?>
 
             <!--                Photo: <input type="file">-->
 
-            <div class="profile-field profile-DOB">
+            <div class="profile-field profile-DOB group <?= get_form_field_status('DOB_date'); ?>">
                 <label for="DOB_day" hidden="hidden">Date of birth</label>
-                <select id="DOB_day" name="DOB_day">
+                <select id="DOB_day" name="DOB_day" onchange="validate_date_fields(this)">
                     <?php
                     for($i = 1; $i <= 31; $i++) {
-                        $default = (($i == $profile->DOB_day) ? "selected=\"selected\"" : "");
+                        $default = (($i == $profile->DOB_day) ? "selected=\"selected\"" : "");  // TODO padding????????
                         echo "<option " . $default . " value=\"$i\">$i</option>";
                     }
                     ?>
                 </select>
                 <label for="DOB_month" hidden="hidden">Month of birth</label>
-                <select id="DOB_month" name="DOB_month">
+                <select id="DOB_month" name="DOB_month" onchange="validate_date_fields(this)">
                     <?php
                     $months = array("January", "February", "March", "April", "May", "June", "July",
                         "August", "September", "October", "November", "December");
                     for($i = 0; $i < 12; $i++) {
-                        $default = (($i + 1 == $profile->DOB_month) ? "selected=\"selected\"" : "");
+                        $default = (($i + 1 == $profile->DOB_month) ? "selected=\"selected\"" : "");    // TODO padding????????
                         echo "<option " . $default . " value=\"" . ($i+1) . "\">$months[$i]</option>";
                     }
                     ?>
                 </select>
                 <label for="DOB_year" hidden="hidden">Year of birth</label>
-                <select id="DOB_year" name="DOB_year">
+                <select id="DOB_year" name="DOB_year" onchange="validate_date_fields(this)">
                     <?php
                     $current_year = date("Y");
                     for($i = $current_year; $i > $current_year - 100; $i--) {
@@ -50,7 +54,14 @@
                     }
                     ?>
                 </select>
+                <script>
+                    function validate_date_fields(el) {
+//                        validate_field(el, $('#DOB_day').val()+$('#DOB_month').val()+$('#DOB_year').val(), 'DOB_date', 'date_of_birth');
+//                        TODO after no js
+                    }
+                </script>
             </div>
+            <?= get_form_field_message('DOB_date');  ?>
 
             <div class="profile-field profile-sex">
                 <label for="sex" hidden="hidden">Sex</label>
@@ -150,7 +161,7 @@
 
                 // Blocks enter key submit
                 $(window).keydown(function(e){
-                    if(e.keyCode == 13) {
+                    if(e.keyCode == 13 && !$("textarea").is(":focus")) {        // except in a text area where we can press enter
                         e.preventDefault();
                         return false;
                     }

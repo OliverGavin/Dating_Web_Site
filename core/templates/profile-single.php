@@ -88,7 +88,7 @@ $status = get_relationship($user_id);
 
         <div class="profile-field profile-description">
             <h3>Description</h3>
-            <p><?php echo $profile->description; ?></p>
+            <p><?php echo nl2br($profile->description); ?></p>
         </div>
         <!--                country-->
         <!--                county-->

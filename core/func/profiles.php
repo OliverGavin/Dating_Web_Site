@@ -119,20 +119,6 @@ class Profile {
         }
 
         // Submit changes to DB
-        // TODO remove and use Profile?
-        $this->first_name     =   $_POST['first_name'];
-        $this->last_name      =   $_POST['last_name'];
-        $this->DOB_day        =   $_POST['DOB_day'];
-        $this->DOB_month      =   $_POST['DOB_month'];
-        $this->DOB_year       =   $_POST['DOB_year'];
-        $this->DOB            =   "$this->DOB_year-$this->DOB_month-$this->DOB_day";
-        $this->sex            =   $_POST['sex'];
-        $this->description    =   $_POST['description'];
-        $this->country        =   $_POST['country'];
-        $this->county         =   $_POST['county'];
-        $this->looking_for    =   $_POST['looking_for'];
-        $this->min_age        =   $_POST['min_age'];
-        $this->max_age        =   $_POST['max_age'];
 
         $prepared = $db->prepare("
               UPDATE users
