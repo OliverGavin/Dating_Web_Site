@@ -96,7 +96,7 @@ require_once 'core/func/notifications.php';
                                                 'parent'    => new MenuItem("Dashboard", "dashboard.php", null, null, null)
                                             ),
                                             array(
-                                                'parent'    => new MenuItem("My Profile", "profile.php", null, null, null)
+                                                'parent'    => new MenuItem("My Profile", "profile.php", null, null, null, !user_is_at_least_role(ROLE_ADMIN))
                                             ),
                                             array(
                                                 'parent'    => new MenuItem("Search", "search.php", null, null, null)
@@ -105,7 +105,7 @@ require_once 'core/func/notifications.php';
                                                 'parent'    => new MenuItem("Browse", "search.php?action=browse", null, null, null)
                                             ),
                                             array(
-                                                'parent'    => new MenuItem("Suggestions", "search.php?action=suggestions", null, null, null)
+                                                'parent'    => new MenuItem("Suggestions", "search.php?action=suggestions", null, null, null, !user_is_at_least_role(ROLE_ADMIN))
                                             ),
                                             array(
                                                 'parent'    => new MenuItem("Settings", "settings.php", null, null, null)
@@ -125,40 +125,6 @@ require_once 'core/func/notifications.php';
                 <div class="navmenu-container">
                     <ul id="primary-menu" class="nav-menu">
                         <?php if (isset($menu_items)) create_navigation_menu_items($menu_items); ?>
-<!--                        <li id="" class="menu-item menu-item-has-children current-menu-parent">-->
-<!--                            <a>Hello, Joe</a>-->
-<!--                            <div class="profile-image">-->
-<!--                                <img class="profile-pic" src="--><?php //echo get_profile_image(45) ?><!--">-->
-<!--                                <div class="profile-notification-counter">-->
-<!--                                    <p>2</p>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <ul class="sub-menu">-->
-<!--                                <li id="" class="menu-item">-->
-<!--                                    <a href="http://127.0.0.1:8080/CS4014-Project/dashboard.php">Dashboard</a>-->
-<!--                                </li>-->
-<!--                                <li id="" class="menu-item menu-item-has-children">-->
-<!--                                    <a href="http://127.0.0.1:8080/CS4014-Project/dashboard.php">Notifications</a>-->
-<!--                                </li>-->
-<!--                                <li id="" class="menu-item">-->
-<!--                                    <a href="--><?php //echo ROOT; ?><!--profile.php">My Profile</a>-->
-<!--                                </li>-->
-<!--                                <li id="" class="menu-item current-menu-item">-->
-<!--                                    <a href="http://127.0.0.1:8080/CS4014-Project/search.php">Search</a>-->
-<!--                                </li>-->
-<!--                                <li id="" class="menu-item current-menu-item">-->
-<!--                                    <a href="http://127.0.0.1:8080/CS4014-Project/browse.php">Browse</a>-->
-<!--                                </li>-->
-<!--                                <li id="" class="menu-item current-menu-item">-->
-<!--                                    <a href="http://127.0.0.1:8080/CS4014-Project/suggestions.php">Suggestions</a>-->
-<!--                                </li>-->
-<!--                                <li id="" class="menu-item">-->
-<!--                                    <a href="--><?php //echo $_SERVER['PHP_SELF'] ?><!--?logout">Log out</a>-->
-<!--                                </li>-->
-<!--                            </ul>-->
-<!--                        </li>-->
-
-
                     </ul>
 
                 </div>

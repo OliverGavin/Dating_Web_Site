@@ -10,6 +10,7 @@ class MenuItem {
     public $class;
     public $counter;
     public $extra_html;
+    public $display;
 
     /**
      * MenuItem constructor.
@@ -19,12 +20,16 @@ class MenuItem {
      * @param null $counter
      * @param null $extra_html
      */
-    public function __construct($title, $link=null, $class=null, $counter=null, $extra_html=null) {
+    public function __construct($title, $link=null, $class=null, $counter=null, $extra_html=null, $display=null) {
         $this->title = $title;
         $this->link = $link;
         $this->class = $class;
         $this->counter = $counter;
         $this->extra_html = $extra_html;
+        if ($display === null)
+            $this->display = true;
+        else
+            $this->display = $display;
     }
 }
 
@@ -35,27 +40,29 @@ class MenuItem {
 function create_navigation_menu_items($menu_items) {
     $current_script_name = basename($_SERVER["SCRIPT_FILENAME"]);
     foreach ($menu_items as $item) {
-        $class_list =   'menu-item ' .
-            ($current_script_name==$item['parent']->link ? 'current-menu-item ' : '') .
-            (isset($item['child']) ? 'menu-item-has-children ' : '') .
-            $item['parent']->class;
+        if ($item['parent']->display) {
+            $class_list = 'menu-item ' .
+                ($current_script_name == $item['parent']->link ? 'current-menu-item ' : '') .
+                (isset($item['child']) ? 'menu-item-has-children ' : '') .
+                $item['parent']->class;
 
-        $link = (isset($item['parent']->link) ? ' href="' . ROOT.$item['parent']->link . '" ' : '');
+            $link = (isset($item['parent']->link) ? ' href="' . ROOT . $item['parent']->link . '" ' : '');
 
-        echo '<li id="" class="' . $class_list . '">';
-        echo '<a' . $link . '>' . $item['parent']->title . '</a>';
+            echo '<li id="" class="' . $class_list . '">';
+                echo '<a' . $link . '>' . $item['parent']->title . '</a>';
 
-        // extras html
-        if (isset($item['parent']->extra_html)) echo $item['parent']->extra_html;
+                // extras html
+                if (isset($item['parent']->extra_html)) echo $item['parent']->extra_html;
 
-        // Recursively create children in sub-menu
-        if (isset($item['child'])) {
-            echo '<ul class="sub-menu">';
-            create_navigation_menu_items($item['child']);
-            echo '</ul>';
+                // Recursively create children in sub-menu
+                if (isset($item['child'])) {
+                    echo '<ul class="sub-menu">';
+                    create_navigation_menu_items($item['child']);
+                    echo '</ul>';
+                }
+
+            echo '</li>';
         }
-
-        echo '</li>';
     }
 }
 
