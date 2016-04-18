@@ -299,9 +299,14 @@ function delete_profile($user_id) {
 
 }
 
-function get_all_profiles() {
-    return get_profiles('', array(), '', '', '');
-}
+//function get_all_profiles() {
+//    global $profiles_per_page, $page_number;
+//
+//    $limit_from = $profiles_per_page*$page_number-$profiles_per_page;
+//    $query_end_part = " LIMIT $limit_from,$profiles_per_page";
+//
+//    return get_profiles('', array(), '', '', $query_end_part);
+//}
 
 /**
  * Gets profiles based on the query passed
@@ -354,6 +359,7 @@ function get_profiles($query_stmt_parts, $query_param_values, $query_param_types
               WHERE $query_parts user_id != ?
               $query_end_parts"
     );
+    echo $db->error;
 
     // calls $prepared->bind_param($ref_args[0], $ref_args[1]... );
     call_user_func_array(array($prepared, 'bind_param'), $ref_args);
@@ -377,7 +383,7 @@ function get_profiles($query_stmt_parts, $query_param_values, $query_param_types
 
     while ($prepared->fetch()) {
 //        echo $match_score.', ';
-        if (!user_is_blocked_by($user_id) && !user_is_blocked_by($_SESSION['user_id'], $user_id)) {
+//        if (!user_is_blocked_by($user_id) && !user_is_blocked_by($_SESSION['user_id'], $user_id)) {
             $profile = new Profile($user_id);
             $profile->first_name = $first_name;
             $profile->last_name = $last_name;
@@ -389,7 +395,7 @@ function get_profiles($query_stmt_parts, $query_param_values, $query_param_types
             $profile->county = $county;
 
             array_push($profiles, $profile);
-        }
+//        }
     }
 
     return $profiles;
