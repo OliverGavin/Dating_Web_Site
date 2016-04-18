@@ -122,7 +122,7 @@ function validate_date_of_birth($day, $month, $year, $field_name) {
             $_SESSION['form_errors'][$field_name] = "$day/$month/$year is not a valid birth date.";
             return $day.$month.$year;
         }
-        if (!checkdate($month, $day, $year)) {
+        if (!checkdate( $month, $day, $year)) {
             $_SESSION['form_errors'][$field_name] = "$day/$month/$year is not a valid birth date.";
             return $day.$month.$year;
         }

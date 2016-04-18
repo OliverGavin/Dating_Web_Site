@@ -1,7 +1,12 @@
+var validation_on = true;
 
+function set_validation(on) {
+    validation_on = on;
+}
 
 function validate_field(el, field_value, field_name, validation_type) {
-//                        var field_value = $(el).val();
+    if (!validation_on) return;
+
     if (field_value.length == 0) field_value = ' ';
     $.post('ajax/validate_form.php', {action:'validate_field', field_name:field_name, field_value:field_value, validation_type:validation_type}, function(data) {
         // Callback function

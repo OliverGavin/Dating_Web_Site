@@ -1584,6 +1584,7 @@ main.frame {
 
 .notice {
     width: 500px;
+    max-width: 85%;
     margin: 5px auto 10px;
     padding: 10px 20px;
     border: 2px solid blue;

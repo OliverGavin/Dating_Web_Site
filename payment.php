@@ -43,7 +43,7 @@ if (user_is_at_least_role(ROLE_ADMIN)) {
 
         <article>
 
-            <h2>Upgrade</h2>
+            <h2 class="page-title">Upgrade</h2>
 
             <p><?=$msg?></p>
 

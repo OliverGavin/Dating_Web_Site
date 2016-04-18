@@ -3,6 +3,45 @@ require_once 'core/init.php';
 require_once 'core/func/validation.php';
 
 // TODO redirect to dashboard if logged in
+
+$register = false;
+
+if (isset($_GET['login']) && isset($_POST['action'])) {
+	if ($_POST['action'] == 'Login') {
+		$email = $_POST['email'];
+		$password = $_POST['password'];
+		login($email, $password);
+
+	} else if ($_POST['action'] == 'Register') {
+		$register = true;
+		$email = validate_email($_POST['email'], 'email');
+		$password = validate_password($_POST['password'], 'password');
+		$password2 = $_POST['password2'];
+
+		if ($password !== $password2) {
+			$_SESSION['form_errors']['password2'] = "Passwords don't match";
+		}
+
+		$first_name = validate_name($_POST['first_name'], 'first_name');
+		$last_name = validate_name($_POST['last_name'], 'last_name');
+
+		$DOB_day = $_POST['DOB_day'];
+		$DOB_month = $_POST['DOB_month'];
+		$DOB_year = $_POST['DOB_year'];
+		$DOB = validate_date_of_birth($DOB_day, $DOB_month, $DOB_year, 'DOB_date');
+
+		$sex = isset($_POST['sex']) ? (int)$_POST['sex'] : 100;
+		if ($sex != 0 && $sex != 1) {
+			$_SESSION['form_errors']['sex'] = "Please specify your gender";
+		}
+
+		if (empty($_SESSION['form_errors'])) {
+			register($email, $password, $first_name, $last_name, $DOB_day, $DOB_month, $DOB_year, $sex);
+		}
+
+	}
+}
+
 ?>
 
 <?php get_header(); ?>
@@ -31,6 +70,10 @@ require_once 'core/func/validation.php';
 
 						case INCORRECT_USER_PASS:
 							echo 'Incorrect username or password, please try again';
+							break;
+
+						case ALREADY_EXISTS:
+							echo 'A user with this email address already exists';
 							break;
 
 						default:
@@ -73,31 +116,31 @@ require_once 'core/func/validation.php';
 				<br>
 			<!-- SHOW / HIDE STARTS HERE -->
 
-				<div id="registration" class="hidden">
+				<div id="registration" class="<?php if(!$register) echo 'hidden'; ?>">
 					<div class="group both-rounded <?= get_form_field_status('password2'); ?>">
 						<label for="password2" class="visible">Confirm Password</label>
 						<input type="password" id="password2" name="password2" size="30" value="<?php if(isset($password2)) echo $password2?>" onblur="check_same_password(this, 'password2', $(this).val(), $('#password').val())" />
 					</div>
-					<?= get_form_field_message('password');  ?>
+					<?= get_form_field_message('password2');  ?>
 					<br>
 					<div class="group both-rounded <?= get_form_field_status('first_name'); ?>">
 						<label for="first_name" class="visible">First Name</label>
 						<input type="text" id="first_name" name="first_name" size="30" value="<?php if(isset($first_name)) echo $first_name?>" onblur="validate_field(this, $(this).val(), 'first_name', 'name')" />
 					</div>
-					<?= get_form_field_message('email');  ?>
+					<?= get_form_field_message('first_name');  ?>
 					<br>
 					<div class="group both-rounded <?= get_form_field_status('last_name'); ?>">
 						<label for="last_name" class="visible">Last Name</label>
 						<input type="text" id="last_name" name="last_name" size="30" value="<?php if(isset($last_name)) echo $last_name?>" onblur="validate_field(this, $(this).val(), 'last_name', 'name')" />
 					</div>
-					<?= get_form_field_message('email');  ?>
+					<?= get_form_field_message('last_name');  ?>
 					<br>
 					<div class="group both-rounded <?= get_form_field_status('DOB_date'); ?>">
 						<label for="DOB_day DOB_month DOB_year" class="visible">Date of Birth</label>
 						<select id="DOB_day" name="DOB_day" onchange="validate_date_fields(this)">
 							<option value="-">Day</option>
 							<?php
-							$default = (int)(isset($DOB_date))? $DOB_date->format('d') : '-';
+							$default = (int)(isset($DOB_day))? $DOB_day : '-';
 							for($i = 1; $i <= 31; $i++) {
 								$value = str_pad((string)$i, 2, "0", STR_PAD_LEFT);
 								$selected = ($i == $default)? 'selected="selected"': '';
@@ -110,7 +153,7 @@ require_once 'core/func/validation.php';
 							<?php
 							$months = array("January", "February", "March", "April", "May", "June", "July",
 											"August", "September", "October", "November", "December");
-							$default = (int)(isset($DOB_date))? $DOB_date->format('m') : '-';
+							$default = (int)(isset($DOB_month))? $DOB_month - 1 : '-';
 							for($i = 0; $i < 12; $i++) {
 								$value = str_pad((string)($i+1), 2, "0", STR_PAD_LEFT);
 								$selected = ($i == $default)? 'selected="selected"': '';
@@ -122,7 +165,7 @@ require_once 'core/func/validation.php';
 							<option value="-">Year</option>
 							<?php
 							$current_year = date("Y");
-							$default = (int)(isset($DOB_date))? $DOB_date->format('Y') : '-';
+							$default = (int)(isset($DOB_year))? $DOB_year : '-';
 							for($i = $current_year; $i > $current_year - 100; $i--) {
 								$selected = ($i == $default)? 'selected="selected"': '';
 								echo "<option $selected value=\"$i\">$i</option>";
@@ -138,13 +181,13 @@ require_once 'core/func/validation.php';
 					</div>
 					<?= get_form_field_message('DOB_date');  ?>
 
-
 					<div class="radioGender">
-						<input id="male" type="radio" name="sex" value="1">
+						<input id="male" type="radio" name="sex" value="1" <?php if(isset($sex) && $sex == 1) echo 'checked="checked"' ?>>
 						<label for="male">Male</label>
-						<input id="female" type="radio" name="sex" value="0">
+						<input id="female" type="radio" name="sex" value="0" <?php if(isset($sex) && $sex == 0) echo 'checked="checked"' ?>>
 						<label for="female">Female</label>
 					</div>
+					<?= get_form_field_message('sex');  ?>
 					<br>
 				</div>
 
@@ -157,13 +200,22 @@ require_once 'core/func/validation.php';
 		</div>
 
 		<script type="text/javascript">
+
+			<?php if(!$register) { ?>
+				set_validation(false);
+			<?php } ?>
+
 			function register() {
 				if($('#registration').hasClass('hidden')) {
 					event.preventDefault();
 					$('#registration').toggleClass('hidden');
 					$('input[value=Login]').remove();
+					set_validation(true);
 				}
 			}
+			$('input[name="sex"]').on('click change', function(e) {
+				update_field_message(this, true, 'sex', '');
+			});
 		</script>
         
     </main><!-- #main -->

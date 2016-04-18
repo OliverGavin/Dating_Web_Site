@@ -12,16 +12,6 @@ if (isset($_GET['logout'])) {
 
 }
 
-else if (isset($_GET['login']) && isset($_POST['action'])) {
-    if ($_POST['action'] == 'Login') {
-        login();
-
-    } else if ($_POST['action'] == 'Register') {
-        register();
-
-    }
-}
-
 function logout($timeout = null) {
 
     unset($_SESSION);
@@ -44,116 +34,94 @@ function logout($timeout = null) {
 
 }
 
-function login() {
+function login($email, $password) {
     global $db, $message, $attempted_user_id;
 
-    if (isset($_POST['email'], $_POST['password']) &&
-        !empty($_POST['email']) &&
-        !empty($_POST['password'])  ) {
+    $password = hash("sha256", $password, false);
+    $ip = $_SERVER['REMOTE_ADDR'];
 
-        $email = $_POST['email'];
-        $password = hash("sha256", $_POST['password'], false);
-        $ip = $_SERVER['REMOTE_ADDR'];
+    $users = $db->prepare("
+          SELECT user_id, first_name, last_name FROM users WHERE email = ? AND password = ?
+        ");
 
-        $users = $db->prepare("
-              SELECT user_id, first_name, last_name FROM users WHERE email = ? AND password = ?
-            ");
+    $users->bind_param('ss', $email, $password);
 
-        $users->bind_param('ss', $email, $password);
+    $users->execute();
 
-        $users->execute();
+    $users->bind_result($user_id, $first_name, $last_name); //i.e. binding to SELECTed attributes
 
-        $users->bind_result($user_id, $first_name, $last_name); //i.e. binding to SELECTed attributes
+    $users->fetch();
 
-        $users->fetch();
+    //Free query result
+    $users->free_result();
 
-        //Free query result
-        $users->free_result();
-
-        if (!$user_id) {
-            array_push($message['error'], INCORRECT_USER_PASS);
-            return;
-        }
-
-        if (user_is_role(ROLE_BANNED, $user_id)) {
-            $attempted_user_id = $user_id;
-            if (date_create() > date_create(get_ban_details()->until_date_time)) {
-                set_user_role(ROLE_FREE, $user_id);
-                // TODO add notification
-            } else {
-                array_push($message['error'], USER_BANNED);
-                return;
-            }
-        } else if (user_is_role(ROLE_DELETED, $user_id)) {
-            $attempted_user_id = $user_id;
-            array_push($message['error'], USER_DELETED);
-            return;
-        }
-
-        $_SESSION['user_id'] = $user_id;
-        $_SESSION['user_ip'] = $ip;
-        $_SESSION['first_name'] = $first_name;
-        $_SESSION['last_name'] = $last_name;
-
-        // redirect to their Dashboard
-        if (isset($_GET['redirect'])) {
-            header("Location: " . $_GET['redirect']);
-            exit();
-        } else {
-            header("Location: profile.php");
-            exit();
-        }
-
+    if (!$user_id) {
+        array_push($message['error'], INCORRECT_USER_PASS);
+        return;
     }
+
+    if (user_is_role(ROLE_BANNED, $user_id)) {
+        $attempted_user_id = $user_id;
+        if (date_create() > date_create(get_ban_details()->until_date_time)) {
+            set_user_role(ROLE_FREE, $user_id);
+            // TODO add notification
+        } else {
+            array_push($message['error'], USER_BANNED);
+            return;
+        }
+    } else if (user_is_role(ROLE_DELETED, $user_id)) {
+        $attempted_user_id = $user_id;
+        array_push($message['error'], USER_DELETED);
+        return;
+    }
+
+    $_SESSION['user_id'] = $user_id;
+    $_SESSION['user_ip'] = $ip;
+    $_SESSION['first_name'] = $first_name;
+    $_SESSION['last_name'] = $last_name;
+
+    // redirect to their Dashboard
+    if (isset($_GET['redirect'])) {
+        header("Location: " . $_GET['redirect']);
+        exit();
+    } else {
+        header("Location: dashboard.php");
+        exit();
+    }
+
 }
 
-function register() {
+function register($email, $password, $first_name, $last_name, $DOB_day, $DOB_month, $DOB_year, $sex) {
     global $db, $message;
 
-    if (isset($_POST['email'], $_POST['password'], $_POST['password2'])) {
+    $password = hash("sha256", $password, false);
 
-        if ($_POST['password'] !== $_POST['password2']) {
-            array_push($message['error'], "Passwords don't match");
-            return;
+    $prepared = $db->prepare("
+            INSERT INTO users (email, password, first_name, last_name)
+            VALUES (?, ?, ?, ?)
+        ");
+
+    $prepared->bind_param('ssss', $email, $password, $first_name, $last_name); //s - string
+
+    if ($prepared->execute()) {
+        array_push($message['success'], "Your account has been created, please log in");
+        // Create a profile for the user using their assigned user_id
+        $profile = new Profile($prepared->insert_id);
+        $profile->create_profile($DOB_day, $DOB_month, $DOB_year, $sex);
+        if ($profile->error) {
+
         }
 
-        // TODO validation
-
-        $email = $_POST['email'];
-        $password = hash("sha256", $_POST['password'], false);
-        $first_name     =   $_POST['first_name'];
-        $last_name      =   $_POST['last_name'];
-
-        $prepared = $db->prepare("
-                INSERT INTO users (email, password, first_name, last_name)
-                VALUES (?, ?, ?, ?)
-            ");
-
-        $prepared->bind_param('ssss', $email, $password, $first_name, $last_name); //s - string
-
-        if ($prepared->execute()) {
-            array_push($message['success'], "Your account has been created, please log in");
-            // Create a profile for the user using their assigned user_id
-            $profile = new Profile($prepared->insert_id);
-            $profile->create_profile();
-            if ($profile->error) {
-
-            }
-//            create_profile($prepared->insert_id);
-
-        } else {
-            // Error code 1062 - duplicate
-            if($prepared->errno === 1062) {
-                array_push($message['error'], ALREADY_EXISTS);
-            } else if ($prepared->errno) {
-                array_push($message['error'], ERROR);
-            }
-        }
-
-        $prepared->free_result();
     } else {
-        array_push($message['error'], MISSING_FIELDS);
+        // Error code 1062 - duplicate
+        if($prepared->errno === 1062) {
+            array_push($message['error'], ALREADY_EXISTS);
+        } else if ($prepared->errno) {
+            array_push($message['error'], ERROR);
+        }
     }
+
+    $prepared->free_result();
 
 }
 

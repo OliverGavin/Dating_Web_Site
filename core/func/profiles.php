@@ -37,14 +37,14 @@ class Profile {
         array_push($this->error, $error);
     }
 
-    function create_profile() {
+    function create_profile($DOB_day, $DOB_month, $DOB_year, $sex) {
         global $db;
 
-        $this->DOB_day        =   $_POST['DOB_day'];
-        $this->DOB_month      =   $_POST['DOB_month'];
-        $this->DOB_year       =   $_POST['DOB_year'];
+        $this->DOB_day        =   $DOB_day;
+        $this->DOB_month      =   $DOB_month;
+        $this->DOB_year       =   $DOB_year;
         $this->DOB            =   "$this->DOB_year-$this->DOB_month-$this->DOB_day";
-        $this->sex            =   $_POST['sex'];
+        $this->sex            =   $sex;
 
         $prepared = $db->prepare("
                 INSERT INTO profiles (user_id, DOB, sex, date_time_updated)
