@@ -54,8 +54,17 @@ $_GET['page']--;
                         if (strlen($msg) > 0) {
                             echo '<p>'.$msg.'</p>';
                         } else if (count($profiles) == 0) {
-                            echo "<p>Sorry, we couldn't find any matches.</p>";
-                            echo "<p>Try broadening your search!</p>";
+                            echo '<div class="search-no-result-message">';
+                                if (isset($_GET['action']) && $_GET['action'] == 'browse') {
+                                    echo "<p>You haven't blocked anybody!</p>";
+                                } else if (isset($_GET['action']) && $_GET['action'] == 'suggestions') {
+                                    echo "<p>Sorry, we couldn't find any matches.</p>";
+                                    echo "<p>Try broadening your interests!</p>";
+                                } else {
+                                    echo "<p>Sorry, we couldn't find anybody.</p>";
+                                    echo "<p>Try broadening your search!</p>";
+                                }
+                            echo '</div>';
                         }
 
                         $n = 1;

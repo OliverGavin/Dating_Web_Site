@@ -54,6 +54,8 @@ if (user_is_at_least_role(ROLE_ADMIN)) {
 
     ?>
 
+    <h2 class="page-title">Suggestions</h2>
+
 
     <?php
 

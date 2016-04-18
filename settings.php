@@ -84,8 +84,8 @@ function set_email($email) {
     <main id="main" class="site-main frame" role="main">
     
     	<div class="generalSettings">
-    
-    		<h2>General Account Settings</h2>
+
+			<h2 class="page-title">Account Settings</h2>
         
         	<form role="" method="post" class="style-rounded-dark" action="">
 
@@ -131,10 +131,14 @@ function set_email($email) {
 					<input class="textbox" type="password" name="current_password" size="30" placeholder=""/>
 				</div>
 
+				<br>
+
 				<input class="button" type="submit" name="action" value="Save Changes" />
+				<br>
+				<br>
+				<a class="button" href="search.php?action=browse&blocked=true">Manage blocked users</a>
 		</form>
 
-		<a href="search.php?action=browse&blocked=true">Manage blocked users</a>
 	</div>
     
     	<!--CONTENT ENDS HERE -->

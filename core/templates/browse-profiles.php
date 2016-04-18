@@ -69,3 +69,5 @@ $query = query_add($query, null, null, null, null, $query_end_part);
 $profiles = get_profiles($query->stmt_parts, $query->param_values, $query->param_types, $query->join_parts, $query->end_parts);
 
 ?>
+
+<h2 class="page-title">Browse</h2>

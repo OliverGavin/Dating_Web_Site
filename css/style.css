@@ -38,6 +38,10 @@ ul {
 --------------------------------------------------------------*/
 body {
     color: #666;
+    font-family: cursive, sans-serif;
+}
+
+form {
     font-family: sans-serif;
 }
 
@@ -64,6 +68,12 @@ body {
 #page {
     min-height: 100%;
     position:relative;
+}
+
+.page-title {
+    font-family: lobster-two, cursive;
+    font-size: 2.5em;
+    padding: 15px 0;
 }
 
 #content {
@@ -232,21 +242,34 @@ body {
 
 .style-rounded-dark button,
 .style-rounded-dark input[type='button'],
-.style-rounded-dark input[type='submit'] {
+.style-rounded-dark input[type='submit'],
+.style-rounded-dark a.button {
     padding-left: 5px;
     padding-right: 5px;
     background-color: #E91E63;
     border-radius: 10px 10px 10px 10px;
+    vertical-align: middle;
+}
+
+.style-rounded-dark a.button {
+    padding-top: 10px;
+    padding-bottom: 11px;
+    color: white;
+    text-decoration: none;
 }
 
 .style-rounded-dark button:hover,
 .style-rounded-dark input[type='button']:hover,
-.style-rounded-dark input[type='submit']:hover {
+.style-rounded-dark input[type='submit']:hover,
+.style-rounded-dark a.button:hover {
     background-color: #db1c5d;
     cursor: pointer;
 }
 
-.style-rounded-dark input[type='submit']:focus {
+.style-rounded-dark button:focus,
+.style-rounded-dark input[type='button']:focus,
+.style-rounded-dark input[type='submit']:focus,
+.style-rounded-dark a.button:focus {
     background-color: #ac1649;
 }
 
@@ -1329,8 +1352,8 @@ font-size: 26px;
 }
 
 .modal-close i.fa {
-    vertical-align: middle;
-    padding: 5px;
+    vertical-align: top;
+    padding: 6px;
 }
 
 .modal-close:hover,
@@ -1426,8 +1449,8 @@ font-size: 26px;
 }
 
 .chat .chat-close i.fa {
-    vertical-align: middle;
-    padding: 2px;
+    vertical-align: top;
+    padding: 3px;
 }
 
 .chat .chat-messages {
