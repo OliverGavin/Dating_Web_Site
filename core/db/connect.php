@@ -1,12 +1,26 @@
 <?php
 //$db = new mysqli('host', 'username', 'password', 'table');
 
-$host="127.0.0.1";
-$port=3306;
+//$host="127.0.0.1";
+//$port=3306;
+//$socket="";
+//$user="root";
+//$password="";
+//$dbname="cs4014";
+
+//$host="127.0.0.1";
+//$port=3306;
+//$socket="";
+//$user="root";
+//$password="";
+//$dbname="cs4014populatedtest";
+
+$host="193.1.101.7";
+$port=3307;
 $socket="";
-$user="root";
-$password="";
-$dbname="cs4014";
+$user="group22";
+$password="LdoOq0a0p";
+$dbname="group22DB";
 
 $db = new mysqli($host, $user, $password, $dbname, $port, $socket)
 or die ('Could not connect to the database server' . mysqli_connect_error());
