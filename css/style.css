@@ -39,6 +39,7 @@ ul {
 body {
     color: #666;
     font-family: cursive, sans-serif;
+    overflow-x: hidden;
 }
 
 form {
@@ -558,7 +559,7 @@ body {
 --------------------------------------------------------------*/
 
 .search .search-form-container {
-    margin-top: 40px;
+    margin-top: 5px;
     margin-bottom: 40px;
 }
 

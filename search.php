@@ -3,6 +3,13 @@ require_once 'core/init.php';
 require_once 'core/func/profiles.php';
 require_once 'core/func/interests.php';
 
+$ajax_request = false;
+if (isset($_GET['ajax']) && $_GET['ajax'] == true) {
+    $ajax_request = true;
+    $_GET = array_merge($_GET, $_GET['$_GET_query']);
+    unset($_GET['$_GET_query']);
+}
+
 verify_login();
 // TODO permissions
 
@@ -23,11 +30,12 @@ $nav_forward = $_SERVER['PHP_SELF'] .'?'. http_build_query($_GET);
 $_GET['page']--;
 ?>
 
+<?php if(!$ajax_request) { ?>
 <?php get_header(); ?>
-
 <div id="primary" class="content-area">
     <main id="main" class="site-main frame" role="main">
         <article class="entry">
+<?php } ?>
 
             <?php if (isset($_GET['action']) && $_GET['action'] == 'browse') {
 //                $profiles = get_all_profiles();
@@ -39,7 +47,10 @@ $_GET['page']--;
             } ?>
 
 
-            <div class="search-results-container <?php if ($_GET['page'] == 1) echo 'first-page' ?> <?php if (count($profiles) < $profiles_per_page) echo 'last-page' ?>">
+            <?php if(!$ajax_request) { ?>
+            <div id="slider">
+            <?php } ?>
+            <div id="results" class="search-results-container <?php if ($_GET['page'] == 1) echo 'first-page' ?> <?php if (count($profiles) < $profiles_per_page) echo 'last-page' ?>">
                 <div id="search-result-page-container">
                     <?php
 
@@ -141,8 +152,8 @@ $_GET['page']--;
                     </script>
                 </div>
 
-                <div class="search-result-profile search-navigation search-navigation-left">
-                    <a href="<?=$nav_back?>" onclick="">
+                <div id="search-navigation-left" class="search-result-profile search-navigation search-navigation-left">
+                    <a href="<?=$nav_back?>" onclick="paginate_back()">
                         <div class="profile-image">
                             <span class="fa-stack fa-lg">
                               <i class="fa fa-circle fa-stack-1x"></i>
@@ -151,8 +162,8 @@ $_GET['page']--;
                         </div>
                     </a>
                 </div>
-                <div class="search-result-profile search-navigation search-navigation-right">
-                    <a href="<?=$nav_forward?>" onclick="">
+                <div id="search-navigation-right" class="search-result-profile search-navigation search-navigation-right">
+                    <a href="<?=$nav_forward?>" onclick="paginate_next()">
                         <div class="profile-image">
                             <span class="fa-stack fa-lg">
                               <i class="fa fa-circle fa-stack-1x"></i>
@@ -179,8 +190,97 @@ $_GET['page']--;
 
             </div>
 
+            <?php if(!$ajax_request) { ?>
+            </div>
+            <?php } ?>
+
+<?php if(!$ajax_request) { ?>
+            <script>
+                var $_GET_query = <?php echo json_encode($_GET); ?>;
+
+                var previous_page = null;
+                var current_page = null;
+                var next_page = null;
+
+                function paginate_next() {
+                    event.preventDefault();
+                    $_GET_query.page = $_GET_query.page+1;
+                    paginate(1);
+                }
+
+                function paginate_back() {
+                    event.preventDefault();
+                    $_GET_query.page = $_GET_query.page-1;
+                    paginate(-1);
+                }
+
+                function paginate(direction) {
+                    $.get('<?= $_SERVER['PHP_SELF'] ?>', {$_GET_query, ajax:true}, function(data) {
+                        // Callback function
+                        if (data != 'failed') {
+                            // swap
+//                            $('#results').replaceWith(data);
+                            var width = $('#results').outerWidth(true);
+                            if (direction == 1) {
+                                $('#results').after(data);
+                                var $oldBox = $('#results');
+                                var $newBox = $('#results').next();
+                            } else {
+                                $('#results').before(data);
+                                var $newBox = $('#results');
+                                $newBox.css({ "margin-left": "-900px", "opacity": "0" });
+                                var $oldBox = $('#results').next();
+                            }
+
+
+                            if (direction == 1) {
+                                $oldBox.animate({
+                                    "margin-left": -width * direction + "px",
+                                    "opacity": "0"
+                                }, 500, function () {
+                                    $oldBox.css({ "margin-left": "", "margin-right": "", "visibility": "hidden" });
+                                    $oldBox.remove();
+                                });
+                            } else {
+                                $newBox.animate({
+                                    "margin-left": "0px",
+                                    "opacity": "1"
+                                }, 500, function () {
+                                    $oldBox.css({ "margin-left": "", "margin-right": "", "visibility": "hidden" });
+                                    $oldBox.remove();
+                                });
+                                $oldBox.animate({
+                                    "opacity": "0"
+                                }, 500, function () {
+
+                                })
+                            }
+
+
+
+
+                        }
+                    });
+                }
+            </script>
+            <style>
+                #slider {
+                    text-align: left;
+                    width: 200%;
+                }
+                #slider #results {
+                    text-align: center;
+                }
+                div#results {
+                    width: 50%;
+                    display: inline-block !important;
+                    vertical-align: top;
+                    /* float: left; */
+                }
+            </style>
         </article>
     </main><!-- #main -->
 </div><!-- #primary -->
 
 <?php get_footer(); ?>
+<?php } ?>

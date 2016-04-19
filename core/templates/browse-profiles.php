@@ -70,4 +70,6 @@ $profiles = get_profiles($query->stmt_parts, $query->param_values, $query->param
 
 ?>
 
-<h2 class="page-title">Browse</h2>
+<?php if(!$ajax_request) { ?>
+    <h2 class="page-title">Browse</h2>
+<?php } ?>

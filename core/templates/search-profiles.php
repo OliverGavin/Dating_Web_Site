@@ -43,25 +43,26 @@ $search_sex = null;
 $search_min_age = null;
 $search_max_age = null;
 
-if (isset($_POST['search_text'])) $search_text = $_POST['search_text'];
+if (isset($_GET['search_text'])) $search_text = $_GET['search_text'];
 else                                    $search_text = "";
 
-if (isset($_POST['sex'])) $search_sex = $_POST['sex'];
+if (isset($_GET['sex'])) $search_sex = $_GET['sex'];
 else                                    $search_sex = ($current_user_profile->looking_for ?: !$current_user_profile->sex);
 
-if (isset($_POST['min_age'])) $search_min_age = $_POST['min_age'];
+if (isset($_GET['min_age'])) $search_min_age = $_GET['min_age'];
 else                                    $search_min_age = (isset($current_user_profile->min_age) ? $current_user_profile->min_age : (isset($current_user_profile->age) ? max($current_user_profile->age - 5, 18) : 18) );
 
-if (isset($_POST['max_age'])) $search_max_age = $_POST['max_age'];
+if (isset($_GET['max_age'])) $search_max_age = $_GET['max_age'];
 else                                    $search_max_age = (isset($current_user_profile->max_age) ? $current_user_profile->max_age : (isset($current_user_profile->age) ? min($current_user_profile->age + 5, 100) : 100) );
 
 ?>
 
+<?php if(!$ajax_request) { ?>
 <h2 class="page-title">Search</h2>
 
 <div class="search-form-container">
     <h3>I'm looking for somebody who likes...</h3>
-    <form role="search" method="post" class="search-form style-rounded-dark" action="">
+    <form role="search" method="GET" class="search-form style-rounded-dark" action="">
         <fieldset>
             <div class="group left-rounded">
                 <label>
@@ -94,6 +95,7 @@ else                                    $search_max_age = (isset($current_user_p
         </fieldset>
     </form>
 </div>
+<?php } ?>
 
 <?php
 
