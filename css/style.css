@@ -721,6 +721,11 @@ body {
     left: 10px;
 }
 
+.profile .profile-actions-good .message-action {
+    margin-left: 68px;
+    position: absolute;
+}
+
 .profile .profile-actions-bad {
     text-align: right;
     height: 0;

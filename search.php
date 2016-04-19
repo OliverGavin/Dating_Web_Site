@@ -56,7 +56,10 @@ $_GET['page']--;
                         } else if (count($profiles) == 0) {
                             echo '<div class="search-no-result-message">';
                                 if (isset($_GET['action']) && $_GET['action'] == 'browse') {
-                                    echo "<p>You haven't blocked anybody!</p>";
+                                    if (isset($_GET['blocked'])) {
+                                        echo "<p>You haven't blocked anybody!</p>";
+                                    } else {
+                                        echo "<p>Nobody was found!</p>";}
                                 } else if (isset($_GET['action']) && $_GET['action'] == 'suggestions') {
                                     echo "<p>Sorry, we couldn't find any matches.</p>";
                                     echo "<p>Try broadening your interests!</p>";

@@ -23,16 +23,8 @@ $status = get_relationship($user_id);
                     <p>DELETE</p>
                 </div>
             </a>
-        <?php   }
+        <?php }
         if (!$is_owner) {
-            if (can_message_each_other($_SESSION['user_id'], $profile->user_id)) { ?>
-                <a href="chat.php?id=<?=$user_id?>" class="message-action" onclick="open_chat(<?=$user_id?>)">
-                    <div class="action action-ban">
-                        <p><i class="fa fa-comment"></i></p>
-                        <p>CHAT</p>
-                    </div>
-                </a>
-            <?php       }
             if ($can_edit_others) { ?>
                 <a href="<?=$_SERVER['REQUEST_URI']?>&action=ban" class="ban-action" onclick="report_ban_user(<?=$user_id?>, 'ban');">
                     <div class="action action-ban">
@@ -40,7 +32,7 @@ $status = get_relationship($user_id);
                         <p>BAN</p>
                     </div>
                 </a>
-            <?php       } else { ?>
+            <?php } else { ?>
                 <a href="<?=$_SERVER['REQUEST_URI']?>&status=<?=BLOCK?>" class="status-action <?=($status==BLOCK? 'current-status':'')?>" onclick="set_relationship(<?=$user_id?>, '<?=BLOCK?>', this);">
                     <div class="action action-block">
                         <p><i class="fa fa-times"></i></p>
@@ -53,7 +45,7 @@ $status = get_relationship($user_id);
                         <p>REPORT</p>
                     </div>
                 </a>
-            <?php       }
+            <?php }
         } ?>
     </div>
 
@@ -67,6 +59,14 @@ $status = get_relationship($user_id);
                         <p>LIKE</p>
                     </div>
                 </a>
+            <?php } ?>
+            <?php if (!$is_owner && can_message_each_other($_SESSION['user_id'], $profile->user_id)) { ?>
+            <a href="chat.php?id=<?=$user_id?>" class="message-action" onclick="open_chat(<?=$user_id?>)">
+                <div class="action action-ban">
+                    <p><i class="fa fa-comment"></i></p>
+                    <p>CHAT</p>
+                </div>
+            </a>
             <?php } ?>
         </div>
     </div>

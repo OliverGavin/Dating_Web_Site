@@ -179,9 +179,11 @@ function set_email($email) {
 
 				<input class="button" type="submit" name="action" value="Save Changes" />
 				<br>
+				<?php if (!user_is_at_least_role(ROLE_ADMIN)) { ?>
 				<br>
 				<br>
 				<a class="button" href="search.php?action=browse&blocked=true">Manage blocked users</a>
+				<?php } ?>
 		</form>
 
 	</div>
