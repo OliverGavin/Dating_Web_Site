@@ -44,7 +44,13 @@ $_GET['page']--;
                 include 'core/templates/suggest-profiles.php';
             } else {
                 include 'core/templates/search-profiles.php';
-            } ?>
+            }
+
+            if ($ajax_request && count($profiles) == 0) {
+                echo 'no records';
+                exit();
+            }
+            ?>
 
 
             <?php if(!$ajax_request) { ?>
@@ -143,10 +149,12 @@ $_GET['page']--;
 
                     <script>
                         function get_profile(id) {
+                            $('#main').css({ "cursor": "wait" });
                             event.preventDefault()
                             $.post('ajax/get_profile.php', {id:id}, function(data) {
                                 // Callback function
                                 show_modal(data, 'modal-profile');
+                                $('#main').css({ "cursor": "" });
                             });
                         }
                     </script>
@@ -198,67 +206,134 @@ $_GET['page']--;
             <script>
                 var $_GET_query = <?php echo json_encode($_GET); ?>;
 
+                var busy = false;
+
                 var previous_page = null;
-                var current_page = null;
                 var next_page = null;
+
+                pre_load_page(1);   // pre load the next page
 
                 function paginate_next() {
                     event.preventDefault();
-                    $_GET_query.page = $_GET_query.page+1;
-                    paginate(1);
+                    $_GET_query.page++;
+                    if (!paginate(1)) {
+                        $_GET_query.page--;
+                    }
                 }
 
                 function paginate_back() {
                     event.preventDefault();
-                    $_GET_query.page = $_GET_query.page-1;
-                    paginate(-1);
+                    $_GET_query.page--;
+                    if (!paginate(-1)) {
+                        $_GET_query.page++;
+                    }
                 }
 
                 function paginate(direction) {
+                    if (busy) return false;
+                    busy = true;
+
+                    if (direction == 1 && next_page != null) {
+                        swap_page(direction, next_page);    // from cache
+                        busy = false;
+                        return true;
+                    } else if (direction == -1 && previous_page != null) {
+                        swap_page(direction, previous_page);    // from cache
+                        busy = false;
+                        return true;
+                    }
+
                     $.get('<?= $_SERVER['PHP_SELF'] ?>', {$_GET_query, ajax:true}, function(data) {
                         // Callback function
                         if (data != 'failed') {
                             // swap
-//                            $('#results').replaceWith(data);
-                            var width = $('#results').outerWidth(true);
-                            if (direction == 1) {
-                                $('#results').after(data);
-                                var $oldBox = $('#results');
-                                var $newBox = $('#results').next();
-                            } else {
-                                $('#results').before(data);
-                                var $newBox = $('#results');
-                                $newBox.css({ "margin-left": "-900px", "opacity": "0" });
-                                var $oldBox = $('#results').next();
+                            swap_page(direction, data);
+
+                        }
+                        busy = false;
+                    });
+                    return true;
+                }
+
+                function swap_page(direction, data) {
+
+                    var width = $('#results').outerWidth(true);
+                    var height = $('#slider').height();
+                    $('#slider').css({ "height":height });
+                    if (direction == 1) {
+                        previous_page = $('#results').clone();   // cache it
+                        next_page = null;
+                        pre_load_page(direction);
+                        $('#results').after(data);
+                        var $oldBox = $('#results');
+                        var $newBox = $('#results').next();
+                        $newBox.css({ "opacity": "0" });
+                    } else {
+                        next_page = $('#results').clone();   // cache it
+                        previous_page = null;
+                        pre_load_page(direction);
+                        $('#results').before(data);
+                        var $newBox = $('#results');
+                        $newBox.css({ "margin-left": "-900px", "opacity": "0" });
+                        var $oldBox = $('#results').next();
+                    }
+
+
+                    if (direction == 1) {
+                        $oldBox.animate({
+                            "margin-left": -width * direction + "px",
+                            "opacity": "0"
+                        }, 300, function () {
+                            $oldBox.css({ "margin-left": "", "margin-right": "", "visibility": "hidden" });
+                            $oldBox.remove();
+                        });
+                        $newBox.animate({
+                            "opacity": "1"
+                        }, 300);
+                    } else {
+                        $newBox.animate({
+                            "margin-left": "0px",
+                            "opacity": "1"
+                        }, 300, function () {
+                            $oldBox.css({ "margin-left": "", "margin-right": "", "visibility": "hidden" });
+                            $oldBox.remove();
+                        });
+                        $oldBox.animate({
+                            "opacity": "0"
+                        }, 300);
+                    }
+
+                }
+
+                function pre_load_page(direction) {
+                    var $_GET_query_future = JSON.parse(JSON.stringify($_GET_query));
+                    if (direction == 1) {
+                        $_GET_query_future.page++;
+                    } else {
+                        $_GET_query_future.page--;
+                    }
+                    console.log('preloading page: '+$_GET_query_future.page);
+                    $.get('<?= $_SERVER['PHP_SELF'] ?>', {$_GET_query:$_GET_query_future, ajax:true}, function(data) {
+                        // Callback function
+                        if (data != 'failed') {
+
+                            if (data.trim() == 'no records') {
+                                if (direction == 1) {
+                                    $('#search-navigation-right').remove();
+                                } else {
+                                    $('#search-navigation-left').remove();
+                                }
+                                console.log('no records at page: '+$_GET_query_future.page);
+                                return;
                             }
 
-
                             if (direction == 1) {
-                                $oldBox.animate({
-                                    "margin-left": -width * direction + "px",
-                                    "opacity": "0"
-                                }, 500, function () {
-                                    $oldBox.css({ "margin-left": "", "margin-right": "", "visibility": "hidden" });
-                                    $oldBox.remove();
-                                });
+                                next_page = data;   // cache it
                             } else {
-                                $newBox.animate({
-                                    "margin-left": "0px",
-                                    "opacity": "1"
-                                }, 500, function () {
-                                    $oldBox.css({ "margin-left": "", "margin-right": "", "visibility": "hidden" });
-                                    $oldBox.remove();
-                                });
-                                $oldBox.animate({
-                                    "opacity": "0"
-                                }, 500, function () {
-
-                                })
+                                previous_page = data;   // cache it
                             }
 
-
-
-
+                            console.log('done preloading page: '+$_GET_query_future.page);
                         }
                     });
                 }
@@ -272,7 +347,7 @@ $_GET['page']--;
                     text-align: center;
                 }
                 div#results {
-                    width: 50%;
+                    width: calc(50% - 5px);
                     display: inline-block !important;
                     vertical-align: top;
                     /* float: left; */

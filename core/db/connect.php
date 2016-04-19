@@ -19,7 +19,7 @@ $host="193.1.101.7";
 $port=3307;
 $socket="";
 $user="group22";
-$password="LdoOq0a0p";
+$password="LdoOq0a0P";
 $dbname="group22DB";
 
 $db = new mysqli($host, $user, $password, $dbname, $port, $socket)
