@@ -15,10 +15,10 @@ function show_modal(content, style_class) {
     modal = $("#modal-"+mnum);
     var close = $("#modal-close-"+mnum);
 
-    close.onclick = function () {
+    close.click(function () {
         // remove modal
         modal.remove();
-    }
+    });
 
     // click outside modal content
     window.onclick = function (event) {
