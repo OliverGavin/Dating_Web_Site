@@ -1,6 +1,7 @@
 <?php
 require_once 'core/init.php';
 require_once 'core/func/validation.php';
+require_once 'core/func/notifications.php';
 
 verify_login();
 $msg = '';
@@ -26,6 +27,7 @@ if (user_is_at_least_role(ROLE_ADMIN)) {
             if ($valid) {
                 set_user_role(ROLE_PAID);
                 $msg = 'Payment accepted, your account has been upgraded. Go to profile';
+                create_notification($_SESSION['user_id'], null, "PAYMENT");
             } else {
                 $msg = 'Payment failed, your card was declined, please try again';
             }

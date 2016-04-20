@@ -40,7 +40,8 @@ function get_user_name($target_user_id) {
  * @return bool
  */
 function set_relationship($target_user_id, $status) {
-    global $db;
+    global $db, $pathToRoot;
+    require_once $pathToRoot.'core/func/notifications.php';
     $user_id = $_SESSION['user_id'];
 
     $is_owner = ($target_user_id == $user_id);
@@ -70,6 +71,8 @@ function set_relationship($target_user_id, $status) {
         return false;
     }
 
+
+    create_notification(18, null, LIKE);
     return true;
 }
 

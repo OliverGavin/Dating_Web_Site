@@ -99,11 +99,11 @@
 		$query->free_result();
 	}
 	
-	function create_notification($user_id, $content, $type)
+	function create_notification($sender_user_id, $content, $type)
 	{
 		global $db;
-		
-		require_once 'core/func/profiles.php';
+
+//		require_once 'core/func/profiles.php';
 		
 		$profile = get_profile($_SESSION['user_id']);
 		
@@ -113,15 +113,17 @@
 		break;
 		
 		case "LIKE"://LIKE:
-		$content = $profile->first_name . ' ' . $profile->last_name . " has liked your profile.";
+			$content = $profile->first_name . ' ' . $profile->last_name . " has liked your profile.";
 		break;
 		
 		case "WARNING"://WARNING: to be displayed after ban time has expired
-		
+			$content = "Your ban has been lifted, please respect the website nad its users.";
+			$sender_user_id = null;	// sent by system, not user
 		break;
 		
 		case "PAYMENT"://PAYMENT
-		
+			$content = "Payment successful, you may now use our services.";
+			$sender_user_id = null;	// sent by system, not user
 		break;
 		
 		case "REPORT"://REPORT: user does this
@@ -133,7 +135,7 @@
 		break;
 		
 		default:
-		$content = "";
+		return;
 		}
 		
 		$type_id = find_type_id($type);
@@ -141,7 +143,7 @@
 		$query = $db->prepare("INSERT INTO `notifications` (`notification_id`, `user_id`, `sender_id`, `seen`, `content`, `link`, `type_id`, `date_time`)
 		VALUES (NULL, ?, ?, b'0', ?, NULL, ?, CURRENT_TIMESTAMP)");
 		
-		$query->bind_param('iisi', $user_id, $_SESSION['user_id'], $content, $type_id);
+		$query->bind_param('iisi', $sender_user_id, $_SESSION['user_id'], $content, $type_id);
 		
 		$query->execute();
 		
