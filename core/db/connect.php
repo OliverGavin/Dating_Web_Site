@@ -15,7 +15,8 @@
 //$password="";
 //$dbname="cs4014populatedtest";
 
-$host="193.1.101.7";
+//ul
+$host="p:193.1.101.7";
 $port=3307;
 $socket="";
 $user="group22";

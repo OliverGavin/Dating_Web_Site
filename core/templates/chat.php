@@ -2,7 +2,7 @@
     <div id="chat-<?=$user_id?>" class="chat">
         <div class="chat-header">
             <img class="chat-pic" src="<?=get_profile_image(IMG_THUMB, $user_id)?>">
-            <p class="chat-title"><?=$user->first_name?> <?=$user->last_name?></p>
+            <p class="chat-title"><?=$user->first_name?> <?=$user->last_name?> <span>(<?=get_user_role_name($user_id)?>)</span></p>
             <span class="chat-close" onclick="close_chat(<?=$user_id?>)"><i class="fa fa-times"></i></span>
         </div>
         <div id="chat-messages-<?=$user_id?>" class="chat-messages scroll">

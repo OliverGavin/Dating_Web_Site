@@ -514,18 +514,30 @@ body {
     border-width: 0;
 }
 
-.nav-menu .profile-image .profile-notification-counter {
+.nav-menu .profile-notification-counter,
+.nav-menu .unseen-counter {
     float: right;
     position: relative;
-    bottom: 28px;
-    right: -2px;
-    padding: 2px 5px 1px 5px;
+    right: -3px;
+    padding: 1px 4px 1px 4px;
     border-radius: 6px;
     background-color: #E91E63;
     font-size: 12px;
 }
 
-.nav-menu .profile-image .profile-notification-counter p {
+.nav-menu .menu-messages .unseen-counter,
+.nav-menu .menu-notifications .unseen-counter {
+    bottom: -25px;
+}
+
+.nav-menu .menu-default .profile-notification-counter,
+.nav-menu .menu-messages .profile-notification-counter,
+.nav-menu .menu-notifications .profile-notification-counter {
+    bottom: 28px;
+}
+
+.nav-menu .profile-notification-counter p,
+.nav-menu .unseen-counter p {
     color: white;
     font-weight: bold;
 }
@@ -1433,6 +1445,11 @@ font-size: 26px;
 .chat .chat-close {
     display: inline-block;
     vertical-align: middle;
+}
+
+.chat .chat-title span {
+    font-size: 0.8em;
+    color: #666666;
 }
 
 .chat .chat-pic {

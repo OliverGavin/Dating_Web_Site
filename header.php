@@ -40,7 +40,13 @@ require_once 'core/func/notifications.php';
                                             </div>
                                         </div>';
 
+                $notifications_unseen_extra = '<div id="notifications-unseen-counter" class="unseen-counter">
+                                                <p>'.get_unseen_notification_count($_SESSION['user_id']).'</p>
+                                            </div>';
+
                 $notifications_extra = '<div class="scroll"><div style="height: 600px">Add here!</div></div>';
+
+                $unseen_message_count = 0;
 
                 $messages_extra = '<ul class="scroll messages" style="height: 600px">';
                     $messages = get_latest_messages();
@@ -54,6 +60,7 @@ require_once 'core/func/notifications.php';
                                 $messages_extra .=          '<div class="profile-image message-pic">';
                                 $messages_extra .=              '<img class="profile-pic" src="'.get_profile_image(IMG_THUMB, $target_user_id).'">';
                                 if ($message->seen) {
+                                    $unseen_message_count += $message->seen;
                                     $messages_extra .=          '<div class="profile-notification-counter">';
                                     $messages_extra .=          '<p>' . $message->seen . '</p>';
                                     $messages_extra .=          '</div>';
@@ -70,11 +77,16 @@ require_once 'core/func/notifications.php';
                     }
                 $messages_extra .= '</ul>';
 
+                $messages_unseen_extra = '<div id="messages-unseen-counter" class="unseen-counter">
+                                                <p>'.$unseen_message_count.'</p>
+                                            </div>';
+                if (!$unseen_message_count) $messages_unseen_extra = '';
+
 
                 // TODO permissions
                 $menu_items = array(
                     array(
-                        'parent'    => new MenuItem('<i class="fa fa-comments"></i>', null, "menu-messages", null, null),
+                        'parent'    => new MenuItem('<i class="fa fa-comments"></i>', null, "menu-messages", null, $messages_unseen_extra),
                         'child'     => array(
                                             array(
                                                 'parent'    => new MenuItem("Messages", null, null, null, $messages_extra)
