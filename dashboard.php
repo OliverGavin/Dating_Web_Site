@@ -85,14 +85,14 @@ else{
         </div>
     </div>
     <?php ?>
-    
-    <?php if($display == 2){ ?><!-- PROFILE OVERVIEW -->
+
+	<?php $profile = get_profile($_SESSION['user_id'])?>
+    <?php if($display == 2 && $profile){ ?><!-- PROFILE OVERVIEW -->
     <div id="pOverview">
     	<div class="pOverviewLink">
         	<i class="fa fa-user fa-2x"></i>
             <p><b>Your Profile</b></p>
         </div>
-    <?php $profile = get_profile($_SESSION['user_id'])?>
     	<a href="" onClick="get_profile(<?=$_SESSION['user_id']?>)"><img src=<?php echo get_profile_image(IMG_MEDIUM, $_SESSION['user_id']); ?>></a>
         <p><?=$_SESSION['first_name']?> <?=$_SESSION['last_name']?></p>
         <p><?php echo $profile->age; ?></p>
