@@ -34,42 +34,48 @@ $query = (object) array(
     'end_parts'  => ''
 );
 
+if (user_is_at_least_role(ROLE_ADMIN)) {
+    $msg = 'Admins cannot block users';
+    $profiles = null;
+} else {
 
-$in_or_not = 'NOT IN';  // default to hiding blocked users
 
-if (isset($_GET['blocked'])) {
-    $in_or_not = 'IN';
-}
+    $in_or_not = 'NOT IN';  // default to hiding blocked users
 
-if (!user_is_at_least_role(ROLE_ADMIN)) {       // Admins can see all users i.e. they cannot be blocked by another user
-    $query = query_add($query,
-        "user_id $in_or_not (      -- user has not been blocked by the current user
-                SELECT target_user_id
-                FROM user_relationships NATURAL JOIN user_relationship_status
-                WHERE status = 'BLOCK' AND user_id = ? AND target_user_id = users.user_id
-            )
-        AND user_id NOT IN (      -- current user has been blocked
-                SELECT user_id
-                FROM user_relationships NATURAL JOIN user_relationship_status
-                WHERE status = 'BLOCK' AND user_id = users.user_id AND target_user_id = ?
-            )",
-        array(
-            $_SESSION['user_id'],
-            $_SESSION['user_id']
-        ),
-        'ii'
-    );
-}
+    if (isset($_GET['blocked'])) {
+        $in_or_not = 'IN';
+    }
 
-$limit_from = $profiles_per_page*$page_number-$profiles_per_page;
-$query_end_part = " LIMIT $limit_from,$profiles_per_page";
-$query = query_add($query, null, null, null, null, $query_end_part);
+    if (!user_is_at_least_role(ROLE_ADMIN)) {       // Admins can see all users i.e. they cannot be blocked by another user
+        $query = query_add($query,
+            "user_id $in_or_not (      -- user has not been blocked by the current user
+                    SELECT target_user_id
+                    FROM user_relationships NATURAL JOIN user_relationship_status
+                    WHERE status = 'BLOCK' AND user_id = ? AND target_user_id = users.user_id
+                )
+            AND user_id NOT IN (      -- current user has been blocked
+                    SELECT user_id
+                    FROM user_relationships NATURAL JOIN user_relationship_status
+                    WHERE status = 'BLOCK' AND user_id = users.user_id AND target_user_id = ?
+                )",
+            array(
+                $_SESSION['user_id'],
+                $_SESSION['user_id']
+            ),
+            'ii'
+        );
+    }
 
-// Search using query built
-$profiles = get_profiles($query->stmt_parts, $query->param_values, $query->param_types, $query->join_parts, $query->end_parts);
+    $limit_from = $profiles_per_page*$page_number-$profiles_per_page;
+    $query_end_part = " LIMIT $limit_from,$profiles_per_page";
+    $query = query_add($query, null, null, null, null, $query_end_part);
 
-?>
+    // Search using query built
+    $profiles = get_profiles($query->stmt_parts, $query->param_values, $query->param_types, $query->join_parts, $query->end_parts);
 
-<?php if(!$ajax_request) { ?>
-    <h2 class="page-title">Browse</h2>
+    ?>
+
+    <?php if(!$ajax_request) { ?>
+        <h2 class="page-title">Browse</h2>
+    <?php } ?>
 <?php } ?>
