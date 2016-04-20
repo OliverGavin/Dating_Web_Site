@@ -166,5 +166,37 @@
 	
 		return $type_id;
 	}
+	
+	function get_report_notifications()
+	{
+		global $db;
+		
+		$query = $db->prepare("SELECT `content`, `notification_id`, `user_id`, `sender_id`, `seen`, `date_time` FROM `notification_type` NATURAL JOIN `notifications` WHERE `type` = 'REPORT'");
+	
+		if(!$query->execute()){
+			return false;
+		}
+	
+		$query->bind_result($content, $notification_id, $user_id, $sender_id, $seen, $date_time);
+		
+		$reports = array();
+
+    		while ($query->fetch()) {
+        		array_push($reports, (object) array(
+            			'content'   => $content,
+            			'notification_id'           => $notification_id,
+				'user_id'			=> $user_id,
+            			'sender_id'        => $sender_id,
+            			'seen' => $seen,
+				'date_time' =>	$date_time,
+       			));
+    		}
+
+    		return $reports;
+	}
+	function truncate($string, $length, $dots = "...")
+	{
+    	return (strlen($string) > $length) ? substr($string, 0, $length - strlen($dots)) . $dots : $string;
+	}
 
 ?>
