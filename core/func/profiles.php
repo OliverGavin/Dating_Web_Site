@@ -388,6 +388,32 @@ function get_profiles($query_stmt_parts, $query_param_values, $query_param_types
 
 }
 
+function get_random_profiles($user)
+{
+    //might move this function else wear
+	global $db;
+
+	$query = $db->prepare("SELECT `user_id`, `first_name` FROM `users` WHERE `user_id`<>? ORDER BY RAND() LIMIT 8");
+	
+	$query->bind_param('i', $user);
+	
+	if(!$query->execute()){
+			return false;
+		}
+       			
+	$query->bind_result($user_id, $firstname);
+	
+	$rUsers = array();
+					
+	while ($query->fetch()) {
+        	array_push($rUsers, (object) array(
+            	'user_id'   => $user_id,
+            	'first_name' => $firstname,
+       		));
+    	}
+	
+	return $rUsers;
+}
 
 
 
