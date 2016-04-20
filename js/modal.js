@@ -12,8 +12,8 @@ function show_modal(content, style_class) {
 
     $('#main').append(modal);
 
-    modal = document.getElementById("modal-"+mnum);
-    var close = document.getElementById("modal-close-"+mnum);
+    modal = $("#modal-"+mnum);
+    var close = $("#modal-close-"+mnum);
 
     close.onclick = function () {
         // remove modal

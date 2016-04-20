@@ -243,7 +243,7 @@ $_GET['page']--;
                         return true;
                     }
 
-                    $.get('<?= $_SERVER['PHP_SELF'] ?>', {$_GET_query, ajax:true}, function(data) {
+                    $.get('<?= $_SERVER['PHP_SELF'] ?>', {$_GET_query:$_GET_query, ajax:true}, function(data) {
                         // Callback function
                         if (data != 'failed') {
                             // swap
