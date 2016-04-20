@@ -34,7 +34,7 @@ $query = (object) array(
     'end_parts'  => ''
 );
 
-if (user_is_at_least_role(ROLE_ADMIN)) {
+if (isset($_GET['blocked']) && user_is_at_least_role(ROLE_ADMIN)) {
     $msg = 'Admins cannot block users';
     $profiles = null;
 } else {

@@ -71,10 +71,11 @@
                 </select>
             </div>
 
-            <div class="profile-field profile-description">
+            <div class="profile-field profile-description group <?= get_form_field_status('description'); ?>">
                 <label for="description">Description</label>
                 <textarea id="description" name="description" cols="60" rows="10" placeholder="Tell us a little about yourself..."><?php echo $profile->description; ?></textarea>
             </div>
+            <?= get_form_field_message('description');  ?>
             <!--                country-->
             <!--                county-->
             <div class="profile-field profile-location">

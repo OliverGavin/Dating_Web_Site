@@ -28,11 +28,11 @@ function validate_text($text, $field_name) {
     if (!empty($text)) {
         $text = filter_var($text, FILTER_SANITIZE_STRING);
         if ($text == "") {
-            $_SESSION['form_errors'][$field_name] = 'Please enter a valid name.';
+            $_SESSION['form_errors'][$field_name] = 'Please enter valid text.';
             return $text;
         }
     } else {
-        $_SESSION['form_errors'][$field_name] = 'Please enter your name.';
+        $_SESSION['form_errors'][$field_name] = 'Please enter a description.';
         return false;
     }
     return $text;
