@@ -61,7 +61,7 @@ $status = get_relationship($user_id);
                 </a>
             <?php } ?>
             <?php if (!$is_owner && can_message_each_other($_SESSION['user_id'], $profile->user_id)) { ?>
-            <a href="chat.php?id=<?=$user_id?>" class="message-action" onclick="open_chat(<?=$user_id?>)">
+            <a href="chat.php?id=<?=$user_id?>" class="message-action" onclick="open_chat(<?=$user_id?>)" style="<?php if ($can_edit_others) echo 'margin-left:0;' ?>">
                 <div class="action action-ban">
                     <p><i class="fa fa-comment"></i></p>
                     <p>CHAT</p>
