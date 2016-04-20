@@ -60,7 +60,12 @@
 				
 		$user_id = $_SESSION['user_id'];
 
-		$query = $db->prepare("SELECT `content`, `notification_id`, `sender_id`, `seen` FROM `notifications` WHERE `user_id`=? AND `date_time` BETWEEN NOW() - INTERVAL 30 DAY AND NOW()");
+		$query = $db->prepare("
+			SELECT `content`, `notification_id`, `sender_id`, `seen`, `type`
+			FROM `notifications` NATURAL JOIN notification_type
+			WHERE `user_id`=? AND `date_time` BETWEEN NOW() - INTERVAL 30 DAY AND NOW()
+				AND `type` != 'REPORT'
+			");
 	
 		$query->bind_param('i', $user_id);
 	
@@ -68,7 +73,7 @@
 			return false;
 		}
        			
-		$query->bind_result($content, $notification_id, $sender_id, $seen);
+		$query->bind_result($content, $notification_id, $sender_id, $seen, $type);
 		
 		$notifications = array();
 
@@ -78,6 +83,7 @@
             	'notification_id'           => $notification_id,
             	'sender_id'        => $sender_id,
             	'seen' => $seen,
+				'type' => $type
        		));
     	}
 
@@ -99,13 +105,15 @@
 		$query->free_result();
 	}
 	
-	function create_notification($sender_user_id, $content, $type)
+	function create_notification($target_user_id, $content, $type)
 	{
 		global $db;
 
+		$current_user_id = $_SESSION['user_id'];
+
 //		require_once 'core/func/profiles.php';
 		
-		$profile = get_profile($_SESSION['user_id']);
+		$profile = get_profile($current_user_id);
 		
 		switch ($type) {
 		case "MESSAGE"://MESSAGE:
@@ -118,12 +126,12 @@
 		
 		case "WARNING"://WARNING: to be displayed after ban time has expired
 			$content = "Your ban has been lifted, please respect the website nad its users.";
-			$sender_user_id = null;	// sent by system, not user
+			$target_user_id= null;	// sent by system, not user
 		break;
 		
 		case "PAYMENT"://PAYMENT
 			$content = "Payment successful, you may now use our services.";
-			$sender_user_id = null;	// sent by system, not user
+			$target_user_id= null;	// sent by system, not user
 		break;
 		
 		case "REPORT"://REPORT: user does this
@@ -143,7 +151,7 @@
 		$query = $db->prepare("INSERT INTO `notifications` (`notification_id`, `user_id`, `sender_id`, `seen`, `content`, `link`, `type_id`, `date_time`)
 		VALUES (NULL, ?, ?, b'0', ?, NULL, ?, CURRENT_TIMESTAMP)");
 		
-		$query->bind_param('iisi', $sender_user_id, $_SESSION['user_id'], $content, $type_id);
+		$query->bind_param('iisi', $target_user_id, $current_user_id, $content, $type_id);
 		
 		$query->execute();
 		

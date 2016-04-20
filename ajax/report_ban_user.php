@@ -1,6 +1,7 @@
 <?php
 $pathToRoot = '../';
 require_once $pathToRoot.'core/init.php';
+require_once $pathToRoot.'core/func/notifications.php';
 
 verify_login();
 
@@ -90,6 +91,7 @@ if (isset($_POST['id'], $_POST['action'], $_POST['res']) && $_POST['res'] == 'ge
 
     if (isset($_POST['reason']) && !empty($_POST['reason'])) {     // TODO Validate
         if (true) {     // TODO notification to admin
+            create_notification($_POST['id'], $_POST['reason'], "REPORT");
             echo 'success';
         } else {
             echo 'An error occurred';
