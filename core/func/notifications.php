@@ -179,7 +179,12 @@
 	{
 		global $db;
 		
-		$query = $db->prepare("SELECT `content`, `notification_id`, `user_id`, `sender_id`, `seen`, `date_time` FROM `notification_type` NATURAL JOIN `notifications` WHERE `type` = 'REPORT'");
+		$query = $db->prepare("
+			SELECT `content`, `notification_id`, `user_id`, `sender_id`, `seen`, `date_time`
+			FROM `notification_type` NATURAL JOIN `notifications`
+			WHERE `type` = 'REPORT'
+			ORDER BY `date_time` DESC
+			");
 	
 		if(!$query->execute()){
 			return false;
