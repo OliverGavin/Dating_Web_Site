@@ -24,14 +24,14 @@ include("image-resize.php");
 			{
 				
 				$newFileName = $user_id.'.jpg'; //FILE NAME uniqid('', true)
-				$targetDir = 'imagestest/profiles/' . $newFileName; // WERE IT WILL GO
+				$targetDir = 'images/profiles/' . $newFileName; // WERE IT WILL GO
 				
 //				if(move_uploaded_file($fileTmp, $targetDir))
 //				{
 					echo $targetDir;
-					$resized_fileM = 'imagestest/profiles/'.IMG_MEDIUM.'_'.$newFileName;
-					$resized_fileS = 'imagestest/profiles/'.IMG_SMALL.'_'.$newFileName;
-					$resized_fileT = 'imagestest/profiles/'.IMG_THUMB.'_'.$newFileName;
+					$resized_fileM = 'images/profiles/'.IMG_MEDIUM.'_'.$newFileName;
+					$resized_fileS = 'images/profiles/'.IMG_SMALL.'_'.$newFileName;
+					$resized_fileT = 'images/profiles/'.IMG_THUMB.'_'.$newFileName;
 					$wmaxM = IMG_MEDIUM;
 					$hmaxM = IMG_MEDIUM;
 					$wmaxS = IMG_SMALL;

@@ -43,7 +43,7 @@ function imageResize($target, $newcopy, $w, $h, $ext)
       $img = imagecreatefromjpeg($target);
     }
 
-//$filename = 'imagestest/cropped_whatever.jpg'; //this is newcopy
+//$filename = 'images/cropped_whatever.jpg'; //this is newcopy
 
 $width = imagesx($img);
 $height = imagesy($img);

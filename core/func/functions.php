@@ -21,13 +21,13 @@ function get_footer() {
  */
 function get_profile_image($size, $user_id = null) {
     if ($user_id == null && is_user_logged_in()) $user_id = $_SESSION['user_id'];
-    $img = 'imagestest/profiles/'.$size.'_'.$user_id.'.jpg';
+    $img = 'images/profiles/'.$size.'_'.$user_id.'.jpg';
     if (file_exists($img) || file_exists('../'.$img)) {
         return $img;
     } else {
         // no image found
         // TODO
-        return 'imagestest/'.$size.'_default.jpg';
+        return 'images/'.$size.'_default.jpg';
     }
 }
 

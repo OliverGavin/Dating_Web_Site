@@ -27,7 +27,7 @@ require_once 'core/func/notifications.php';
         <div class="site-wrapper">
             <div class="site-branding">
                 <h1 class="site-title">
-<!--                    Swoon--><img src="imagestest/logo.png">
+<!--                    Swoon--><img src="images/logo.png">
                 </h1>
             </div>
 
