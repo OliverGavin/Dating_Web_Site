@@ -16,14 +16,14 @@
 //$dbname="cs4014populatedtest";
 
 //ul
-$host="p:193.1.101.7";
-$port=3307;
-$socket="";
-$user="group22";
-$password="LdoOq0a0P";
+$dbhost="p:193.1.101.7";
+$dbport=3307;
+$dbsocket="";
+$dbuser="group22";
+$dbpassword="LdoOq0a0P";
 $dbname="group22DB";
 
-$db = new mysqli($host, $user, $password, $dbname, $port, $socket)
+$db = new mysqli($dbhost, $dbuser, $dbpassword, $dbname, $dbport, $dbsocket)
 or die ('Could not connect to the database server' . mysqli_connect_error());
 
 
