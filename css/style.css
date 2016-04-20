@@ -995,71 +995,6 @@ font-size: 26px;
 .dashboard #notifications .notePictures ul li:hover {
 	background: #9DE8EF;
 }
-/*CSS ADMIN*/
-.dashboard #notificationsadmin{
-	margin: 15px 0 20px 15px;
-	width: 900px;
-	height: 525px;
-	border: 2px solid #DC086B;
-	border-radius: 25px;
-	background-color: white;
-	}
-.dashboard #notificationsadmin .notificationHead{
-	width: 900px;
-	height: 25px;
-	border-radius: 23px 23px 0 0;
-	background-color: #e1d9ec;
-	text-align: center;	
-	}
-.dashboard #notificationsadmin .notificationHead p{
-	color: #DC086B;
-	top: 4px;
-	position: relative;
-	}
-.dashboard #notificationsadmin .notePictures{
-	float: left;
-	}
-.dashboard #notificationsadmin .notePictures img {
-	width: 45px;
-	height: 45px;
-	border-radius: 150px;
-	margin: 5px;
-	-webkit-border-radius: 150px;
-	-moz-border-radius: 150px;
-	vertical-align: middle;
-	display: inline-block;
-}
-.dashboard #notificationsadmin .notePictures {
-  display: block;
-}
-.dashboard #notificationsadmin .notePictures ul {
-  	list-style: none;
-	overflow-y: auto;
-	overflow-x: hidden;
-	height: 500px;
-	width: 880px;
-}
-.dashboard #notificationsadmin .notePictures ul li {
-    background: #e6e6e6;
-	list-style: none;
-    margin: 0 20px 0 0;
-  	padding: 5px 0 5px 0; 
-    color: #000;
-    width: 860px;
-}
-.dashboard #notificationsadmin .notePictures ul li.seen {
-	background: #FFFFFF;
-}
-.dashboard #notificationsadmin .notePictures ul li:hover {
-	background: #9DE8EF;
-}
-.dashboard #notificationsadmin .notePictures ul li .fa-trash{
-	color: #C00206;
-	position: relative;
-	line-height: 51px;
-	float:right;
-	margin-right: 10px;
-	}
 	
 .dashboard #pOverview{
 	margin: 15px 0 0 15px;
@@ -1128,6 +1063,91 @@ font-size: 26px;
 	font-size: 13px;
 	position: relative;
 	}
+.dashboard #userReports{
+	margin: 15px 0 20px 15px;
+	width: 900px;
+	height: 500px;
+	border: 2px solid #DC086B;
+	border-radius: 25px;
+	background-color: white;
+	}
+.dashboard #userReports .userReportsHead{
+	width: 900px;
+	height: 25px;
+	border-radius: 23px 23px 0 0;
+	background-color: #e1d9ec;
+	text-align: center;	
+	}
+.dashboard #userReports .userReportsHead p{
+	color: #DC086B;
+	top: 4px;
+	position: relative;
+	}
+.dashboard #userReports .reportPictures{
+	float: left;
+	}
+.dashboard #userReports .reportPictures img {
+	width: 45px;
+	height: 45px;
+	border-radius: 150px;
+	margin: 5px 8px 5px 12px;
+	-webkit-border-radius: 150px;
+	-moz-border-radius: 150px;
+	vertical-align: middle;
+	display: inline-block;
+}
+.dashboard #userReports .reportPictures {
+  display: block;
+}
+.dashboard #userReports .reportPictures ul {
+  	list-style: none;
+	overflow-y: auto;
+	overflow-x: hidden;
+	height: 500px;
+	width: 880px;
+}
+.dashboard #userReports .reportPictures ul li {
+    background: #e6e6e6;
+	list-style: none;
+    margin: 0 20px 0 0;
+  	padding: 5px 0 5px 0; 
+    color: #000;
+    width: 860px;
+}
+.dashboard #userReports .reportPictures ul li.seen {
+	background: #FFFFFF;
+}
+.dashboard #userReports .reportPictures ul li:hover {
+	background: #9DE8EF;
+}
+.dashboard #userReports .reportPictures ul li .fa-trash{
+	color: #C00206;
+	position: relative;
+	line-height: 51px;
+	float:right;
+	margin-right: 10px;
+	}
+.dashboard #userReports .reportPictures #heading{
+	color: black;
+	}
+.dashboard #userReports .reportPictures #heading tr .A{
+    width: 66px;
+}
+.dashboard #userReports .reportPictures #heading tr .B{
+    width: 70px;
+	text-align: center;
+	border-left: 1px solid black;
+}
+.dashboard #userReports .reportPictures #heading tr .C{
+    width: 520px;
+	text-align: center;
+	border-left: 1px solid black;
+}
+.dashboard #userReports .reportPictures #heading tr .D{
+    width: 155px;
+	text-align: center;
+	border-left: 1px solid black;
+}
 .dashboard #clearDash{
 	clear: both;
 }
