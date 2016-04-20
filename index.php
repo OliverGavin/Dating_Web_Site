@@ -5,6 +5,7 @@ require_once 'core/func/validation.php';
 // TODO redirect to dashboard if logged in
 
 $register = false;
+$register_success = false;
 
 if (isset($_GET['login']) && isset($_POST['action'])) {
 	if ($_POST['action'] == 'Login') {
@@ -37,6 +38,7 @@ if (isset($_GET['login']) && isset($_POST['action'])) {
 
 		if (empty($_SESSION['form_errors'])) {
 			register($email, $password, $first_name, $last_name, $DOB_day, $DOB_month, $DOB_year, $sex);
+			login($email, $password);
 		}
 
 	}
