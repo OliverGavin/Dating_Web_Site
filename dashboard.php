@@ -22,82 +22,76 @@ else{
     <!-- CONTENT STARTS HERE -->
     
 	<?php if($display == 2){?><!-- FEATURED USERS -->
-    <div id="featured">
-    	<div class="featuredHead">
-        	<p><b>Featured Users</b></p>
-        </div>
-    	<div class="pictures">
+    	<div id="featured">
+    			<div class="featuredHead">
+        			<p><b>Featured Users</b></p>
+        		</div>
+    		<div class="pictures">
             
-            <ul><!-- Div will fit 8 profiles -->
+            	<ul><!-- Div will fit 8 profiles -->
             
             	<?php
             		
-			global $db;
-
-			$user_id = $_SESSION['user_id'];
-
-			$query = $db->prepare("SELECT `user_id`, `first_name` FROM `users` WHERE `user_id`<>? ORDER BY RAND() LIMIT 8");
-	
-			$query->bind_param('i', $user_id);
-	
-			$query->execute();
-       			
-			$query->bind_result($featured_user_id, $firstname);
-					
-			while($row = $query->fetch()){
+			$rUsers = get_random_profiles($_SESSION['user_id']);
+			if ($rUsers) {
+                		foreach ($rUsers as $rUser) {
 		?>
-          	<li><span><a href="" onClick="get_profile(<?=$featured_user_id?>)"><img src=<?php echo get_profile_image(IMG_SMALL, $featured_user_id); ?>></a></span>
-                <span><?php echo $firstname ?></span>
-                </li>
-                <?php
+            
+          		<li>
+            			<span><a href="" onClick="get_profile(<?=$rUser->user_id?>)"><img src=<?php echo get_profile_image(IMG_SMALL, $rUser->user_id); ?>></a></span>
+                		<span><?php echo $rUser->first_name ?></span>
+            		</li>
+            	<?php
+				}
 			}
 		?>
-	    </ul>
+	    	</ul>
             
-        </div>
-    </div>
+        	</div>
+    	</div>
     <?php } ?>
     
      <!-- NOTIFICATIONS -->
-    <div id="notifications<?php if($display == 1){echo 'admin';} ?>">
-    	<div class="notificationHead">
-        	<p><b>Notifications</b></p>
-        </div>
-    	<div class="notePictures">
+     <?php if($display == 2){ ?>
+    	<div id="notifications">
+    		<div class="notificationHead">
+        		<p><b>Notifications</b></p>
+        	</div>
+    		<div class="notePictures">
             
-            	<ul>
-            	<?php
-					$notifications = get_notifications($_SESSION['user_id']);
-					if ($notifications) {
-                		foreach ($notifications as $notification) {
-				?>
-                <li class="<?php if ($notification->seen) echo 'seen'; ?>" onClick="seen_notification(this, <?=$notification->notification_id?>)"><span><img src=<?php echo get_profile_image(IMG_THUMB, $notification->sender_id); ?>></span>
-                <i class="fa fa-trash" onClick="delete_notification(this, <?=$notification->notification_id?>)"></i>
-                <span><?php echo $notification->content ?></span>
-                </li>
-                    
-            <?php
-				}
-				}
+            		<ul>
+            		<?php
+				$notifications = get_notifications($_SESSION['user_id']);
+				if ($notifications) {
+                			foreach ($notifications as $notification) {
 			?>
-		</ul>
+                		<li class="<?php if ($notification->seen) echo 'seen'; ?>" onClick="seen_notification(this, <?=$notification->notification_id?>)">
+                			<span><img src=<?php echo get_profile_image(IMG_THUMB, $notification->sender_id); ?>></span>
+                			<i class="fa fa-trash" onClick="delete_notification(this, <?=$notification->notification_id?>)"></i>
+                			<span><?php echo truncate($notification->content, $length=75, $dots="...") ?></span>
+        			</li>
+                	<?php 
+                			}
+                		}
+                	?>
+			</ul>
             
-        </div>
-    </div>
-    <?php ?>
-
-	<?php $profile = get_profile($_SESSION['user_id'])?>
-    <?php if($display == 2 && $profile){ ?><!-- PROFILE OVERVIEW -->
-    <div id="pOverview">
-    	<div class="pOverviewLink">
-        	<i class="fa fa-user fa-2x"></i>
-            <p><b>Your Profile</b></p>
-        </div>
-    	<a href="" onClick="get_profile(<?=$_SESSION['user_id']?>)"><img src=<?php echo get_profile_image(IMG_MEDIUM, $_SESSION['user_id']); ?>></a>
-        <p><?=$_SESSION['first_name']?> <?=$_SESSION['last_name']?></p>
-        <p><?php echo $profile->age; ?></p>
+        	</div>
+    	</div>
+    <?php } ?>
+    
+    <?php if($display == 2){ ?><!-- PROFILE OVERVIEW -->
+    	<div id="pOverview">
+    		<div class="pOverviewLink">
+        		<i class="fa fa-user fa-2x"></i>
+            		<p><b>Your Profile</b></p>
+        	</div>
+    		<?php $profile = get_profile($_SESSION['user_id'])?>
+    			<a href="" onClick="get_profile(<?=$_SESSION['user_id']?>)"><img src=<?php echo get_profile_image(IMG_MEDIUM, $_SESSION['user_id']); ?>></a>
+        		<p><?=$_SESSION['first_name']?> <?=$_SESSION['last_name']?></p>
+        		<p><?php echo $profile->age; ?></p>
             
-    </div>
+    	</div>
     <?php } ?>
     
     <?php if($display == 2){ ?><!-- VIEWED YOU -->
@@ -106,6 +100,53 @@ else{
         	<p><b>Recently Viewed You</b></p>
         </div>
     
+    </div>
+    <?php } ?>
+    
+    <?php if($display == 1){ ?><!-- USER REPORTS -->
+    <div id="userReports">
+    	<div class="userReportsHead">
+        	<p><b>User Reports</b></p>
+        </div>
+        
+        <div class="reportPictures">
+            
+            <ul>
+            
+            	<table id="heading">
+                        <tr>
+    				<td class="A">Reporter</td>
+    				<td class="B">Reported</td>
+    				<td class="C">Reason</td>
+                        	<td class="D">Time</td>
+  			</tr>
+		</table>
+                
+            	<?php
+			$reports = get_report_notifications();
+			if ($reports) {
+                		foreach ($reports as $report) {
+		?>
+                <li class="<?php if ($report->seen) echo 'seen'; ?>" onClick="seen_notification(this, <?=$report->notification_id?>)">
+                	
+                	<span>
+                		<a href="" onClick="get_profile(<?=$report->sender_id?>)"><img src=<?php echo get_profile_image(IMG_THUMB, $report->sender_id); ?>></a>
+                    		<a href="" onClick="get_profile(<?=$report->user_id?>)"><img src=<?php echo get_profile_image(IMG_THUMB, $report->user_id); ?>></a>
+               		</span>
+                	<i class="fa fa-trash" onClick="delete_notification(this, <?=$report->notification_id?>)"></i>
+                	<span style="margin-left: 15px;"><?php echo truncate($report->content, $length=72, $dots="...") ?></span>
+                    
+                    	<span style="position: relative;line-height: 51px;float:right;margin: 0 15px 0 10px;"> <?php echo $report->date_time ?> </span>
+                </li>
+                    
+            	<?php
+				}
+			}
+		?>
+	    </ul>
+            
+        </div>
+        
     </div>
     <?php } ?>
     <div id="clearDash"></div>
@@ -134,12 +175,15 @@ else{
     	event.preventDefault()
     	$.post('ajax/get_profile.php', {id:id}, function(data) {
     		// Callback function
-    		show_modal(data, 'modal-profile');
+    		show_modal(data);
     		});
     	}
 	</script>
+	
+	<!-- REPORT MODAL FOR SHOW MORE -->
 
     </main><!-- #main -->
 </div><!-- #primary -->
 
 <?php get_footer(); ?>
+
