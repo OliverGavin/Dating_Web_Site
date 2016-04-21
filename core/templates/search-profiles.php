@@ -174,8 +174,7 @@ if (isset($search_text) && !empty($search_text)) {
     $query = query_add($query, null, null, null, null, $query_end_part);
 }
 
-$limit_from = $profiles_per_page*$page_number-$profiles_per_page;
-$query_end_part = " LIMIT $limit_from,$profiles_per_page";
+$query_end_part = " LIMIT $limit_from,$limit_offset";
 $query = query_add($query, null, null, null, null, $query_end_part);
 
 // Search using query built

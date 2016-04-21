@@ -66,8 +66,7 @@ if (isset($_GET['blocked']) && user_is_at_least_role(ROLE_ADMIN)) {
         );
     }
 
-    $limit_from = $profiles_per_page*$page_number-$profiles_per_page;
-    $query_end_part = " LIMIT $limit_from,$profiles_per_page";
+    $query_end_part = " LIMIT $limit_from,$limit_offset";
     $query = query_add($query, null, null, null, null, $query_end_part);
 
     // Search using query built

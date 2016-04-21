@@ -125,8 +125,7 @@ if (user_is_at_least_role(ROLE_ADMIN)) {
         $query_end_part = " AND (match_score > 0 OR match_score IS NULL) ORDER BY match_score DESC";
         $query = query_add($query, null, null, null, null, $query_end_part);
 
-        $limit_from = $profiles_per_page*$page_number-$profiles_per_page;
-        $query_end_part = " LIMIT $limit_from,$profiles_per_page";
+        $query_end_part = " LIMIT $limit_from,$limit_offset";
         $query = query_add($query, null, null, null, null, $query_end_part);
 
         // Search using query built

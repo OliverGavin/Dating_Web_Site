@@ -20,6 +20,10 @@ $msg = '';
 $_GET['page'] = (int) isset($_GET['page']) ? $_GET['page'] : 1;
 $page_number = $_GET['page'];
 $profiles_per_page = 11;
+$has_more = true;
+
+$limit_from = $profiles_per_page*$page_number-$profiles_per_page;
+$limit_offset = $profiles_per_page + 1;
 
 $_GET['page']--;
 $nav_back = $_SERVER['PHP_SELF'] .'?'. http_build_query($_GET);
@@ -87,9 +91,11 @@ $_GET['page']--;
                             echo '</div>';
                         }
 
+                        if (count($profiles) <= $profiles_per_page) $has_more = false;
+
                         $n = 1;
                         $lastBrAt = 0;
-                        for ($i = 1; $i <= count($profiles); $i++) {
+                        for ($i = 1; $i <= count($profiles) && $i <= $profiles_per_page; $i++) {    // an extra profile is loaded to see if there are more pages, don't show it
                             // Determines when a line break is outputted so that profiles appear as groups of 4,3,4,3,....
                             if ($n % 5 === 0 && $lastBrAt !== 5) {
                                 echo '<br />';
@@ -170,6 +176,7 @@ $_GET['page']--;
                         </div>
                     </a>
                 </div>
+                <?php if ($has_more) { ?>
                 <div id="search-navigation-right" class="search-result-profile search-navigation search-navigation-right">
                     <a href="<?=$nav_forward?>" onclick="paginate_next()">
                         <div class="profile-image">
@@ -180,6 +187,7 @@ $_GET['page']--;
                         </div>
                     </a>
                 </div>
+                <?php } ?>
                 <style>
                     .search-navigation {
                         margin-top: <?= (count($profiles) <= 7) ? '-190px' : '-380px' ?>;
@@ -319,9 +327,9 @@ $_GET['page']--;
 
                             if (data.trim() == 'no records') {
                                 if (direction == 1) {
-                                    $('#search-navigation-right').remove();
+//                                    $('#search-navigation-right').remove();
                                 } else {
-                                    $('#search-navigation-left').remove();
+//                                    $('#search-navigation-left').remove();
                                 }
                                 console.log('no records at page: '+$_GET_query_future.page);
                                 return;
