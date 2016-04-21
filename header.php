@@ -34,11 +34,9 @@ require_once 'core/func/notifications.php';
             <?php
             if (is_user_logged_in()) {
                 $profile_thumb_extra = '<div class="profile-image">
-                                            <img class="profile-pic" src="' . get_profile_image(IMG_THUMB) . '">
-                                            <div class="profile-notification-counter">
-                                                <p>'.get_unseen_notification_count($_SESSION['user_id']).'</p>
-                                            </div>
-                                        </div>';
+                                            <img class="profile-pic" src="' . get_profile_image(IMG_THUMB) . '">'
+                    .(user_is_at_least_role(ROLE_ADMIN) ? "<div class=\"profile-notification-counter\"><p>".get_unseen_report_notification_count()."</p></div>" : '')
+                    .'</div>';
 
                 $notifications_unseen_extra = '<div id="notifications-unseen-counter" class="unseen-counter">
                                                 <p>'.get_unseen_notification_count($_SESSION['user_id']).'</p>
@@ -100,6 +98,12 @@ require_once 'core/func/notifications.php';
                                             </div>';
                 if (!$unseen_message_count) $messages_unseen_extra = '';
 
+                $unseen_notification_count = get_unseen_notification_count($_SESSION['user_id']);
+                $notifications_unseen_extra = '<div id="messages-unseen-counter" class="unseen-counter">
+                                                <p>'.$unseen_notification_count.'</p>
+                                            </div>';
+                if (!$unseen_notification_count) $notifications_unseen_extra = '';
+
 
                 // TODO permissions
                 $menu_items = array(
@@ -112,7 +116,7 @@ require_once 'core/func/notifications.php';
                         )
                     ),
                     array(
-                        'parent'    => new MenuItem('<i class="fa fa-bell"></i>', null, "menu-notifications", null, null),
+                        'parent'    => new MenuItem('<i class="fa fa-bell"></i>', null, "menu-notifications", null, $notifications_unseen_extra, !user_is_at_least_role(ROLE_ADMIN)),
                         'child'     => array(
                                             array(
                                                 'parent'    => new MenuItem("Notifications", null, null, null, $notifications_extra)
