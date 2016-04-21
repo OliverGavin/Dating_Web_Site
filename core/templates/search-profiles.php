@@ -57,9 +57,9 @@ else                                    $search_min_age = (isset($current_user_p
 if (isset($_GET['max_age'])) $search_max_age = $_GET['max_age'];
 else                                    $search_max_age = (isset($current_user_profile->max_age) ? $current_user_profile->max_age : (isset($current_user_profile->age) ? min($current_user_profile->age + 5, 100) : 100) );
 
-if (isset($_GET['location'])) $location = preg_replace('/\s+/', ' ', $_GET['location']);
+if (isset($_GET['location'])) $location = trim(preg_replace('/\s+/', ' ', $_GET['location']));
 
-if (isset($_GET['name'])) $name = preg_replace('/\s+/', ' ', $_GET['name']);
+if (isset($_GET['name'])) $name = trim(preg_replace('/\s+/', ' ', $_GET['name']));
 
 ?>
 
