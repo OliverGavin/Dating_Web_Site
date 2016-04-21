@@ -5,6 +5,10 @@ require_once 'core/func/notifications.php';
 
 verify_login();
 
+if (!user_is_at_least_role(ROLE_ADMIN)) {
+	header("Location: 404.php");
+}
+
 $clear_form = false;
 
 if (isset($_POST['action'])) {

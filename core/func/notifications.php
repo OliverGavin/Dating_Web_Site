@@ -105,15 +105,15 @@
 		$query->free_result();
 	}
 	
-	function create_notification($target_user_id, $content, $type)
+	function create_notification($receiver_user_id, $content, $type)
 	{
 		global $db;
 
-		$current_user_id = $_SESSION['user_id'];
+		$sender_user_id = $_SESSION['user_id'];
 
 //		require_once 'core/func/profiles.php';
 		
-		$profile = get_profile($current_user_id);
+		$profile = get_profile($sender_user_id);
 		
 		switch ($type) {
 		case "MESSAGE"://MESSAGE:
@@ -123,15 +123,19 @@
 		case "LIKE"://LIKE:
 			$content = $profile->first_name . ' ' . $profile->last_name . " has liked your profile.";
 		break;
+
+		case "MUTUAL_LIKE"://LIKE:
+			$content = "It's a match! " . $profile->first_name . ' ' . $profile->last_name . " has liked you back. You can now chat.";
+		break;
 		
 		case "WARNING"://WARNING: to be displayed after ban time has expired
 			$content = "Your ban has been lifted, please respect the website nad its users.";
-			$target_user_id= null;	// sent by system, not user
+			$sender_user_id= null;	// sent by system, not user
 		break;
 		
 		case "PAYMENT"://PAYMENT
 			$content = "Payment successful, you may now use our services.";
-			$target_user_id= null;	// sent by system, not user
+			$sender_user_id= null;	// sent by system, not user
 		break;
 		
 		case "REPORT"://REPORT: user does this
@@ -151,7 +155,7 @@
 		$query = $db->prepare("INSERT INTO `notifications` (`notification_id`, `user_id`, `sender_id`, `seen`, `content`, `link`, `type_id`, `date_time`)
 		VALUES (NULL, ?, ?, b'0', ?, NULL, ?, CURRENT_TIMESTAMP)");
 		
-		$query->bind_param('iisi', $target_user_id, $current_user_id, $content, $type_id);
+		$query->bind_param('iisi', $receiver_user_id, $sender_user_id, $content, $type_id);
 		
 		$query->execute();
 		

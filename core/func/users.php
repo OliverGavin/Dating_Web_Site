@@ -71,8 +71,15 @@ function set_relationship($target_user_id, $status) {
         return false;
     }
 
+    if ($status == LIKE) {
+        if (get_relationship($user_id, $target_user_id) == LIKE) {  // mutual like
+            create_notification($target_user_id, null, "MUTUAL_LIKE");
 
-    create_notification(18, null, LIKE);
+        } else {
+            create_notification($target_user_id, null, LIKE);
+
+        }
+    }
     return true;
 }
 
