@@ -118,7 +118,7 @@ else{
 			if ($reports) {
                 		foreach ($reports as $report) {
 		?>
-                <li class="<?php if ($report->seen) echo 'seen'; ?>" onClick="seen_notification(this, <?=$report->notification_id?>)">
+                <li class="<?php if ($report->seen) echo 'seen'; ?>" onClick="get_report(<?=$report->notification_id?>); seen_notification(this, <?=$report->notification_id?>);">
                 	
                 	<span>
                 		<a href="" onClick="get_profile(<?=$report->sender_id?>)"><img src=<?php echo get_profile_image(IMG_THUMB, $report->sender_id); ?>></a>
@@ -126,7 +126,7 @@ else{
                		</span>
                 	<i class="fa fa-trash" onClick="delete_notification(this, <?=$report->notification_id?>)"></i>
                 	<span style="margin-left: 15px;"><?php echo truncate($report->content, $length=72, $dots="...") ?></span>
-                    
+
                     	<span style="position: relative;line-height: 51px;float:right;margin: 0 15px 0 10px;"> <?php echo $report->date_time ?> </span>
                 </li>
                     
@@ -163,10 +163,18 @@ else{
 	}
 	
 	function get_profile(id) {
-    	event.preventDefault()
+    	event.preventDefault();
     	$.post('ajax/get_profile.php', {id:id}, function(data) {
     		// Callback function
     		show_modal(data, 'modal-profile');
+    		});
+    	}
+
+	function get_report(id) {
+    	event.preventDefault();
+    	$.post('ajax/get_report.php', {id:id}, function(data) {
+    		// Callback function
+    		show_modal(data, "modal-dialog dialog-user-report");
     		});
     	}
 	</script>
