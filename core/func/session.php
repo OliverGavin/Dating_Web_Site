@@ -92,7 +92,8 @@ function login($email, $password) {
 }
 
 function register($email, $password, $first_name, $last_name, $DOB_day, $DOB_month, $DOB_year, $sex) {
-    global $db, $message;
+    global $db, $message, $pathToRoot;
+    require_once $pathToRoot.'core/func/notifications.php';
 
     $password = hash("sha256", $password, false);
 

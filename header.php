@@ -49,6 +49,7 @@ require_once 'core/func/notifications.php';
                 $unseen_message_count = 0;
 
                 $messages_extra = '<ul class="scroll messages" style="height: 600px">';
+                if (user_can(PERM_SEND_MESSAGES)) {
                     $messages = get_latest_messages();
                     if ($messages) {
                         foreach ($messages as $message) {
@@ -75,6 +76,7 @@ require_once 'core/func/notifications.php';
                             }
                         }
                     }
+                }
                 $messages_extra .= '</ul>';
 
                 $messages_unseen_extra = '<div id="messages-unseen-counter" class="unseen-counter">

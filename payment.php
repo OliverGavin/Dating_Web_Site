@@ -8,9 +8,9 @@ $msg = '';
 $valid = false;
 
 if (user_is_at_least_role(ROLE_ADMIN)) {
-    $msg = 'Admins cannot cannot upgrade';
+    $message['error'][] = 'Admins cannot cannot upgrade';
 } else if (user_is_role(ROLE_PAID)) {
-    $msg = 'You have already upgraded. Go to profile';
+    $message['success'][] = 'You have already upgraded. Go to <a href="profile.php">My Profile</a>';
 } else {
 
     if (isset($_POST['action']) && $_POST['action'] == 'Upgrade') {
@@ -26,10 +26,10 @@ if (user_is_at_least_role(ROLE_ADMIN)) {
 
             if ($valid) {
                 set_user_role(ROLE_PAID);
-                $msg = 'Payment accepted, your account has been upgraded. Go to profile';
+                $message['success'][] = 'Payment accepted, your account has been upgraded. <a href="edit-profile.php">My Profile</a>';
                 create_notification($_SESSION['user_id'], null, "PAYMENT");
             } else {
-                $msg = 'Payment failed, your card was declined, please try again';
+                $message['error'][] = 'Payment failed, your card was declined, please try again';
             }
         }
 
@@ -43,11 +43,35 @@ if (user_is_at_least_role(ROLE_ADMIN)) {
 <div id="primary" class="content-area">
     <main id="main" class="site-main frame" role="main">
 
-        <article>
-
+        <div class="">
             <h2 class="page-title">Upgrade</h2>
 
-            <p><?=$msg?></p>
+            <div class="promo">
+                <h3>Limited time offer!</h3>
+                <h4>Lifetime membership for only <span>€5</span></h4>
+            </div>
+
+            <?php
+            if (isset($message['error']) && !empty($message['error'])) {
+                echo '<div class="notice error">';
+                echo '<h6 class="notice-title">WARNING</h6>';
+                foreach ($message['error'] as $msg) {
+                    echo '<p>';
+                        echo $msg;
+                    echo '</p>';
+                }
+                echo '</div>';
+            }
+            if (isset($message['success']) && !empty($message['success'])) {
+                echo '<div class="notice success">';
+                foreach ($message['success'] as $msg) {
+                    echo '<p>';
+                        echo $msg;
+                    echo '</p>';
+                }
+                echo '</div>';
+            }
+            ?>
 
             <?php if (user_is_role(ROLE_FREE) && !$valid) { ?>
 
@@ -110,8 +134,7 @@ if (user_is_at_least_role(ROLE_ADMIN)) {
 
             <?php } ?>
 
-        </article>
-
+        </div>
     </main><!-- #main -->
 </div><!-- #primary -->
 
