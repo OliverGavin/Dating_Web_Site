@@ -211,5 +211,23 @@
 	{
     	return (strlen($string) > $length) ? substr($string, 0, $length - strlen($dots)) . $dots : $string;
 	}
+	
+	function get_unseen_report_notification_count()
+	{
+		
+		global $db;
+		
+		$query = $db->prepare("SELECT count(*) FROM notification_type NATURAL JOIN notifications WHERE seen=FALSE AND type='REPORT'");
+	
+		$query->execute();
+	
+		$query->bind_result($count);
+	
+		$query->fetch();
+		
+		$query->free_result();
+	
+		return $count;
+	}	
 
 ?>
