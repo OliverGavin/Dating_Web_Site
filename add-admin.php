@@ -97,7 +97,7 @@ if (isset($_POST['action'])) {
 			}
 			?>
 
-			<form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?login=1' . $redirect?>" class="style-rounded-dark" onSubmit="">
+			<form method="post" action="" class="style-rounded-dark" onSubmit="">
 	<!--				<input class="textbox" type="email" size="30" placeholder="Email" name="email"><br>-->
 	<!--				<input class="textbox" type="password" size="30" placeholder="Password" name="password">-->
 
