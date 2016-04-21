@@ -44,7 +44,23 @@ require_once 'core/func/notifications.php';
                                                 <p>'.get_unseen_notification_count($_SESSION['user_id']).'</p>
                                             </div>';
 
-                $notifications_extra = '<div class="scroll"><div style="height: 600px">Add here!</div></div>';
+
+                $notifications_extra = '<ul class="scroll messages" style="height: 600px">';
+					$notifications = get_notifications($_SESSION['user_id']);
+					if ($notifications) {
+                			foreach ($notifications as $notification) {
+								
+								$notifications_extra .=		'<li class="message">';
+								$notifications_extra .=			'<div class="profile-image message-pic">';
+								$notifications_extra .=				'<img class="profile-pic" src="'.get_profile_image(IMG_THUMB, $notification->sender_id).'">';
+								$notifications_extra .=			'</div>';
+								$notifications_extra .=			'<div class="message-text">';
+								$notifications_extra .=				'<span class="message-message">'.$notification->content.'</span>';
+								$notifications_extra .=			'</div>';
+								$notifications_extra .=		'</li>';
+																		}
+										}
+				$notifications_extra .= '</ul>';
 
                 $unseen_message_count = 0;
 

@@ -881,15 +881,15 @@ font-size: 26px;
 	margin: 20px 15px 0 15px;
 	width: 870px;
 	height: 150px;
-	border: 2px solid #DC086B;
+	/*border: 2px solid #DC086B;*/
 	border-radius: 25px;
-	background-color: white;
+	background-color: rgba(255, 240, 221, 0.67);
 	}
 .dashboard .featuredHead{
-	width: 870px;
+	/*width: 870px;
 	height: 25px;
 	border-radius: 23px 23px 0 0;
-	background-color: #e1d9ec;
+	background-color: #e1d9ec;*/
 	text-align: center;
 	}
 .dashboard .featuredHead p{
@@ -912,7 +912,7 @@ font-size: 26px;
 
 }
 .dashboard #featured .pictures ul li {
-    background: #fff;
+    background-color: rgba(255, 240, 221, 0.0);
 	display: inline;
 	list-style: none;
   	float: left;
@@ -943,16 +943,17 @@ font-size: 26px;
 	margin: 15px 0 20px 15px;
 	width: 690px;
 	height: 525px;
-	border: 2px solid #DC086B;
+	padding-bottom: 25px;
+	/*border: 2px solid #DC086B;*/
 	border-radius: 25px;
-	background-color: white;
+	background-color: rgba(255, 240, 221, 0.67);
 	float: left;
 	}
 .dashboard #notifications .notificationHead{
-	width: 690px;
-	height: 25px;
+	/*width: 690px;
+	height: 25px;*/
 	border-radius: 23px 23px 0 0;
-	background-color: #e1d9ec;
+	/*background-color: #e1d9ec;*/
 	text-align: center;	
 	}
 .dashboard #notifications .notificationHead p{
@@ -984,7 +985,7 @@ font-size: 26px;
 	width: 670px;
 }
 .dashboard #notifications .notePictures ul li {
-    background: #e6e6e6;
+    background-color: rgba(255, 240, 221, 0.67);
 	list-style: none;
     margin: 0 20px 0 0;
   	padding: 5px 0 5px 0; 
@@ -992,7 +993,7 @@ font-size: 26px;
     width: 650px;
 }
 .dashboard #notifications .notePictures ul li.seen {
-	background: #FFFFFF;
+	background-color: rgba(255, 240, 221, 0.0);
 }
 .dashboard #notifications .notePictures ul li:hover {
 	background: #9DE8EF;
@@ -1002,17 +1003,18 @@ font-size: 26px;
 	margin: 15px 0 0 15px;
 	width: 165px;
 	height: 242px;
-	border: 2px solid #DC086B;
+	/*border: 2px solid #DC086B;*/
 	border-radius: 25px;
 	float: left;
 	text-align: center;
-	background-color: white;
+	background-color: rgba(255, 240, 221, 0.67);
+    padding-bottom: 13px;
 	}
 .dashboard .pOverviewLink{
 	width: 165px;
 	height:50px;
 	border-radius: 23px 23px 0 0;
-	background-color: #e1d9ec;
+	/*background-color: #e1d9ec;*/
 	}
 .dashboard .pOverviewLink p{
 	color: #DC086B;
@@ -1047,16 +1049,17 @@ font-size: 26px;
 	margin: 15px 0 20px 15px;
 	width: 165px;
 	height: 260px;
-	border: 2px solid #DC086B;
+	/*border: 2px solid #DC086B;*/
 	border-radius: 25px;
 	float: left;
-	background-color: white;
+	background-color: rgba(255, 240, 221, 0.67);
+    padding-bottom: 13px;
 	}
 .dashboard .recentlyViewedYouHead{
 	width: 165px;
 	height: 25px;
 	border-radius: 23px 23px 0 0;
-	background-color: #e1d9ec;
+	/*background-color: #e1d9ec;*/
 	text-align: center;	
 	}
 .dashboard .recentlyViewedYouHead p{
@@ -1071,13 +1074,13 @@ font-size: 26px;
 	height: 500px;
 	border: 2px solid #DC086B;
 	border-radius: 25px;
-	background-color: white;
+	background-color: rgba(255, 240, 221, 0.67);
 	}
 .dashboard #userReports .userReportsHead{
 	width: 900px;
 	height: 25px;
 	border-radius: 23px 23px 0 0;
-	background-color: #e1d9ec;
+	/*background-color: #e1d9ec;*/
 	text-align: center;	
 	}
 .dashboard #userReports .userReportsHead p{
@@ -1117,7 +1120,7 @@ font-size: 26px;
     width: 860px;
 }
 .dashboard #userReports .reportPictures ul li.seen {
-	background: #FFFFFF;
+	background-color: rgba(255, 240, 221, 0.0);
 }
 .dashboard #userReports .reportPictures ul li:hover {
 	background: #9DE8EF;
@@ -1590,6 +1593,32 @@ font-size: 26px;
     top: 0;
 }
 
+.menu-notifications ul.messages {
+    padding: 0;
+}
+
+.menu-notifications .message .message-text {
+    display: inline-block;
+    vertical-align: top;
+    width: calc(100% - 60px);
+    padding-top: 12px;
+}
+
+.menu-notifications .message .message-message {
+    display: block;
+    font-size: 0.8em;
+}
+
+.menu-notifications .message .message-pic {
+    /*height: 50px;*/
+    /*width: 50px;*/
+    margin: 5px;
+    /*border-radius: 50%;*/
+    float: none;
+    position: relative;
+    top: 0;
+    vertical-align: top;
+}
 
 /*--------------------------------------------------------------
 # Payment

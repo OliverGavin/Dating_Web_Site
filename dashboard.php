@@ -69,7 +69,7 @@ else{
                 			<span><img src=<?php echo get_profile_image(IMG_THUMB, $notification->sender_id); ?>></span>
                 			<i class="fa fa-trash" onClick="delete_notification(this, <?=$notification->notification_id?>)"></i>
                 			<span><?php echo truncate($notification->content, $length=75, $dots="...") ?></span>
-        			</li>
+        				</li>
                 	<?php 
                 			}
                 		}
@@ -166,7 +166,7 @@ else{
 		$.post("ajax/set_notification.php", {notification_id:notification_id}, function( data ) {
 			if (data == 'success') {
 				//CSS
-				$(el).css('background-color','#FFFFFF');
+				$(el).css('background-color','rgba(255, 240, 221, 0.0)');
 			}
 		});
 	}
