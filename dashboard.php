@@ -94,15 +94,6 @@ else{
 		</div>
     <?php } ?>
     
-    <?php if($display == 2){ ?><!-- VIEWED YOU -->
-    <div id="recentlyViewedYou">
-    	<div class="recentlyViewedYouHead">
-        	<p><b>Recently Viewed You</b></p>
-        </div>
-    
-    </div>
-    <?php } ?>
-    
     <?php if($display == 1){ ?><!-- USER REPORTS -->
     <div id="userReports">
     	<div class="userReportsHead">
