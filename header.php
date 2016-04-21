@@ -98,7 +98,7 @@ require_once 'core/func/notifications.php';
                                             </div>';
                 if (!$unseen_message_count) $messages_unseen_extra = '';
 
-                $unseen_notification_count = get_unseen_notification_count($_SESSION['user_id']);
+                $unseen_notification_count = get_unseen_notification_count($_SESSION['user_id']) - 1;
                 $notifications_unseen_extra = '<div id="messages-unseen-counter" class="unseen-counter">
                                                 <p>'.$unseen_notification_count.'</p>
                                             </div>';
