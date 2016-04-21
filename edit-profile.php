@@ -70,8 +70,7 @@ if ($is_owner && user_is_at_least_role(ROLE_ADMIN)) {
 
         $profile->sex            =   (int) $_POST['sex'];
         $profile->description    =   validate_text($_POST['description'], 'description');
-        $profile->country        =   $_POST['country']; // todo
-        $profile->county         =   $_POST['county'];  // todo
+        $profile->location        =   $_POST['location']; // todo
         $profile->looking_for    =   (int) $_POST['looking_for'];
         $profile->min_age        =   max((int)$_POST['min_age'], 18);
         $profile->max_age        =   min((int)$_POST['max_age'], 100);

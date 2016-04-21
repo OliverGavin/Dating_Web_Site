@@ -82,21 +82,11 @@
             <?= get_form_field_message('description');  ?>
             <!--                country-->
             <!--                county-->
-            <div class="profile-field profile-location">
-                <label for="location">Location</label>
-                <fieldset id="location" style="border: hidden">
-                    <label for="country" hidden="hidden">Country</label>
-                    <select id="country" name="country">
-                        <option value="IRL">Ireland</option>
-                    </select>
-
-                    <label for="county" hidden="hidden">County</label>
-                    <select id="county" name="county">
-                        <option value=""></option>
-                        <option value="LK">Limerick</option>
-                    </select>
-                </fieldset>
+            <div class="profile-field profile-location group <?= get_form_field_status('location'); ?>">
+                <label for="location" hidden="hidden">Location</label>
+                <input type="text" id="location" name="location" size="8" maxlength="30" value="<?php echo $profile->location; ?>" placeholder="Location" />
             </div>
+            <?= get_form_field_message('location');  ?>
 
             <div class="profile-field profile-looking-for">
                 <label for="looking_for">Looking for:</label>

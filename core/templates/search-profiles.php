@@ -42,6 +42,8 @@ $search_text = null;
 $search_sex = null;
 $search_min_age = null;
 $search_max_age = null;
+$location = null;
+$name = null;
 
 if (isset($_GET['search_text'])) $search_text = $_GET['search_text'];
 else                                    $search_text = "";
@@ -54,6 +56,10 @@ else                                    $search_min_age = (isset($current_user_p
 
 if (isset($_GET['max_age'])) $search_max_age = $_GET['max_age'];
 else                                    $search_max_age = (isset($current_user_profile->max_age) ? $current_user_profile->max_age : (isset($current_user_profile->age) ? min($current_user_profile->age + 5, 100) : 100) );
+
+if (isset($_GET['location'])) $location = $_GET['location'];
+
+if (isset($_GET['name'])) $name = $_GET['name'];
 
 ?>
 
@@ -90,7 +96,11 @@ else                                    $search_max_age = (isset($current_user_p
         <fieldset id="advanced-search">
             <div class="group both-rounded">
                 <label class="visible"><i class="fa fa-globe"></i>&nbsp; Location</label>
-                <input type="text" id="" name="">
+                <input type="text" id="location" name="location">
+            </div>
+            <div class="group both-rounded">
+                <label class="visible"><i class="fa fa-globe"></i>&nbsp; Name</label>
+                <input type="text" id="name" name="name">
             </div>
         </fieldset>
     </form>
@@ -139,6 +149,18 @@ if (isset($search_text) && !empty($search_text)) {
 
 if (isset($search_sex)) {
     $query = query_add($query, 'sex = ?', $search_sex, 'i');
+}
+
+if (isset($location) && !empty($location)) {
+    $query = query_add($query,
+        'AND  MATCH (location) AGAINST (?)',
+        $location, 's');
+}
+
+if (isset($name) && !empty($name)) {
+    $query = query_add($query,
+        "AND CONCAT_WS('', first_name, last_name) LIKE CONCAT('%', ?, '%')",
+        $name, 's');
 }
 
 if (isset($search_min_age)) {

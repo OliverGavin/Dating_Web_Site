@@ -138,9 +138,7 @@ $_GET['page']--;
                                         <div class="profile-location">
                                             <p>
                                                 <?php
-                                                echo $profile->county;
-                                                if (!empty($profile->county) && !empty($profile->country)) echo ', ';
-                                                echo $profile->country;
+                                                echo $profile->location;
                                                 ?>
                                             </p>
                                         </div>

@@ -17,8 +17,9 @@ class Profile {
     public $age;
     public $sex;
     public $description;
-    public $country;
-    public $county;
+//    public $country;
+//    public $county;
+    public $location;
     public $looking_for;
     public $min_age;
     public $max_age;
@@ -67,8 +68,7 @@ class Profile {
 
         $prepared = $db->prepare("
               SELECT    first_name, last_name,
-                        DOB, sex, description, country,
-                        county, looking_for, min_age,
+                        DOB, sex, description, location, looking_for, min_age,
                         max_age, date_time_updated
               FROM users NATURAL JOIN profiles
               WHERE user_id = ?
@@ -87,8 +87,7 @@ class Profile {
             $DOB,
             $this->sex,
             $this->description,
-            $this->country,
-            $this->county,
+            $this->location,
             $this->looking_for,
             $this->min_age,
             $this->max_age,
@@ -137,17 +136,16 @@ class Profile {
         $prepared = $db->prepare("
               UPDATE profiles
               SET DOB = ?, sex = ?, description = ?,
-                  country = ?, county = ?, looking_for = ?, min_age = ?, max_age = ?,
+                  location = ?, looking_for = ?, min_age = ?, max_age = ?,
                   date_time_updated = NOW()
               WHERE user_id = ?
             ");
 
-        $prepared->bind_param('sisssiiii',
+        $prepared->bind_param('sissiiii',
             $this->DOB,
             $this->sex,
             $this->description,
-            $this->country,
-            $this->county,
+            $this->location,
             $this->looking_for,
             $this->min_age,
             $this->max_age,
@@ -341,7 +339,7 @@ function get_profiles($query_stmt_parts, $query_param_values, $query_param_types
     // TODO add limit and ignore list??
     $prepared = $db->prepare("
               SELECT    user_id, first_name, last_name,
-                        DOB, country, county -- , match_score
+                        DOB, location -- , match_score
               FROM users NATURAL JOIN profiles $query_join_parts
               WHERE $query_parts user_id != ?
               $query_end_parts"
@@ -363,8 +361,7 @@ function get_profiles($query_stmt_parts, $query_param_values, $query_param_types
         $first_name,
         $last_name,
         $DOB,
-        $country,
-        $county
+        $location
 //        ,$match_score
     );
 
@@ -378,8 +375,7 @@ function get_profiles($query_stmt_parts, $query_param_values, $query_param_types
 
             $profile->age = date_diff($profile->DOB, date_create('now'))->y;
 
-            $profile->country = $country;
-            $profile->county = $county;
+            $profile->location = $location;
 
             array_push($profiles, $profile);
 //        }

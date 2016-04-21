@@ -95,9 +95,7 @@ $status = get_relationship($user_id);
         <div class="profile-field profile-location">
             <h3>Location</h3>
             <h4><?php
-                echo $profile->county;
-                if (!empty($profile->county) && !empty($profile->country)) echo ', ';
-                echo $profile->country;
+                echo $profile->location;
                 ?>
             </h4>
         </div>
