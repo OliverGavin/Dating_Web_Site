@@ -179,14 +179,22 @@
 		return $type_id;
 	}
 	
-	function get_report_notifications()
+	function get_report_notifications($notification_id = null)
 	{
 		global $db;
-		
+
+		$query_extra = "";
+
+		if($notification_id)
+		{
+			$notification_id = (int) $notification_id;
+			$query_extra = " AND notification_id = $notification_id ";
+		}
+
 		$query = $db->prepare("
 			SELECT `content`, `notification_id`, `user_id`, `sender_id`, `seen`, `date_time`
 			FROM `notification_type` NATURAL JOIN `notifications`
-			WHERE `type` = 'REPORT'
+			WHERE `type` = 'REPORT' $query_extra
 			ORDER BY `date_time` DESC
 			");
 	
