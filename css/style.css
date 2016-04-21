@@ -996,7 +996,7 @@ font-size: 26px;
 	background-color: rgba(255, 240, 221, 0.0);
 }
 .dashboard #notifications .notePictures ul li:hover {
-	background: #9DE8EF;
+	background: #9DE8EF !important;
 }
 	
 .dashboard #pOverview{
@@ -1123,7 +1123,7 @@ font-size: 26px;
 	background-color: rgba(255, 240, 221, 0.0);
 }
 .dashboard #userReports .reportPictures ul li:hover {
-	background: #9DE8EF;
+	background: #9DE8EF !important;
 }
 .dashboard #userReports .reportPictures ul li .fa-trash{
 	color: #C00206;
