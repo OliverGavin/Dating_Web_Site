@@ -106,7 +106,7 @@ function register($email, $password, $first_name, $last_name, $DOB_day, $DOB_mon
 
     if ($prepared->execute()) {
         array_push($message['success'], "Your account has been created, please log in");
-        create_notification($prepared->insert_id, "Welcome to swoon!", "SYSTEM");
+//        create_notification($prepared->insert_id, "Welcome to swoon!", "SYSTEM");
         // Create a profile for the user using their assigned user_id
         $profile = new Profile($prepared->insert_id);
         $profile->create_profile($DOB_day, $DOB_month, $DOB_year, $sex);

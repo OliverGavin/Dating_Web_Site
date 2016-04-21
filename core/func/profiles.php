@@ -50,7 +50,7 @@ class Profile {
 
         $prepared = $db->prepare("
                 INSERT INTO profiles (user_id, DOB, sex, looking_for, date_time_updated)
-                VALUES (?, ?, ?, NOW())
+                VALUES (?, ?, ?, ?, NOW())
             ");
 
         $prepared->bind_param('isii', $this->user_id, $this->DOB, $this->sex, $this->looking_for); //s - string
