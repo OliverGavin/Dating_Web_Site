@@ -96,11 +96,11 @@ if (isset($_GET['name'])) $name = $_GET['name'];
         <fieldset id="advanced-search">
             <div class="group both-rounded">
                 <label class="visible"><i class="fa fa-globe"></i>&nbsp; Location</label>
-                <input type="text" id="location" name="location">
+                <input type="text" id="location" name="location" value="<?=$location?>">
             </div>
             <div class="group both-rounded">
                 <label class="visible"><i class="fa fa-globe"></i>&nbsp; Name</label>
-                <input type="text" id="name" name="name">
+                <input type="text" id="name" name="name" value="<?=$name?>">
             </div>
         </fieldset>
     </form>
@@ -159,7 +159,7 @@ if (isset($location) && !empty($location)) {
 
 if (isset($name) && !empty($name)) {
     $query = query_add($query,
-        "AND CONCAT_WS('', first_name, last_name) LIKE CONCAT('%', ?, '%')",
+        "AND CONCAT_WS(' ', first_name, last_name) LIKE CONCAT('%', ?, '%')",
         $name, 's');
 }
 
