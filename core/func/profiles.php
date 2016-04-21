@@ -45,13 +45,14 @@ class Profile {
         $this->DOB_year       =   $DOB_year;
         $this->DOB            =   "$this->DOB_year-$this->DOB_month-$this->DOB_day";
         $this->sex            =   $sex;
+        $this->looking_for    =   !$sex;
 
         $prepared = $db->prepare("
-                INSERT INTO profiles (user_id, DOB, sex, date_time_updated)
+                INSERT INTO profiles (user_id, DOB, sex, looking_for, date_time_updated)
                 VALUES (?, ?, ?, NOW())
             ");
 
-        $prepared->bind_param('isi', $this->user_id, $this->DOB, $this->sex); //s - string
+        $prepared->bind_param('isii', $this->user_id, $this->DOB, $this->sex, $this->looking_for); //s - string
 
         if (!$prepared->execute()) {
             $this->error_push(ERROR);
@@ -177,11 +178,6 @@ class Profile {
 function get_profile($user_id) {
     global $message;
 
-    if (!exists_profile($user_id)) {
-        $message['error'][] = NOT_FOUND;
-        return false;
-    }
-
     $is_blocked_by_owner = user_is_blocked_by($user_id);
     // Unauthorised user - blocked
     if ($is_blocked_by_owner) {
@@ -192,6 +188,11 @@ function get_profile($user_id) {
     if (!user_can(PERM_VIEW_PROFILES)) {
         // Authorised, but not permitted to view (upgrade required)
         $message['error'][] = MSG_UPGRADE_REQUIRED;
+        return false;
+    }
+
+    if (!exists_profile($user_id)) {
+        $message['error'][] = NOT_FOUND;
         return false;
     }
 

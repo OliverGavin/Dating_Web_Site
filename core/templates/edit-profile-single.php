@@ -7,7 +7,11 @@
         <div class="profile-info">
 
 <!--            TODO-->
-            <input type="file" name="fileToUpload" id="fileToUpload">
+            <div class="profile-field profile-DOB group <?= get_form_field_status('profile_image'); ?>">
+                <label for="fileToUpload">Profile picture: </label>
+                <input type="file" accept="image/png, image/jpg, image/jpeg" name="fileToUpload" id="fileToUpload">
+            </div>
+            <?= get_form_field_message('profile_image');  ?>
             <!--                user_id-->
             <!--                first_name-->
             <!--                last_name-->

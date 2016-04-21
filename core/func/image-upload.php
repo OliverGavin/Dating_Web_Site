@@ -28,7 +28,7 @@ include("image-resize.php");
 				
 //				if(move_uploaded_file($fileTmp, $targetDir))
 //				{
-					echo $targetDir;
+//					echo $targetDir;
 					$resized_fileM = 'images/profiles/'.IMG_MEDIUM.'_'.$newFileName;
 					$resized_fileS = 'images/profiles/'.IMG_SMALL.'_'.$newFileName;
 					$resized_fileT = 'images/profiles/'.IMG_THUMB.'_'.$newFileName;
@@ -50,18 +50,18 @@ include("image-resize.php");
 			}
 			else
 			{
-				echo "There was an error uploading you file.";
+				$_SESSION['form_errors']['profile_image'] = "There was an error uploading you file.";
 			}
 		}
 		else
 		{
-			echo "Sorry the file size is too large.";	
+			$_SESSION['form_errors']['profile_image'] = "Sorry the file size is too large.";
 		}
 		
 	}
 	else
 	{
-		echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+		$_SESSION['form_errors']['profile_image'] = "Sorry, only JPG, JPEG & PNG files are allowed.";
 	}
 
 
