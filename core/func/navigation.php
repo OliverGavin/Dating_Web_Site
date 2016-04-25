@@ -14,11 +14,11 @@ class MenuItem {
 
     /**
      * MenuItem constructor.
-     * @param $title
-     * @param null $link
-     * @param null $class
-     * @param null $counter
-     * @param null $extra_html
+     * @param string $title             Display title of the menu item
+     * @param null|string $link         The location of the page
+     * @param null|string $class        A list of extra classes
+     * @param null|integer $counter
+     * @param null|string $extra_html   Extra html to display
      */
     public function __construct($title, $link=null, $class=null, $counter=null, $extra_html=null, $display=null) {
         $this->title = $title;
@@ -40,7 +40,7 @@ class MenuItem {
 function create_navigation_menu_items($menu_items) {
     $current_script_name = basename($_SERVER["SCRIPT_FILENAME"]);
     foreach ($menu_items as $item) {
-        if ($item['parent']->display) {
+        if ($item['parent']->display) {     // hide parent and children if the current user does not have permission
             $class_list = 'menu-item ' .
                 ($current_script_name == $item['parent']->link ? 'current-menu-item ' : '') .
                 (isset($item['child']) ? 'menu-item-has-children ' : '') .
@@ -65,12 +65,3 @@ function create_navigation_menu_items($menu_items) {
         }
     }
 }
-
-//            echo $_SERVER['SERVER_NAME'].'<br>';
-//            echo $_SERVER['PHP_SELF'].'<br>';
-//            echo $_SERVER['SCRIPT_NAME'].'<br>';
-//            echo $_SERVER['REQUEST_URI'].'<br>';
-//            echo dirname(__FILE__).'<br>';
-//            echo __DIR__.'<br>';
-//            echo '//'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).'<br>';
-//            echo basename($_SERVER["SCRIPT_FILENAME"]);

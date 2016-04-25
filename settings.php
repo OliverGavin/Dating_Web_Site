@@ -146,19 +146,6 @@ function set_email($email) {
         
         	<form role="" method="post" class="style-rounded-dark" action="">
 
-<!--				TODO -->
-<!--				<div class="group both-rounded">-->
-<!--					<label for="firstname" class="visible">First name</label>-->
-<!--					<input class="textbox" type="text" name="first_name" size="30" placeholder="--><?//=$first_name?><!--"/>-->
-<!--				</div>-->
-<!---->
-<!--				<div class="group both-rounded">-->
-<!--					<label for="surname" class="visible">Last name</label>-->
-<!--					<input class="textbox" type="text" name="last_name" size="30" placeholder="--><?//=$last_name?><!--"/>-->
-<!--				</div>-->
-<!---->
-<!--				<br><br>-->
-
 				<div class="group both-rounded <?php if($changing_email) echo get_form_field_status('email1'); ?>">
 					<label for="email" class="visible">New email</label>
 					<input class="textbox" type="email" name="email1" size="30" placeholder="janedoe@gmail.com" value="<?php if(isset($email1) && $changing_email) echo $email1?>"/>

@@ -1,11 +1,18 @@
 <?php
+/*
+ * Script to generate 200 random BELIEVABLE users with names matching gender and random set of likes/dislikes
+ *
+ * Efficiency was not indented here
+ *
+ * Data sources:
+ *  http://listofrandomnames.com/
+ *  http://www.notsoboringlife.com/list-of-hobbies/
+ */
+
 $pathToRoot = '../../';
 require_once $pathToRoot.'core/init.php';
 require_once $pathToRoot.'core/func/users.php';
 require_once $pathToRoot.'core/func/interests.php';
-// Data sources:
-//  http://listofrandomnames.com/
-//  http://www.notsoboringlife.com/list-of-hobbies/
 
 
 $male_first_names = array(
@@ -85,33 +92,9 @@ function get_random_date($start_date, $end_date)
     return date('Y-m-d', $val);
 }
 
-//echo '<pre>';
-//$sex = rand(0,1);
-//echo $sex ? 'male' : 'female'; echo '<br>';
-//
-//echo $first_name = get_random(($sex ? $male_first_names : $female_first_names)); echo '<br>';
-//echo $last_name = get_random($last_names); echo '<br>';
-//echo $DOB = get_random_date('01-04-1956', '01-04-1998'); echo '<br>';
-//
-//echo $email = $first_name.'.'.$last_name.substr($DOB, 2, 4).'@gmail.com';  echo '<br>';
-//echo $password = '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8'; // password
-//    echo '<br>';
-//echo $role_id = 4;   // paid user
-//    echo '<br>';
-//
-//
-//echo $min = max(rand((2016 - substr($DOB, 0, 4)) - 10, (2016 - substr($DOB, 0, 4))), 18); echo '<br>';
-//echo $max = rand((2016 - substr($DOB, 0, 4)), (2016 - substr($DOB, 0, 4)) + 10); echo '<br>';
-//
-//$likes = get_random($interests, rand( 0 , 10 ));
-//$dislikes = get_random($interests, rand( 0 , 8 ));
-//var_dump($likes);
-//var_dump($dislikes);
-//echo '</pre>';
-
 
 $i = 0;
-while ($i < 1) {
+while ($i < 200) {
     $i++;
 
     $sex = rand(0,1);
@@ -122,7 +105,7 @@ while ($i < 1) {
     echo $DOB = get_random_date('01-04-1956', '01-04-1998');
 
     echo $email = $first_name.'.'.$last_name.substr($DOB, 2, 4).'@gmail.com';
-    echo $password = '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8'; // password
+    echo $password = '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8'; // password hash -> 'test12345'
     echo $role_id = 4;   // paid user
 
 

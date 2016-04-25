@@ -1,4 +1,8 @@
 <?php
+/*
+ * Functions for adding, removing and getting a users like/dislikes
+ */
+
 /**
  * Adds a like/dislike for a user
  * @param integer $user_id      the user's id for which to add the like/dislike
@@ -47,9 +51,9 @@ function add_interest($user_id, $likes, $content) {
 
 /**
  * Removes a like/dislike for a user
- * @param integer $user_id      the user's id for which to remove the like/dislike
- * @param $interests_id         the id of the like/dislike which is to be removed
- * @return bool                 true on success, false on error/permission denied
+ * @param integer $user_id              the user's id for which to remove the like/dislike
+ * @param integer $interests_id         the id of the like/dislike which is to be removed
+ * @return bool                         true on success, false on error/permission denied
  */
 function remove_interest($user_id, $interests_id) {
     global $db;
@@ -88,9 +92,9 @@ function remove_interest($user_id, $interests_id) {
 
 /**
  * Gets all the users like/dislikes (interests)
- * @param $user_id          the user's id for which we are getting the likes of
- * @param null $likes       true to return like only, false to return dislikes only
- * @return array            a list of interests
+ * @param integer $user_id          the user's id for which we are getting the likes of
+ * @param null $likes               true to return like only, false to return dislikes only
+ * @return array                    a list of interests
  */
 function get_interests($user_id, $likes = null) {  // TODO add extra query conditions? sorting?
     global $db;

@@ -1,30 +1,12 @@
-<?php   // TODO refactor and add reverse checks
-global $message;
-/**
- * Builds query parts ready for use with prepared statements
- * @param object $query
- * @param string $stmt_part
- * @param array|integer $param_value
- * @param string $param_type
- * @param string $join_part
- * @return object mixed
+<?php
+/*
+ * Browse template for search.php
+ * Loads all users, allowing pagination
+ * Hides users that have blocked the current user
+ * Hides all users the current user has blocked, unless $_GET['blocked'] is set, in which case only blocked users are shown (for unblocking)
  */
-function query_add($query, $stmt_part, $param_value = null, $param_type = null, $join_part = null, $end_part = null) {
 
-    $query->stmt_parts  .= ' '.$stmt_part;
-    if (isset($param_value) && isset($param_type)) {
-        if (is_array($param_value)) {
-            $query->param_values = array_merge($query->param_values, $param_value);
-        } else {
-            array_push($query->param_values, $param_value);
-        }
-        $query->param_types .= $param_type;
-    }
-    $query->join_parts  .= $join_part;
-    $query->end_parts  .= $end_part;
-
-    return $query;
-}
+global $message;
 
 $query = (object) array(
     'stmt_parts'   => '',

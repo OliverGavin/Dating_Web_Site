@@ -1,4 +1,8 @@
-<?php if ($_POST['res'] == 'get_chat' && $_POST['res'] != 'get_chat_messages') { ?>
+<?php
+/*
+ * Chat template - displays messages in a chat box
+ */
+if ($_POST['res'] == 'get_chat' && $_POST['res'] != 'get_chat_messages') { ?>
     <div id="chat-<?=$user_id?>" class="chat">
         <div class="chat-header">
             <img class="chat-pic" src="<?=get_profile_image(IMG_THUMB, $user_id)?>">

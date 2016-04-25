@@ -1,3 +1,6 @@
+// Creates a modal window with a close button
+// Darkens the background and the content slides in using CSS animations
+
 var mnum = 0;
 
 function show_modal(content, style_class) {

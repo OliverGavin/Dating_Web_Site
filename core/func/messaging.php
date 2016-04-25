@@ -1,4 +1,14 @@
 <?php
+/*
+ * Chat functions for sending, getting and setting messages as seen
+ */
+
+/**
+ * Sends a message to a user from the current user
+ * @param integer $user_id      The user to send the message to
+ * @param string $content       The message
+ * @return bool                 true on success, false on error or invalid permission
+ */
 function send_message($user_id, $content) {
     global $db;
     global $message;
@@ -28,7 +38,12 @@ function send_message($user_id, $content) {
     return true;
 }
 
-function get_messages($user_id, $seen = null) {
+/**
+ * Gets the chat messages between the current user and another user
+ * @param integer $user_id          The other user
+ * @return array|bool               A list of messages, false on error or invalid permissions
+ */
+function get_messages($user_id) {
     global $db;
     global $message;
 
@@ -82,6 +97,11 @@ function get_messages($user_id, $seen = null) {
     return $messages;
 }
 
+/**
+ * Sets the messages sent to the current user as seen for a particular chat
+ * @param integer $sender_id        The other user
+ * @return bool                     false on error
+ */
 function set_messages_from_user_seen($sender_id) {
     global $db;
     global $message;
@@ -103,6 +123,10 @@ function set_messages_from_user_seen($sender_id) {
 
 }
 
+/**
+ * Gets all the latest messages, with the other users name and the amount of unread messages
+ * @return array|bool       A list of messages
+ */
 function get_latest_messages() {
     global $db;
     global $message;
@@ -111,45 +135,6 @@ function get_latest_messages() {
         $message['error'][] = MSG_UPGRADE_REQUIRED;
         return false;
     }
-
-    // TODO mutual and blocking
-//    if (!can_message_each_other($user_id, $_SESSION['user_id'])) {
-//        $message['error'][] = MSG_PERMISSION_DENIED;
-//        return false;
-//    }
-
-//            SELECT message_id, sender_id, receiver_id, time_date, content, seen,
-//                  if(us.user_id = ?, CONCAT(ur.first_name, ' ', ur.last_name), CONCAT(us.first_name, ' ', us.last_name)) as target_name
-//            FROM messages JOIN users us on sender_id = us.user_id JOIN users ur on receiver_id = ur.user_id
-//            WHERE message_id IN (SELECT MAX(message_id)
-//                                 FROM messages
-//                                 GROUP BY if(sender_id > receiver_id, CONCAT(sender_id, receiver_id), CONCAT(receiver_id, sender_id))
-//                                )
-//                AND (sender_id = ? OR receiver_id = ?)
-//
-//            SELECT messages.*, if(us.user_id = 23, CONCAT(ur.first_name, ' ', ur.last_name), CONCAT(us.first_name, ' ', us.last_name)) as target_name, unseen_count
-//            FROM messages JOIN users us on sender_id = us.user_id JOIN users ur on receiver_id = ur.user_id
-//				JOIN (SELECT receiver_id as rid, COUNT(seen) as unseen_count
-//					  FROM messages
-//                      WHERE seen = FALSE
-//                      GROUP BY receiver_id) t on receiver_id = rid
-//                      WHERE message_id IN (SELECT MAX(message_id)
-//					 FROM messages
-//                     GROUP BY if(sender_id > receiver_id, CONCAT(sender_id, receiver_id), CONCAT(receiver_id, sender_id))
-//					)
-//                AND (sender_id = 23 OR receiver_id = 23)
-
-//    SELECT messages.*, if(us.user_id = 23, CONCAT(ur.first_name, ' ', ur.last_name), CONCAT(us.first_name, ' ', us.last_name)) as target_name, unseen_count
-//    FROM messages JOIN users us on sender_id = us.user_id JOIN users ur on receiver_id = ur.user_id
-//                    JOIN (SELECT sender_id as sid, receiver_id as rid, COUNT(seen) as unseen_count
-//                          FROM messages
-//                          WHERE seen = FALSE AND receiver_id = 23
-//                          GROUP BY sender_id) t on (receiver_id = rid AND sender_id = sid) OR (receiver_id = sid AND sender_id = rid)
-//    WHERE message_id IN (SELECT MAX(message_id)
-//                         FROM messages
-//                         GROUP BY if(sender_id > receiver_id, CONCAT(sender_id, receiver_id), CONCAT(receiver_id, sender_id))
-//                        )
-//    AND (sender_id = 23 OR receiver_id = 23)
 
     $prepared = $db->prepare("
             SELECT message_id, sender_id, receiver_id, time_date, content, unseen_count,
@@ -189,13 +174,13 @@ function get_latest_messages() {
 
     while ($prepared->fetch()) {
         array_push($messages, (object) array(
-            'message_id'   => $message_id,
-            'sender_id'           => $sender_id,
-            'receiver_id'        => $receiver_id,
-            'interest_score' => $time_date,
-            'content' => $content,
-            'seen' => $seen,
-            'target_name' => $target_name
+            'message_id'        => $message_id,
+            'sender_id'         => $sender_id,
+            'receiver_id'       => $receiver_id,
+            'interest_score'    => $time_date,
+            'content'           => $content,
+            'seen'              => $seen,
+            'target_name'       => $target_name
         ));
     }
 

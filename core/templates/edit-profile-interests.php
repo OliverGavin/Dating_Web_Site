@@ -1,5 +1,9 @@
 
 <?php
+/*
+ * Interests template - displays likes and dislikes, input for a new like/dislike and a remove button for each
+ */
+
 $likes = get_interests($user_id, true);
 
 echo '<div class="profile-field profile-interests profile-likes">';

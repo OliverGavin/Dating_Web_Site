@@ -15,9 +15,9 @@ function get_footer() {
 
 /**
  * Gets the users profile image
- * @param $size
- * @param null $user_id
- * @return string
+ * @param integer $size     the image to fetch in px IMG (IMG_THUMB|IMG_SMALL|IMG_MEDIUM|IMG_LARGE)
+ * @param null integer $user_id
+ * @return string           the location of the image
  */
 function get_profile_image($size, $user_id = null) {
     if ($user_id == null && is_user_logged_in()) $user_id = $_SESSION['user_id'];
@@ -33,7 +33,7 @@ function get_profile_image($size, $user_id = null) {
 
 /**
  * Checks if the password for the current user is correct
- * @param $pass
+ * @param string $pass
  * @return bool
  */
 function check_password($pass) {

@@ -1,4 +1,8 @@
 <?php
+/*
+ * Functions for user permissions/roles
+ */
+
 // Constants useful for IDE auto-complete and refactoring
 DEFINE('PERM_DELETE_USERS',				'delete_users');
 DEFINE('PERM_BAN_USERS',				'ban_users');
@@ -42,13 +46,6 @@ function user_can($permission, $user_id = null) {
 
 	$db->real_escape_string($permission);
 
-	// The problem was that a string was passed in the select part for an attribute
-	// SQL->				SELECT 'edit_settings' FROM....
-	// When it should be	SELECT  edit_settings FROM....
-	// Prepared statements cannot do this:
-	// http://stackoverflow.com/questions/11312737/can-i-parameterize-the-table-name-in-a-prepared-statement
-	// It's ok as the data will always be safe from sql injection as the user never submits this parameter
-	// $db->real_escape_string($permission); does the job even though it isn't hugely needed
 	$query = $db->prepare("SELECT ".$permission." FROM `users` NATURAL JOIN `roles` WHERE `user_id` = ?");
 
 	if ($db->error) {
@@ -68,19 +65,6 @@ function user_can($permission, $user_id = null) {
 
 	return $can;
 }
-
-//// To test...
-//if (user_can(PERM_EDIT_OTHERS_PROFILE)) {
-//	echo 'can';
-//} else {
-//	echo 'can\'t';
-//}
-//echo '<br>';
-//if (user_is_at_least_role(ROLE_BANNED)) {
-//	echo 'is';
-//} else {
-//	echo 'isn\'t';
-//}
 
 /**
  * Gets a users role name
@@ -160,8 +144,8 @@ function get_role_weight($role) {
 	return $weight;
 }
 
-// Checks if a user has a certain role
 /**
+ * Checks if a user has a certain role
  * @param $role
  * @param integer|null $user_id
  * @return integer
@@ -174,8 +158,8 @@ function user_is_role($role, $user_id = null) {
 	return get_user_role_weight($user_id) === get_role_weight($role);
 }
 
-// Checks if a user has at least a certain role
 /**
+ * Checks if a user has at least a certain role
  * @param string $role
  * @param integer|null $user_id
  * @return bool
@@ -188,6 +172,12 @@ function user_is_at_least_role($role, $user_id = null) {
 	return get_user_role_weight($user_id) >= get_role_weight($role);
 }
 
+/**
+ * Sets a users role
+ * @param string $role
+ * @param null|integer $user_id
+ * @return bool
+ */
 function set_user_role($role, $user_id = null) {
 	global $db;
 	if ($user_id == null)
@@ -210,6 +200,13 @@ function set_user_role($role, $user_id = null) {
 	return true;
 }
 
+/**
+ * Bans a user for a duration (changes role to BANNED and logs the reason)
+ * @param string $reason
+ * @param integer $duration
+ * @param integer $user_id
+ * @return bool
+ */
 function ban_user($reason, $duration, $user_id) {
 	if(!set_user_role(ROLE_BANNED, $user_id)) {
 		return false;
@@ -219,17 +216,29 @@ function ban_user($reason, $duration, $user_id) {
 	return true;
 }
 
+/**
+ * Deletes a user and their profile forever (changes role to DELETED and logs the reason)
+ * @param string $reason
+ * @param integer $user_id
+ * @return bool
+ */
 function delete_user($reason, $user_id) {
 	if(!set_user_role(ROLE_DELETED, $user_id)) {
 		return false;
 	}
 	add_ban_details($reason, null, $user_id);
-	// TODO
 	delete_profile($user_id);
 
 	return true;
 }
 
+/**
+ * Logs details of a ban
+ * @param string $reason
+ * @param integer $duration
+ * @param integer $user_id
+ * @return bool
+ */
 function add_ban_details($reason, $duration, $user_id) {
 	global $db;
 
@@ -252,6 +261,10 @@ function add_ban_details($reason, $duration, $user_id) {
 	return true;
 }
 
+/**
+ * Gets the details of a ban (reason, date and time)
+ * @return bool|object
+ */
 function get_ban_details() {
 	global $db;
 	global $attempted_user_id;
@@ -291,6 +304,14 @@ function get_ban_details() {
 		);
 }
 
+/**
+ * Checks if a pair of users can message each other
+ * - Anybody can message an admin and an admin can message anybody
+ * - Two users must mutually like each other otherwise
+ * @param $user_id1
+ * @param $user_id2
+ * @return bool
+ */
 function can_message_each_other($user_id1, $user_id2) {
 
 	if (user_is_at_least_role(ROLE_ADMIN, $user_id1) || user_is_at_least_role(ROLE_ADMIN, $user_id2)) {

@@ -1,30 +1,11 @@
-<?php   // TODO refactor and add reverse checks
-global $message;
-/**
- * Builds query parts ready for use with prepared statements
- * @param object $query
- * @param string $stmt_part
- * @param array|integer $param_value
- * @param string $param_type
- * @param string $join_part
- * @return object mixed
+<?php
+/*
+ * Suggestions template for search.php
+ * Queries users based on attributes from the current users profile, allowing pagination
+ * Hides users that have blocked the current user
  */
-function query_add($query, $stmt_part, $param_value = null, $param_type = null, $join_part = null, $end_part = null) {
 
-    $query->stmt_parts  .= ' '.$stmt_part;
-    if (isset($param_value) && isset($param_type)) {
-        if (is_array($param_value)) {
-            $query->param_values = array_merge($query->param_values, $param_value);
-        } else {
-            array_push($query->param_values, $param_value);
-        }
-        $query->param_types .= $param_type;
-    }
-    $query->join_parts  .= $join_part;
-    $query->end_parts  .= $end_part;
-
-    return $query;
-}
+global $message;
 
 $query = (object) array(
     'stmt_parts'   => '',
@@ -42,7 +23,7 @@ if (user_is_at_least_role(ROLE_ADMIN)) {
     $msg = 'Admins cannot have suggestions';
     $profiles = null;
 } else if (!$current_user_profile->fetch()) {
-    $msg .= 'You need to create a profile first!';
+    $msg .= 'You need to create a profile first!';      // We cannot make suggestions otherwise
     $profiles = null;
 } else {
 
@@ -73,6 +54,8 @@ if (user_is_at_least_role(ROLE_ADMIN)) {
             return $dislike->content;
         }, $search_dislike));
 
+        // Score is determined on matching other users likes (1 if they like it too, -0.5 if they don't)
+        // but also other users dislikes (1 if they dislike it too, -0.5 if they don't)
         $join_part = "
             LEFT JOIN
                 (SELECT user_id, SUM(like_dislike_score) as match_score
@@ -122,6 +105,7 @@ if (user_is_at_least_role(ROLE_ADMIN)) {
             'ii'
         );
 
+        // Only show the users with a match score above 0, showing best match first
         $query_end_part = " AND (match_score > 0 OR match_score IS NULL) ORDER BY match_score DESC";
         $query = query_add($query, null, null, null, null, $query_end_part);
 

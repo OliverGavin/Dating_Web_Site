@@ -1,4 +1,8 @@
 <?php
+/*
+ * Facilitates ajax requests for loading a users profile (for display in a modal window) based on a specified ID
+ */
+
 $pathToRoot = '../';
 require_once $pathToRoot.'core/init.php';
 require_once $pathToRoot.'core/func/profiles.php';
@@ -14,7 +18,5 @@ if (isset($_POST['id']) && exists_profile($_POST['id'])) {
         echo '<div class="profile">';
         include $pathToRoot.'core/templates/profile-single.php';
         echo '</div>';
-    } else {
-            // TODO 404 template
     }
 }

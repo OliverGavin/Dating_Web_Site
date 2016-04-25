@@ -1,1 +1,19 @@
-Add any references to copied materials and resources here:
+References to copied materials and resources:
+Profile images:
+    http://www.buddytv.com/actors-all.aspx
+
+Default profile image:
+    https://www.thinkprocurement.com/assets/img/gallery/1.jpg
+
+Background image:
+    https://img1.goodfon.ru/original/4272x2848/3/bd/priroda-more-zakat-lyubov-ruki.jpg
+
+Data sources for populating DB:
+    http://listofrandomnames.com/
+    http://www.notsoboringlife.com/list-of-hobbies/
+
+JQuery library:
+    http://jquery.com/
+
+FontAwesome icons:
+    https://fortawesome.github.io/Font-Awesome/icons/

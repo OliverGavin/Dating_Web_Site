@@ -1,9 +1,14 @@
 <?php
+/*
+ * Function for account/session management
+ * required on every page to maintain a session
+ */
+
 global $pathToRoot;
 require_once $pathToRoot.'core/func/profiles.php';
 require_once $pathToRoot.'core/func/roles.php';
 
-$attempted_user_id;
+$attempted_user_id;     // id of user attempting to log in
 
 session_start();
 
@@ -12,6 +17,10 @@ if (isset($_GET['logout'])) {
 
 }
 
+/**
+ * Logs the current user out, redirects the user to the main page and stores a redirect if they are logged out by a timeout
+ * @param null $timeout
+ */
 function logout($timeout = null) {
 
     unset($_SESSION);
@@ -34,6 +43,12 @@ function logout($timeout = null) {
 
 }
 
+/**
+ * Logs a user in and redirects them to their dashboard if a redirect is not set
+ * Removes a ban if period has passed
+ * @param $email
+ * @param $password
+ */
 function login($email, $password) {
     global $db, $message, $attempted_user_id;
 
@@ -62,9 +77,9 @@ function login($email, $password) {
 
     if (user_is_role(ROLE_BANNED, $user_id)) {
         $attempted_user_id = $user_id;
+        // Remove ban if period has passed
         if (date_create() > date_create(get_ban_details()->until_date_time)) {
             set_user_role(ROLE_FREE, $user_id);
-            // TODO add notification
         } else {
             array_push($message['error'], USER_BANNED);
             return;
@@ -75,6 +90,7 @@ function login($email, $password) {
         return;
     }
 
+    // Caches frequently used data
     $_SESSION['user_id'] = $user_id;
     $_SESSION['user_ip'] = $ip;
     $_SESSION['first_name'] = $first_name;
@@ -91,6 +107,17 @@ function login($email, $password) {
 
 }
 
+/**
+ * Registers a user
+ * @param string $email
+ * @param string $password
+ * @param string $first_name
+ * @param string $last_name
+ * @param integer $DOB_day
+ * @param integer $DOB_month
+ * @param integer $DOB_year
+ * @param integer $sex
+ */
 function register($email, $password, $first_name, $last_name, $DOB_day, $DOB_month, $DOB_year, $sex) {
     global $db, $message, $pathToRoot;
     require_once $pathToRoot.'core/func/notifications.php';
@@ -106,7 +133,8 @@ function register($email, $password, $first_name, $last_name, $DOB_day, $DOB_mon
 
     if ($prepared->execute()) {
         array_push($message['success'], "Your account has been created, please log in");
-//        create_notification($prepared->insert_id, "Welcome to swoon!", "SYSTEM");
+        // Adds a welcome message
+        create_notification($prepared->insert_id, "Welcome to swoon!", "SYSTEM");
         // Create a profile for the user using their assigned user_id
         $profile = new Profile($prepared->insert_id);
         $profile->create_profile($DOB_day, $DOB_month, $DOB_year, $sex);
@@ -132,10 +160,9 @@ function register($email, $password, $first_name, $last_name, $DOB_day, $DOB_mon
  * Verifies the users login state.
  * Redirects the user if they are not logged in
  *                    or their IP is different
+ *                    or the 30 minute timeout has expired
  */
 function verify_login() {
-    //if wrong ip...
-    //if not logged in redirect
 
     if ( is_user_logged_in() ) {
 

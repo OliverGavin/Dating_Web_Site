@@ -1,7 +1,16 @@
 <?php
+/*
+ * Crops and down-samples an image of type png or jpg to a specified height and width
+ */
 
-//SHOULD BE COMPLETELY FINISHED
 
+/**
+ * @param string $target        the location of the image
+ * @param string $newcopy       the new location and name of the image
+ * @param integer $w            width
+ * @param integer $h            height
+ * @param string $ext           extension
+ */
 function imageResize($target, $newcopy, $w, $h, $ext)
 {
 

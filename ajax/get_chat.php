@@ -1,8 +1,12 @@
 <?php
+/*
+ * Facilitates ajax requests for loading the chat, getting the messages in the chat and sending messages
+ * The chat will only load if the users have permission to chat with each other
+ */
+
 $pathToRoot = '../';
 require_once $pathToRoot.'core/init.php';
 require_once $pathToRoot.'core/func/users.php';
-
 require_once $pathToRoot.'core/func/messaging.php';
 
 verify_login();

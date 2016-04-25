@@ -11,7 +11,6 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == true) {
 }
 
 verify_login();
-// TODO permissions
 
 $profiles = false;
 $msg = '';
@@ -42,7 +41,6 @@ $_GET['page']--;
 <?php } ?>
 
             <?php if (isset($_GET['action']) && $_GET['action'] == 'browse') {
-//                $profiles = get_all_profiles();
                 include 'core/templates/browse-profiles.php';
             } else if (isset($_GET['action']) && $_GET['action'] == 'suggestions') {
                 include 'core/templates/suggest-profiles.php';
@@ -324,11 +322,6 @@ $_GET['page']--;
                         if (data != 'failed') {
 
                             if (data.trim() == 'no records') {
-                                if (direction == 1) {
-//                                    $('#search-navigation-right').remove();
-                                } else {
-//                                    $('#search-navigation-left').remove();
-                                }
                                 console.log('no records at page: '+$_GET_query_future.page);
                                 return;
                             }
@@ -356,7 +349,6 @@ $_GET['page']--;
                     width: calc(50% - 5px);
                     display: inline-block !important;
                     vertical-align: top;
-                    /* float: left; */
                 }
             </style>
         </article>

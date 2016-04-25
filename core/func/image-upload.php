@@ -1,6 +1,7 @@
 <?php
-
-// TODO Delete
+/*
+ * Processes image upload, checks for errors such as file size limit and extension and generates various image sizes
+ */
 
 include("image-resize.php");
 
@@ -23,12 +24,9 @@ include("image-resize.php");
 			if($fileError === 0)//Make sure there is no errors
 			{
 				
-				$newFileName = $user_id.'.jpg'; //FILE NAME uniqid('', true)
+				$newFileName = $user_id.'.jpg'; //FILE NAME -> profile user ID
 				$targetDir = 'images/profiles/' . $newFileName; // WERE IT WILL GO
-				
-//				if(move_uploaded_file($fileTmp, $targetDir))
-//				{
-//					echo $targetDir;
+
 					$resized_fileM = 'images/profiles/'.IMG_MEDIUM.'_'.$newFileName;
 					$resized_fileS = 'images/profiles/'.IMG_SMALL.'_'.$newFileName;
 					$resized_fileT = 'images/profiles/'.IMG_THUMB.'_'.$newFileName;
@@ -41,12 +39,7 @@ include("image-resize.php");
 					imageResize($fileTmp, $resized_fileM, $wmaxM, $hmaxM, $fileExt);
 					imageResize($fileTmp, $resized_fileS, $wmaxS, $hmaxS, $fileExt);
 					imageResize($fileTmp, $resized_fileT, $wmaxT, $hmaxT, $fileExt);
-					
-//				}
-//				else
-//				{
-//        			echo "Sorry, there was an error uploading your file.";
-//    			}
+
 			}
 			else
 			{

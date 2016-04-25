@@ -1,4 +1,7 @@
 <?php
+/*
+ * Facilitates ajax requests for deleting a notification with a specified ID
+ */
 
 $pathToRoot = '../';
 require_once $pathToRoot.'core/init.php';

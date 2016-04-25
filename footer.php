@@ -76,13 +76,6 @@
             }
 
         </script>
-        <script>
-            setInterval(start_content_service, 5000);
-
-            function start_content_service() {
-//                alert('hhh');
-            }
-        </script>
     </div>
 
     <footer id="main-footer" class="site-footer" role="contentinfo">

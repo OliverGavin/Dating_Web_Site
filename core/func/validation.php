@@ -1,7 +1,17 @@
 <?php
+/*
+ * Function for validation
+ */
+
 // remove old errors
 unset($_SESSION['form_errors']);
 
+/**
+ * Validates and sanitises a human name
+ * @param string $name
+ * @param string $field_name        The name of the field for storing error messages
+ * @return bool|mixed|string
+ */
 function validate_name($name, $field_name) {
     $name = trim($name);
     if (!empty($name)) {
@@ -10,9 +20,8 @@ function validate_name($name, $field_name) {
             $_SESSION['form_errors'][$field_name] = 'Please enter a valid name.';
             return $name;
         }
-//        echo $name;
-//        echo preg_match("/^[a-zA-Z '-]+$/", $name);
-        if (!preg_match("/^[a-zA-Z '-]+$/", $name)) {   // TODO apostrophe
+
+        if (!preg_match("/^[a-zA-Z '-]+$/", $name)) {
             $_SESSION['form_errors'][$field_name] = 'Please enter a valid name, using alphabetic characters.';
             return $name;
         }
@@ -23,6 +32,12 @@ function validate_name($name, $field_name) {
     return $name;
 }
 
+/**
+ * Validates and sanitises a text entry
+ * @param string $text
+ * @param string $field_name        The name of the field for storing error messages
+ * @return bool|mixed|string
+ */
 function validate_text($text, $field_name) {
     $text = trim($text);
     if (!empty($text)) {
@@ -38,6 +53,12 @@ function validate_text($text, $field_name) {
     return $text;
 }
 
+/**
+ * Validates and sanitises an email
+ * @param string $email
+ * @param string $field_name        The name of the field for storing error messages
+ * @return bool|mixed
+ */
 function validate_email($email, $field_name) {
     if (!empty($email)) {
         $email = filter_var($email, FILTER_SANITIZE_EMAIL);
@@ -52,6 +73,12 @@ function validate_email($email, $field_name) {
     return $email;
 }
 
+/**
+ * Validates a card number
+ * @param string $number
+ * @param string $field_name        The name of the field for storing error messages
+ * @return bool|string
+ */
 function validate_card_number($number, $field_name) {
     $number = trim($number);
     if (!empty($number)) {
@@ -70,6 +97,12 @@ function validate_card_number($number, $field_name) {
     return $number;
 }
 
+/**
+ * Validates a CVC4 code
+ * @param string $cvc
+ * @param string $field_name        The name of the field for storing error messages
+ * @return bool|string
+ */
 function validate_card_cvc($cvc, $field_name) {
     $cvc = trim($cvc);
     if (!empty($cvc)) {
@@ -88,6 +121,12 @@ function validate_card_cvc($cvc, $field_name) {
     return $cvc;
 }
 
+/**
+ * Validates a password
+ * @param string $password
+ * @param string $field_name        The name of the field for storing error messages
+ * @return bool
+ */
 function validate_password($password, $field_name) {
     if (!empty($password)) {
         if (preg_match("/ +/", $password)) {
@@ -113,6 +152,14 @@ function validate_password($password, $field_name) {
     return $password;
 }
 
+/**
+ * Validates a date of birth
+ * @param integer $day
+ * @param integer $month
+ * @param integer $year
+ * @param string $field_name        The name of the field for storing error messages
+ * @return bool|DateTime|string
+ */
 function validate_date_of_birth($day, $month, $year, $field_name) {
     if (!empty($day) &&!empty($month) && !empty($year)) {
         $day = filter_var($day, FILTER_SANITIZE_NUMBER_INT);
@@ -126,8 +173,6 @@ function validate_date_of_birth($day, $month, $year, $field_name) {
             $_SESSION['form_errors'][$field_name] = "$day/$month/$year is not a valid birth date.";
             return $day.$month.$year;
         }
-
-//        $now=date("d-m-Y");//today's date
 
         $DOB=new DateTime("$day-$month-$year");
         $now=new DateTime();
@@ -146,6 +191,13 @@ function validate_date_of_birth($day, $month, $year, $field_name) {
     return $DOB;
 }
 
+/**
+ * Validates a card expiry date
+ * @param integer $month
+ * @param integer $year
+ * @param string $field_name        The name of the field for storing error messages
+ * @return bool|DateTime|string
+ */
 function validate_card_expiry_date($month, $year, $field_name) {
     if (!empty($month) && !empty($year)) {
         $month = filter_var($month, FILTER_SANITIZE_NUMBER_INT);
@@ -167,6 +219,14 @@ function validate_card_expiry_date($month, $year, $field_name) {
     return $expiry;
 }
 
+/**
+ * Verifies a card transaction
+ * @param string $cardholder_name
+ * @param string $card_number
+ * @param string $card_cvc
+ * @param DateTime $card_expiry_date
+ * @return boolean
+ */
 function verify_card($cardholder_name, $card_number, $card_cvc, $card_expiry_date) {
 
     $data = array(
@@ -178,7 +238,8 @@ function verify_card($cardholder_name, $card_number, $card_cvc, $card_expiry_dat
     );
 
     $ch = curl_init("http://amnesia.csisdmz.ul.ie/4014/cc.php?".http_build_query($data));
-//    $ch = curl_init("http://amnesia.csisdmz.ul.ie/4014/cc.php?fullname=$cardholder_name&ccNumber=$card_number&month=$card_expiry_month&year=$card_expiry_year&security=$card_cvc");
+    //    $ch = curl_init("http://amnesia.csisdmz.ul.ie/4014/cc.php?fullname=$cardholder_name&ccNumber=$card_number&month=$card_expiry_month&year=$card_expiry_year&security=$card_cvc");
+
     //return the transfer as a string
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
@@ -190,6 +251,11 @@ function verify_card($cardholder_name, $card_number, $card_cvc, $card_expiry_dat
     return ($output); // 1 for accept or 0 for decline
 }
 
+/**
+ * Gets the status of a field
+ * @param string $field_name        The name of the field storing error message
+ * @return string|void
+ */
 function get_form_field_status($field_name) {
     if (isset($_SESSION['form_errors']) && !empty($_SESSION['form_errors'])) {
         $valid = !isset($_SESSION['form_errors'][$field_name]);
@@ -198,6 +264,11 @@ function get_form_field_status($field_name) {
     return;
 }
 
+/**
+ * Gets the success/error message for a field
+ * @param string $field_name        The name of the field storing error message
+ * @return string|void
+ */
 function get_form_field_message($field_name) {
     if (isset($_SESSION['form_errors']) && !empty($_SESSION['form_errors'])) {
         $valid = !isset($_SESSION['form_errors'][$field_name]);

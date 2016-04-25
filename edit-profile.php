@@ -27,16 +27,15 @@ if ($is_owner && user_is_at_least_role(ROLE_ADMIN)) {
 
     // Unauthorised user
     if (!$is_owner && !$can_edit_others) {
-        header("Location: 401.php");        //TODO
+        header("Location: 401.php");
         exit();
     }
     // Authorised, but not permitted to edit (upgrade required)
     if (!$can_edit) {
-        header("Location: payment.php");    //TODO message
+        header("Location: payment.php");
         exit();
     }
 
-    // TODO function
     if (isset($_FILES['fileToUpload']) && file_exists($_FILES['fileToUpload']['tmp_name']) && is_uploaded_file($_FILES['fileToUpload']['tmp_name'])) {
         require_once 'core/func/image-upload.php';
     }
@@ -77,10 +76,6 @@ if ($is_owner && user_is_at_least_role(ROLE_ADMIN)) {
 
         if (empty($_SESSION['form_errors'])) {
             $profile->submit();
-
-            if ($profile->error) {
-                // TODO error
-            }
 
             if (isset($_POST['new_interest_like']) && !empty($_POST['new_interest_like'])) {
                 $like = validate_text($_POST['new_interest_like'], 'new_interest_like');

@@ -1,3 +1,6 @@
+// Locks the scroll on items such as notifications and chat where a scroll
+// to bottom/top should not cause the rest of the page to move
+
 $(document).ready(function() {
 // locks the scroll to a particular element and prevents the rest of the page from scrolling
     $('.scroll').on('touchmove wheel', function (e) {

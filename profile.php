@@ -5,7 +5,6 @@ require_once 'core/func/users.php';
 require_once 'core/func/interests.php';
 
 verify_login();
-// TODO permissions
 
 $profile = false;
 $msg = '';
@@ -34,7 +33,6 @@ if ($is_owner && user_is_at_least_role(ROLE_ADMIN)) {
         } else if (in_array(MSG_UPGRADE_REQUIRED, $message['error'])) {
 
         } else {
-            // TODO 404 template
             header("Location: 404.php");
         }
     }

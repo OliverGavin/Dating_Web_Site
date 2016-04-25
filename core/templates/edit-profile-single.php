@@ -1,3 +1,9 @@
+<?php
+/*
+ * Template for editing a profile
+ * Displays the saved information in an editable form
+ */
+?>
 <article>
     <form action="" method="post" enctype="multipart/form-data" onSubmit="" class="style-underline no-valid-messages">
         <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
@@ -6,7 +12,6 @@
         </div>
         <div class="profile-info">
 
-<!--            TODO-->
             <div class="profile-field profile-DOB group <?= get_form_field_status('profile_image'); ?>">
                 <label for="fileToUpload">Profile picture: </label>
                 <input type="file" accept="image/png, image/jpg, image/jpeg" name="fileToUpload" id="fileToUpload">
@@ -25,31 +30,29 @@
             <?= get_form_field_message('first_name');  ?>
             <?= get_form_field_message('last_name');  ?>
 
-            <!--                Photo: <input type="file">-->
-
             <div class="profile-field profile-DOB group <?= get_form_field_status('DOB_date'); ?>">
                 <label for="DOB_day" hidden="hidden">Date of birth</label>
-                <select id="DOB_day" name="DOB_day" onchange="validate_date_fields(this)">
+                <select id="DOB_day" name="DOB_day">
                     <?php
                     for($i = 1; $i <= 31; $i++) {
-                        $default = (($i == $profile->DOB_day) ? "selected=\"selected\"" : "");  // TODO padding????????
+                        $default = (($i == $profile->DOB_day) ? "selected=\"selected\"" : "");
                         echo "<option " . $default . " value=\"$i\">$i</option>";
                     }
                     ?>
                 </select>
                 <label for="DOB_month" hidden="hidden">Month of birth</label>
-                <select id="DOB_month" name="DOB_month" onchange="validate_date_fields(this)">
+                <select id="DOB_month" name="DOB_month">
                     <?php
                     $months = array("January", "February", "March", "April", "May", "June", "July",
                         "August", "September", "October", "November", "December");
                     for($i = 0; $i < 12; $i++) {
-                        $default = (($i + 1 == $profile->DOB_month) ? "selected=\"selected\"" : "");    // TODO padding????????
+                        $default = (($i + 1 == $profile->DOB_month) ? "selected=\"selected\"" : "");
                         echo "<option " . $default . " value=\"" . ($i+1) . "\">$months[$i]</option>";
                     }
                     ?>
                 </select>
                 <label for="DOB_year" hidden="hidden">Year of birth</label>
-                <select id="DOB_year" name="DOB_year" onchange="validate_date_fields(this)">
+                <select id="DOB_year" name="DOB_year">
                     <?php
                     $current_year = date("Y");
                     for($i = $current_year; $i > $current_year - 100; $i--) {
@@ -58,12 +61,6 @@
                     }
                     ?>
                 </select>
-                <script>
-                    function validate_date_fields(el) {
-//                        validate_field(el, $('#DOB_day').val()+$('#DOB_month').val()+$('#DOB_year').val(), 'DOB_date', 'date_of_birth');
-//                        TODO after no js
-                    }
-                </script>
             </div>
             <?= get_form_field_message('DOB_date');  ?>
 

@@ -1,4 +1,8 @@
 <?php
+/*
+ * Facilitates ajax requests for loading a user report (for display in a modal window) based on a specified ID
+ */
+
 $pathToRoot = '../';
 require_once $pathToRoot.'core/init.php';
 require_once $pathToRoot.'core/func/notifications.php';

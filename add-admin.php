@@ -102,9 +102,6 @@ if (isset($_POST['action'])) {
 			?>
 
 			<form method="post" action="" class="style-rounded-dark" onSubmit="">
-	<!--				<input class="textbox" type="email" size="30" placeholder="Email" name="email"><br>-->
-	<!--				<input class="textbox" type="password" size="30" placeholder="Password" name="password">-->
-
 				<div class="group both-rounded <?= get_form_field_status('email'); ?>">
 					<label for="email" class="visible">Email</label>
 					<input type="email" id="email" name="email" size="30" value="<?php if(isset($email) && !$clear_form) echo $email?>" onblur="validate_field(this, $(this).val(), 'email', 'email')" />

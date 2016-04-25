@@ -2,8 +2,6 @@
 require_once 'core/init.php';
 require_once 'core/func/validation.php';
 
-// TODO redirect to dashboard if logged in
-
 $register = false;
 $register_success = false;
 
@@ -101,8 +99,6 @@ if (isset($_GET['login']) && isset($_POST['action'])) {
 			?>
 
 			<form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?login=1' . $redirect?>" class="style-rounded-dark" onSubmit="">
-<!--				<input class="textbox" type="email" size="30" placeholder="Email" name="email"><br>-->
-<!--				<input class="textbox" type="password" size="30" placeholder="Password" name="password">-->
 
 				<div class="group both-rounded <?= get_form_field_status('email'); ?>">
 					<label for="email" class="visible">Email</label>

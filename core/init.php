@@ -1,4 +1,10 @@
 <?php
+/*
+ * Initialises every page
+ *  -   Defines commonly used constants
+ *  -   Includes commonly required files
+ */
+
 global $pathToRoot;
 ini_set('display_startup_errors',1);
 ini_set('display_errors',1);

@@ -1,4 +1,8 @@
 <?php
+/*
+ * Facilitates ajax requests for setting a relationship status with another user based on a specified user ID
+ */
+
 $pathToRoot = '../';
 require_once $pathToRoot.'core/init.php';
 require_once $pathToRoot.'core/func/users.php';

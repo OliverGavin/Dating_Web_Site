@@ -1,6 +1,14 @@
 <?php
-	
-	function get_unseen_notification_count($user_id)
+/*
+ * Notification functions
+ */
+
+/**
+ * Gets a count of unseen notifications for a user
+ * @param integer $user_id
+ * @return mixed
+ */
+function get_unseen_notification_count($user_id)
 	{
 		
 		global $db;
@@ -21,8 +29,13 @@
 	
 		return $count;
 	}
-	
-	function delete_notification($notification_id)
+
+/**
+ * Deletes a notification
+ * @param integer $notification_id
+ * @return bool
+ */
+function delete_notification($notification_id)
 	{
 		global $db;
 
@@ -37,8 +50,13 @@
 	
 		$query->free_result();
 	}
-	
-	function set_notification_seen($notification_id)
+
+/**
+ * Sets a notification to be seen
+ * @param integer $notification_id
+ * @return bool
+ */
+function set_notification_seen($notification_id)
 	{	
 		global $db;
 
@@ -53,8 +71,13 @@
 	
 		$query->free_result();
 	}
-	
-	function get_notifications($user_id)
+
+/**
+ * Gets a list of notifications for a user in the last 30 days
+ * @param $user_id
+ * @return array|bool
+ */
+function get_notifications($user_id)
 	{
 		global $db;
 				
@@ -90,8 +113,12 @@
     	return $notifications;
 							
 	}
-	
-	function remove_old_notifications()
+
+/**
+ * Deletes notifications older than 30 days
+ * @return bool
+ */
+function remove_old_notifications()
 	{
 		global $db;
 
@@ -104,21 +131,22 @@
 	
 		$query->free_result();
 	}
-	
-	function create_notification($receiver_user_id, $content, $type)
+
+/**
+ * Creates a notification
+ * @param integer $receiver_user_id		The user to send the notification to
+ * @param string $content				The content of the notification
+ * @param string $type					The type of notification (LIKE|REPORT)
+ */
+function create_notification($receiver_user_id, $content, $type)
 	{
 		global $db;
 
 		$sender_user_id = $_SESSION['user_id'];
-
-//		require_once 'core/func/profiles.php';
 		
 		$profile = get_profile($sender_user_id);
 		
 		switch ($type) {
-		case "MESSAGE"://MESSAGE:
-		
-		break;
 		
 		case "LIKE"://LIKE:
 			$content = $profile->first_name . ' ' . $profile->last_name . " has liked your profile.";
@@ -147,7 +175,7 @@
 		break;
 		
 		default:
-		return;
+			return;
 		}
 		
 		$type_id = find_type_id($type);
@@ -160,7 +188,13 @@
 		$query->execute();
 		
 	}
-	function find_type_id($type)
+
+/**
+ * Gets the ID of a particular notification type
+ * @param string $type
+ * @return integer
+ */
+function find_type_id($type)
 	{
 		global $db;
 
@@ -178,8 +212,13 @@
 	
 		return $type_id;
 	}
-	
-	function get_report_notifications($notification_id = null)
+
+/**
+ * Gets all the user reports, optionally just one specific one
+ * @param null|integer $notification_id
+ * @return array|bool
+ */
+function get_report_notifications($notification_id = null)
 	{
 		global $db;
 
@@ -209,22 +248,34 @@
     		while ($query->fetch()) {
         		array_push($reports, (object) array(
             			'content'   => $content,
-            			'notification_id'           => $notification_id,
-				'user_id'			=> $user_id,
-            			'sender_id'        => $sender_id,
-            			'seen' => $seen,
-				'date_time' =>	$date_time,
+            			'notification_id'	=> $notification_id,
+						'user_id'			=> $user_id,
+            			'sender_id'        	=> $sender_id,
+            			'seen'				=> $seen,
+						'date_time'			=>	$date_time,
        			));
     		}
 
     		return $reports;
 	}
-	function truncate($string, $length, $dots = "...")
+
+/**
+ * Truncates a string to a given length
+ * @param string $string
+ * @param integer $length
+ * @param string $dots
+ * @return string
+ */
+function truncate($string, $length, $dots = "...")
 	{
     	return (strlen($string) > $length) ? substr($string, 0, $length - strlen($dots)) . $dots : $string;
 	}
-	
-	function get_unseen_report_notification_count()
+
+/**
+ * Gets a count of unseen user reports
+ * @return integer
+ */
+function get_unseen_report_notification_count()
 	{
 		
 		global $db;

@@ -1,7 +1,11 @@
 <?php
+/*
+ * Template for a viewable profile
+ * Users can like, unlike, block, unblock, report and ban a user (depending on role and permissions) through ajax
+ */
+
 $is_owner = ($profile->user_id == $_SESSION['user_id']);
 
-// TODO ban block report
 $can_edit = user_can(PERM_EDIT_PROFILE);
 $can_edit_others = user_can(PERM_EDIT_OTHERS_PROFILE);
 

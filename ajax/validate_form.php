@@ -1,4 +1,10 @@
 <?php
+/*
+ * Facilitates ajax requests for validation of a specified form field
+ * Errors are returned in JSON format
+ * If no errors are returned, 'success' is returned
+ */
+
 $pathToRoot = '../';
 require_once $pathToRoot.'core/init.php';
 require_once $pathToRoot.'core/func/validation.php';
@@ -11,10 +17,6 @@ if (isset($_POST['action']) && $_POST['action'] == 'validate_field'
     && isset($_POST['field_value']) && !empty($_POST['field_value'])
     && isset($_POST['validation_type']) && !empty($_POST['validation_type'])) {
 
-//    $cardholder_name = validate_name($_POST['cardholder_name'], 'cardholder_name');
-//    $card_number = validate_card_number($_POST['card_number'], 'card_number');
-//    $card_cvc = validate_card_cvc($_POST['card_cvc'], 'card_cvc');
-//    $card_expiry_date = validate_card_expiry_date($_POST['card_expiry_month'], $_POST['card_expiry_year'], 'card_expiry_date');
 
     $field_name = $_POST['field_name'];
     $field_value = $_POST['field_value'];
@@ -68,8 +70,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'validate_field'
         echo 'success';
         exit();
     } else {
-        // send error json
-        // send value?
+        // send errors in json
         // tell javascript data is json
         header("Content-Type: application/json");
         echo json_encode($_SESSION['form_errors']);

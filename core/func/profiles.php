@@ -17,8 +17,6 @@ class Profile {
     public $age;
     public $sex;
     public $description;
-//    public $country;
-//    public $county;
     public $location;
     public $looking_for;
     public $min_age;
@@ -38,6 +36,13 @@ class Profile {
         array_push($this->error, $error);
     }
 
+    /**
+     * Creates a profile initially
+     * @param string $DOB_day
+     * @param string $DOB_month
+     * @param string $DOB_year
+     * @param integer $sex
+     */
     function create_profile($DOB_day, $DOB_month, $DOB_year, $sex) {
         global $db;
 
@@ -63,6 +68,10 @@ class Profile {
         return;
     }
 
+    /**
+     * Fetches the profile
+     * @return bool     false on error/not found
+     */
     public function fetch() {
         global $db;
 
@@ -109,7 +118,10 @@ class Profile {
         return true;
     }
 
-    // Updates a profile for a given user_id
+    /**
+     * Updates the profile
+     * @return bool
+     */
     public function submit() {
         global $db;
 
@@ -170,7 +182,7 @@ class Profile {
 
 /**
  * Gets the profile of a user
- * @param $user_id
+ * @param integer $user_id
  * @return bool|Profile
  */
 function get_profile($user_id) {
@@ -198,7 +210,6 @@ function get_profile($user_id) {
     $profile->fetch();
 
     if ($profile->error) {
-//        header("Location: 404.php");      // TODO
         return false;
     }
 
@@ -206,13 +217,9 @@ function get_profile($user_id) {
 
 }
 
-function submit_profile() {
-
-}
-
 /**
  * Checks if a profile exists
- * @param $user_id
+ * @param integer $user_id
  * @return bool
  */
 function exists_profile($user_id) {
@@ -222,7 +229,7 @@ function exists_profile($user_id) {
     $prepared = $db->prepare("
             SELECT `user_id`
             FROM `profiles`
-            WHERE user_id=?
+            WHERE user_id = ?
     ");
 
     $prepared->bind_param("i", $user_id);
@@ -246,8 +253,8 @@ function exists_profile($user_id) {
 
 /**
  * Deletes a profile
- * @param $user_id
- * @return bool
+ * @param integer $user_id
+ * @return bool         false on error or invalid permissions
  */
 function delete_profile($user_id) {
     global $message;
@@ -260,7 +267,6 @@ function delete_profile($user_id) {
         return false;
     }
 
-    // TODO permissions
     if (!exists_profile($user_id)) {
         $message['error'][] = NOT_FOUND;
         return false;
@@ -284,23 +290,40 @@ function delete_profile($user_id) {
 
 }
 
-//function get_all_profiles() {
-//    global $profiles_per_page, $page_number;
-//
-//    $limit_from = $profiles_per_page*$page_number-$profiles_per_page;
-//    $query_end_part = " LIMIT $limit_from,$profiles_per_page";
-//
-//    return get_profiles('', array(), '', '', $query_end_part);
-//}
+/**
+ * Builds query parts ready for use with prepared statements
+ * @param object $query
+ * @param string $stmt_part
+ * @param array|integer $param_value
+ * @param string $param_type
+ * @param string $join_part
+ * @return object mixed
+ */
+function query_add($query, $stmt_part, $param_value = null, $param_type = null, $join_part = null, $end_part = null) {
+
+    $query->stmt_parts  .= ' '.$stmt_part;
+    if (isset($param_value) && isset($param_type)) {
+        if (is_array($param_value)) {
+            $query->param_values = array_merge($query->param_values, $param_value);
+        } else {
+            array_push($query->param_values, $param_value);
+        }
+        $query->param_types .= $param_type;
+    }
+    $query->join_parts  .= $join_part;
+    $query->end_parts  .= $end_part;
+
+    return $query;
+}
 
 /**
- * Gets profiles based on the query passed
- * A SQL injection safe query is built using prepared statements
+ * Gets profiles based on the query parts passed
+ * An SQL injection safe, variable parameter length, query is built using prepared statements
  * @param string $query_stmt_parts         SQL in WHERE clause
  * @param array  $query_param_values       list of values to bind
  * @param string $query_param_types        value types e.g. 'issis'
  * @param string $query_join_parts         SQL in JOIN clause
- * @param string $query_end_parts          SQL after WHERE clause
+ * @param string $query_end_parts          SQL after WHERE clause and ORDER/LIMIT
  * @return array|boolean                   false on error
  */
 function get_profiles($query_stmt_parts, $query_param_values, $query_param_types, $query_join_parts, $query_end_parts) {
@@ -333,10 +356,8 @@ function get_profiles($query_stmt_parts, $query_param_values, $query_param_types
         $ref_args[] = &$param_values[$key];
 
 
-    // TODO check if blocked
     $profiles = array();
 
-    // TODO add limit and ignore list??
     $prepared = $db->prepare("
               SELECT    user_id, first_name, last_name,
                         DOB, location -- , match_score
@@ -367,7 +388,6 @@ function get_profiles($query_stmt_parts, $query_param_values, $query_param_types
 
     while ($prepared->fetch()) {
 //        echo $match_score.', ';
-//        if (!user_is_blocked_by($user_id) && !user_is_blocked_by($_SESSION['user_id'], $user_id)) {
             $profile = new Profile($user_id);
             $profile->first_name = $first_name;
             $profile->last_name = $last_name;
@@ -378,13 +398,17 @@ function get_profiles($query_stmt_parts, $query_param_values, $query_param_types
             $profile->location = $location;
 
             array_push($profiles, $profile);
-//        }
     }
 
     return $profiles;
 
 }
 
+/**
+ * Gets 8 random users
+ * @param $user
+ * @return array|bool
+ */
 function get_random_profiles($user)
 {
     //might move this function else wear
@@ -398,14 +422,14 @@ function get_random_profiles($user)
 			return false;
 		}
        			
-	$query->bind_result($user_id, $firstname);
+	$query->bind_result($user_id, $first_name);
 	
 	$rUsers = array();
 					
 	while ($query->fetch()) {
         	array_push($rUsers, (object) array(
             	'user_id'   => $user_id,
-            	'first_name' => $firstname,
+            	'first_name' => $first_name,
        		));
     	}
 	

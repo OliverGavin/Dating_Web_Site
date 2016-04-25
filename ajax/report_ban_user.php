@@ -1,4 +1,10 @@
 <?php
+/*
+ * Facilitates ajax requests for loading a user report/admin ban form (for display in a modal window) and processing reports/bans
+ * An admin can only ban somebody with a role weight lower than theirs
+ * A notification is sent to the admins if a report is made
+ */
+
 $pathToRoot = '../';
 require_once $pathToRoot.'core/init.php';
 require_once $pathToRoot.'core/func/notifications.php';
@@ -68,8 +74,8 @@ if (isset($_POST['id'], $_POST['action'], $_POST['res']) && $_POST['res'] == 'ge
     <?php
 } else if (isset($_POST['id'], $_POST['action']) && $_POST['action']=='ban') {
 
-    if (isset($_POST['reason'], $_POST['ban_duration']) && !empty($_POST['reason'])) {     // TODO Validate
-        if (user_can(PERM_BAN_USERS) && get_user_role_weight($_SESSION['user_id']) > get_user_role_weight($_POST['id'])) {     // TODO notification to admin
+    if (isset($_POST['reason'], $_POST['ban_duration']) && !empty($_POST['reason'])) {
+        if (user_can(PERM_BAN_USERS) && get_user_role_weight($_SESSION['user_id']) > get_user_role_weight($_POST['id'])) {
             $duration = (int) $_POST['ban_duration'];
             if ($duration == 0) {
                 delete_user($_POST['reason'], $_POST['id']);
@@ -89,8 +95,9 @@ if (isset($_POST['id'], $_POST['action'], $_POST['res']) && $_POST['res'] == 'ge
 
 } else if (isset($_POST['id'], $_POST['action']) && $_POST['action']=='report') {
 
-    if (isset($_POST['reason']) && !empty($_POST['reason'])) {     // TODO Validate
-        if (true) {     // TODO notification to admin
+    if (isset($_POST['reason']) && !empty($_POST['reason'])) {
+        if (true) {
+            // send notification to admins
             create_notification($_POST['id'], $_POST['reason'], "REPORT");
             echo 'success';
         } else {

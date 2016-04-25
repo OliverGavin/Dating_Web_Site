@@ -7,6 +7,7 @@ require_once 'core/func/notifications.php';
 
 <html>
 <head>
+    <title>Swoon</title>
 
     <link rel="stylesheet" type="text/css" href="css/style.css" />
     <script type="text/javascript" src="js/jquery-2.2.0.min.js"></script>
@@ -27,7 +28,7 @@ require_once 'core/func/notifications.php';
         <div class="site-wrapper">
             <div class="site-branding">
                 <h1 class="site-title">
-<!--                    Swoon--><img src="images/logo.png">
+                    <img title="Swoon" src="images/logo.png">
                 </h1>
             </div>
 

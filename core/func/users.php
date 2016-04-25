@@ -4,6 +4,11 @@ DEFINE('DISLIKE',	"DISLIKE");
 DEFINE('LIKE',		"LIKE");
 
 
+/**
+ * Gets a users first and last names
+ * @param $target_user_id
+ * @return bool|object
+ */
 function get_user_name($target_user_id) {
     global $db;
 
@@ -35,8 +40,8 @@ function get_user_name($target_user_id) {
 
 /**
  * Sets the relationship between the current user and another user
- * @param integer $target_user_id
- * @param string $status                BLOCK, DISLIKE, LIKE
+ * @param integer $target_user_id       The user to set the relationship with
+ * @param string $status                (BLOCK|DISLIKE|LIKE)
  * @return bool
  */
 function set_relationship($target_user_id, $status) {
@@ -51,6 +56,7 @@ function set_relationship($target_user_id, $status) {
         // An admin may not set a relationship
         return false;
     }
+
     // Current user can set a relationship
 
     $prepared = $db->prepare("
@@ -73,9 +79,11 @@ function set_relationship($target_user_id, $status) {
 
     if ($status == LIKE) {
         if (get_relationship($user_id, $target_user_id) == LIKE) {  // mutual like
+            // Notification is created to let the user know that their has been a mutual like
             create_notification($target_user_id, null, "MUTUAL_LIKE");
 
         } else {
+            // Notification is created to let the user know that they have been liked
             create_notification($target_user_id, null, LIKE);
 
         }
@@ -85,8 +93,8 @@ function set_relationship($target_user_id, $status) {
 
 /**
  * Gets the relationship between the current user and another user
- * @param $target_user_id
- * @param null $user_id
+ * @param integer $target_user_id
+ * @param null integer $user_id
  * @return bool|string
  */
 function get_relationship($target_user_id, $user_id = null) {
@@ -115,6 +123,12 @@ function get_relationship($target_user_id, $user_id = null) {
     return $status;
 }
 
+/**
+ * Checks if the current user (default) is blocked by another user
+ * @param $target_user_id
+ * @param null $user_id
+ * @return bool
+ */
 function user_is_blocked_by($target_user_id, $user_id = null) {
     if (!isset($user_id)) $user_id = $_SESSION['user_id'];
     return get_relationship($user_id, $target_user_id) === BLOCK;

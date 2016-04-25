@@ -1,4 +1,8 @@
 <?php
+/*
+ * Facilitates ajax requests for adding or deleting an interest (like/dislike) using the interest's ID
+ */
+
 $pathToRoot = '../';
 require_once $pathToRoot.'core/init.php';
 require_once $pathToRoot.'core/func/users.php';
